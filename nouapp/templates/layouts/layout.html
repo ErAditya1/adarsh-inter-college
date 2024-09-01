@@ -1,0 +1,48 @@
+{% load static %} 
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {% include 'includes/head.html' %}
+      <title>{% block title %}layout{% endblock %}</title>
+      {% tailwind_css %}
+      {% block css %}{% endblock %}
+  </head>
+  <body id="body" class="bg-blue-50  text-black-800 dark:bg-sky-900 dark:text-white">
+    <div class="container-fluid m-0  p-0 ">
+    {% include 'includes/header.html' %}
+
+    {% block main %} {% endblock %}
+
+    {% include 'includes/footer.html' %}
+    {% include 'includes/scripts.html' %}
+    {% include "includes/select_program_script.html" %}
+    {% block js %}
+    
+      
+
+
+
+    
+   <script>
+    date_id = document.getElementById("date")
+    function displayDateTime() {
+        
+        let now = new Date();
+    
+        // Convert to a string which automatically includes the timezone information
+        let istTimeString = now.toString();
+    
+         date_id.innerHTML = istTimeString
+        
+        
+        setTimeout(displayDateTime, 1000); // Update the date every second
+    
+    }
+    displayDateTime();
+   </script>
+    {% endblock %}
+    </div>
+    
+  </body>
+</html>

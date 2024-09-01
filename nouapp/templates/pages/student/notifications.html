@@ -1,0 +1,49 @@
+
+
+{% extends "layouts/slayout.html" %}
+{% load static %}
+
+
+{% block title %}lectures.html{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block student %}
+<h1 class="text-center text-3xl font-semibold">Notification Page</h1>
+<div class="min-h-screen my-2 container-fluid">
+  
+    <table class="table table-bordered">
+      <thead>
+        <tr class="table-dark text-center">
+          <th>id</th>
+          <th>Text</th>
+          <th>Read More</th>
+          
+        </tr>
+      <tbody class="bg-blue-100">
+        
+        {% for i in notifications  %}
+        <tr class="text-center">
+          <td>{{i.id}}</td>
+          <td>{{i.text}}</td>
+          
+          
+          <td>
+            <a href="{{i.link}}">Read More</a>
+          </td>
+          
+        </tr>
+        {% endfor %}
+       
+      </tbody>
+      </thead>
+    </table>
+</div>
+{% endblock %}

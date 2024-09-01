@@ -1,0 +1,323 @@
+  {% extends 'layouts/layout.html' %} 
+
+
+
+  {% load static %} 
+
+
+  {% block title %} About{%endblock %} 
+
+
+  {% block css %}
+    <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .modal {
+    display: block;
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  .modal-content {
+    margin: 15% auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+  }
+</style>
+{% endblock %} {% block main %}
+<div class="row m-0 p-0">
+  <div class="col-md-12 p-0 w-full ">
+    <div
+      id="carouselExampleInterval"
+      class="carousel slide"
+      data-bs-ride="carousel"
+      class="w-full"
+    >
+      <div class="carousel-inner w-full">
+        <div class="carousel-item active w-full">
+          <img
+            class="h-[300px] w-screen"
+            src="{% static 'image/b10.jpg' %}"
+            class="d-block w-100"
+            alt="..."
+          />
+        </div>
+        <div class="carousel-item w-full">
+          <img
+            class="h-[300px] w-screen"
+            src="{% static 'image/b11.jpg' %}"
+            class="d-block w-100"
+            alt="..."
+          />
+        </div>
+        <div class="carousel-item w-full">
+          <img
+            class="h-[300px] w-screen"
+            src="{% static 'image/b12.jpg' %}"
+            class="d-block w-100"
+            alt="..."
+          />
+        </div>
+        <div class="carousel-item">
+          <img
+            class="h-[300px] w-screen"
+            src="{% static 'image/b13.jpg' %}"
+            class="d-block w-100"
+            alt="..."
+          />
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleInterval"
+        data-bs-slide="prev"
+      >
+        <span class="" aria-hidden="true"
+          ><i class="fa-solid fa-circle-chevron-left text-gray-200 text-4xl"></i
+        ></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleInterval"
+        data-bs-slide="next"
+      >
+        <span class="" aria-hidden="true"
+          ><i
+            class="fa-solid fa-circle-chevron-right text-gray-200 text-4xl"
+          ></i
+        ></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="container p-0 m-0 my-4">
+      <div class="section-title py-0 ml-4">
+        <h2>About Us</h2>
+        <p class="dark:text-white">Social <span> of the Portal</span></p>
+      </div>
+
+      <div class="aboutus-content p-5 md:p-10">
+        <div
+          class="columns-1 sm:columns-2 md:columns-3 gap-4 [&>div:not(:first-child)]:mt-5"
+        >
+          <div class=" ">
+            <a href="" class="relative">
+              <img
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/07/jaipuriaschools-image1.jpg"
+                alt=""
+                onclick="showModal(this)"
+              />
+              <i
+                class="fa-brands fa-youtube absolute bottom-2 right-4 text-4xl"
+              ></i>
+            </a>
+          </div>
+
+          <div class="relative">
+            <a href="" class="relative my-2">
+              <img
+                class="w-full"
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/07/jaipuriaschools-image2.jpg"
+                alt=""
+                onclick="showModal(this)"
+              />
+              <i
+                class="fa-brands fa-instagram absolute bottom-2 right-4 text-4xl"
+              ></i>
+            </a>
+            <a href="" class="relative my-2">
+              <img
+                class="w-full my-2"
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/07/Jaipuriaschools-image-2.jpg"
+                alt=""
+                onclick="showModal(this)"
+              />
+              <i
+                class="fa-brands fa-facebook absolute bottom-2 right-4 text-4xl"
+              ></i>
+            </a>
+          </div>
+          <div class=" ">
+            <a href="" class="relative">
+              <img
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/07/jaipuriaschools-image3.jpg"
+                alt=""
+                onclick="showModal(this)"
+              />
+              <i
+                class="fa-solid fa-camera absolute bottom-2 right-4 text-4xl"
+              ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="myModal" class="modal">
+      <span
+        class="close text-white text-4xl absolute top-0 right-0 mt-4 mr-4 cursor-pointer"
+        onclick="closeModal()"
+        >&times;</span
+      >
+      <img class="modal-content" id="img01" />
+    </div>
+  </div>
+
+  <div class="col-md-12 bg-teal-950">
+    <div class="container p-0 m-0 my-4">
+      <div class="text-center py-0 ml-4 text-3xl font-bold">
+        <h2>Community Voices</h2>
+      </div>
+    </div>
+   <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body flex justify-center items-center dark:bg-sky-950 rounded dark:text-white ">
+          <h5 class="card-title text-center text-xl font-bold">
+            <i class="fa-regular fa-user"></i> STUDENTS SPEAK
+          </h5>
+          <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">View Reviews</button>
+          </a>
+    
+        </div>
+      </div>
+          
+            
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body flex justify-center items-center dark:bg-sky-950 rounded dark:text-white ">
+          <h5 class="card-title text-center text-xl font-bold">
+            <i class="fa-solid fa-people-roof"></i>PARENTS SPEAK
+          </h5>
+          <a href="">        <button type="button" class="w-fit text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Parents Reviews</button>
+          </a>
+    
+        </div>
+      </div>
+          
+            
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body flex justify-center items-center dark:bg-sky-950 rounded dark:text-white ">
+          <h5 class="card-title text-center text-xl font-bold">
+            <i class="fa-regular fa-handshake"></i>PARTENERS SPEAK
+          </h5>
+          <a href="">        <button type="button" class="w-fit text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Partners Reviews</button>
+          </a>
+    
+        </div>
+      </div>
+          
+            
+    </div>
+   </div>
+
+  <div class="col-md-12">
+    <div class="container p-0 m-0 my-4">
+      <div class="section-title py-0 ml-4">
+        <h2>Schools</h2>
+        <p class="dark:text-white">Visit <span>Our Schools</span></p>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card bg-base-100 w-96 shadow-xl">
+            <figure>
+              <img
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/12/Motihari-1.jpg"
+                alt="Shoes" />
+            </figure>
+            <div class="card-body dark:bg-sky-950 dark:text-white rounded-b">
+              <h2 class="card-title">
+                School!
+                <div class="badge badge-secondary">NEW</div>
+              </h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+              <div class="card-actions justify-end">
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Visit</button>
+                </a>
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Read More</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-base-100 w-96 shadow-xl">
+            <figure>
+              <img
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/12/Motihari-1.jpg"
+                alt="Shoes" />
+            </figure>
+            <div class="card-body dark:bg-sky-950 dark:text-white rounded-b">
+              <h2 class="card-title">
+                School!
+                <div class="badge badge-secondary">NEW</div>
+              </h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+              <div class="card-actions justify-end">
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Visit</button>
+                </a>
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Read More</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-base-100 w-96 shadow-xl">
+            <figure>
+              <img
+                src="https://www.jaipuriaschools.ac.in/wp-content/uploads/2023/12/Motihari-1.jpg"
+                alt="Shoes" />
+            </figure>
+            <div class="card-body dark:bg-sky-950 dark:text-white rounded-b">
+              <h2 class="card-title">
+                School!
+                <div class="badge badge-secondary">NEW</div>
+              </h2>
+              <p>If a dog chews shoes whose shoes does he choose?</p>
+              <div class="card-actions justify-end">
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Visit</button>
+                </a>
+                <a href="">        <button type="button" class="w-40 text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded-full  px-2 py-1 text-center me-2 mb-2 dark:focus:ring-yellow-900">Read More</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+  </div>
+</div>
+
+{% endblock %} {% block extrajs %}
+<script>
+  function showModal(element) {
+    console.log(element.src);
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("img01");
+    modal.style.display = "block";
+    modalImg.src = element.src;
+  }
+
+  function closeModal() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+</script>
+{% endblock %}

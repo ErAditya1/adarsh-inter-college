@@ -1,0 +1,49 @@
+<script>
+    $(document).ready(function() {
+        $('#program').change(function() {
+            var programId = $(this).val();
+            console.log(programId);
+            if (programId) {
+                $.ajax({
+                    url: 'load_branches/',
+                    data: {
+                        'program_id': programId
+                    },
+                    success: function(data) {
+                        $('#branch').html('<option value="">--Select Branch--</option>');
+                        $('#year').html('<option value="">--Select Year--</option>'); // Clear year when program changes
+                        $.each(data, function(key, value) {
+                            $('#branch').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                
+                $('#branch').html('<option value="">--Select Branch--</option>');
+                $('#year').html('<option value="">--Select Year--</option>');
+            }
+        });
+
+        $('#branch').change(function() {
+            var branchId = $(this).val();
+            if (branchId) {
+                console.log(branchId)
+                $.ajax({
+                    url: 'load_years/',
+                    data: {'branch_id': branchId},
+                    success: function(data) {
+                        console.log('data received', data)
+
+                        $('#year').html('<option value="">--Select Year--</option>');
+                        $.each(data, function(key, value) {
+                            $('#year').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                console.log('Please select a branch')
+                $('#year').html('<option value="">--Select Year--</option>');
+            }
+        });
+    });
+</script>

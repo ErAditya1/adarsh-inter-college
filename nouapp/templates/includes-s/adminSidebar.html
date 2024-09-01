@@ -1,0 +1,97 @@
+{% load static %}
+
+<!-- Menu -->
+
+<aside
+  id="layout-menu"
+  class="layout-menu menu-vertical menu p-0 m-0 flex flex-col bg-blue-100 dark:bg-sky-950 shadow "
+>
+  <div class="app-brand demo ">
+    <a href="{% url "home" %}" class="app-brand-link">
+      <img
+          src="{% static 'image/logo1.png' %}"
+          height="50px"
+          width="50px"
+          class="w-px-40 h-auto rounded-circle bg-blue-100 p-1 m-1"
+          alt="Logo"
+        />
+      <span
+        class="app-brand-text demo menu-text fw-bolder"
+        style="font-size: 20px"
+        >Student Pannel</span
+      >
+    </a>
+
+    <a
+      href="javascript:void(0);"
+      class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none"
+    >
+      <i class="bx bx-chevron-left bx-sm align-middle"></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow  "></div>
+
+  <div class=" m-0 p-0 w-full">
+    <ul class="menu-inner py-1  w-full">
+      <!-- Dashboard -->
+      <li class="menu-item active m-0 w-full flex justify-center items-center p-0" style="">
+        
+
+        <a href="{% url "admin_dashboard" %}" class="menu-link  text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded  px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">
+          <i class="menu-icon tf-icons bx bx-home-circle "></i>
+          <div >Dashboard</div>
+        </a>
+      </li>
+  
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text text-lg">Pages <hr/></span>
+      </li>
+  
+      <li class="menu-item">
+        <a href="{% url "student-profile" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Your Profile</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url "study_material" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">View Study Material</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="menu-item" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Doubt Section</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url "register_complaint" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Register Compliant</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url "feedbacks" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Your Feedback</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url "assignments" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Assenments</div>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="{% url "lectures" %}" class="menu-link">
+          <i class="menu-icon tf-icons bx bx-copy"></i>
+          <div data-i18n="Basic">Your Leatures</div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
+
+<!-- / Menu -->

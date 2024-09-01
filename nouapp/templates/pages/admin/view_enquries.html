@@ -1,0 +1,56 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}view_enquries{% endblock %}
+
+
+{% block css %}
+
+<style>
+
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<h1 class="text-center text-3xl font-semibold">View Enquries</h1>
+<div class="min-h-screen my-2 container-fluid">
+  
+    <table class="table table-bordered">
+      <thead>
+        <tr class="table-dark text-center">
+          <th>#</th>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>Address</th>
+          <th>Contact No.</th>
+          <th> Email Address</th>
+          <th>Enquiry Text</th>
+          <th>Enquiry Date</th>
+        </tr>
+      <tbody class="bg-blue-100">
+        
+        {% for i in enquries %}
+        <tr class="text-center">
+          <td>{{i.id}}</td>
+          <td>{{i.name}}</td>
+          <td>{{i.gender}}</td>
+          <td>{{i.address}}</td>
+          <td>{{i.mobile}}</td>
+          <td>{{i.email}}</td>
+          <td>{{i.text}}</td>
+          <td>{{i.created_at}}</td>
+
+          
+        </tr>
+        {% endfor %}
+       
+      </tbody>
+      </thead>
+    </table>
+</div>
+{% endblock %}
+{% block js %}{% endblock %}

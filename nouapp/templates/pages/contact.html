@@ -1,0 +1,141 @@
+{% extends 'layouts/layout.html' %} 
+{% load static %} 
+{% block title %} Contact {% endblock %} 
+{% block main %}
+<div class="container-fluid p-0 m-0">
+  <div class="row p-0 m-0">
+    <div class="">
+      <img
+      style=""
+        class="w-full h-[300px] m-0 p-0"
+        src="{% static 'image/b11.jpg' %}"
+        alt=""
+      />
+    </div>
+    <div class="col-sm-12">
+      <h1 class="text-start text-3xl font-bold  p-2">
+        Contact Us:
+      </h1>
+    </div>
+    <div class="col-sm-12 p-4 m-0">
+      <h1 class="text-2xl font-serif font-bold">NOU e-Gyan Portel</h1>
+    </div>
+    <div class="col-md-6 p-4">
+      <form action="{% url "save_enquiry" %}" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Name:</label>
+          <div class="relative">
+              <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                <i class="fa-solid fa-user w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+              </div>
+              <input type="text" id="name" name="name" aria-describedby="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter Name" required />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Id:</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+          <i class="fa-solid fa-envelope w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+        </div>
+        <input type="email" id="email" name="email" aria-describedby="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@gmail.com" required />
+    </div>
+          <div id="emailHelp" class="form-text">
+            We'll never share your email with anyone else.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="mobile" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number:</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 19 18">
+                <path d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z"/>
+            </svg>
+        </div>
+        <input type="text" id="mobile" name="mobile" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required />
+    </div>
+        </div>
+        <div class="mb-3">
+          <label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter Address:</label>
+          <div class="relative">
+              <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                <i class="fa-solid fa-user w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+              </div>
+              <input type="text" id="address" name="address" aria-describedby="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Enter You Address" required />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Gender:</label>
+          <div class="relative">
+            <select id="gender" name="gender" autocomplete="country-name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"  required>
+              <option value="">--Select Gender--</option>
+              
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              
+            </select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label
+            for="text"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >Your message</label
+          >
+          <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+            <i class="fa-solid fa-envelope w-4 h-4 text-gray-500 dark:text-gray-400"></i>
+          </div>
+          <textarea
+            id="text"
+            rows="4"
+            name="text"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Write your thoughts here..."
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="column_attr gap-y-4" style=" padding:0 0 0 30px;"><div>
+        <h4 class="text-xl my-2 font-semibold"> Corporate Office</h4>
+        <p>1/3, (Block 1, Plot No.3,) WHS Timber Market, <br>
+        Kirti Nagar, Near Mayapuri Chowk <br>
+        New Delhi – 110015 <br>
+        <strong>Phone : </strong>+91 11 40088000<br>
+        <strong>Fax : </strong>+91 11 25863255<br>
+        <strong>Email : </strong>info@jaipuriaschools.ac.in</p>
+        </div>
+        
+        
+        <div>
+        <h4 class="text-xl my-2 font-semibold">Franchise Enquiry</h4>
+        <strong>Phone : </strong> 011-40088000<p></p>
+        <p>Business Partnership<br>
+        <strong>M : </strong>  +91-9625425778,  +91-9625425870 </p>
+        </div>
+        
+        <div>
+        <h4 class="text-xl my-2 font-semibold">Recruitment Office</h4>
+        <p><strong>Email:</strong> recruitment.co@jaipuriaschools.ac.in<br>
+        <strong>M: </strong>+91-9625426486</p>
+        </div>
+        
+        
+        <div>
+        <h4 class="text-xl my-2 font-semibold">Admission Enquiry</h4>
+        <p><strong>Email:</strong> <br>admissions@jaipuriaschools.ac.in<br>
+        <strong>M: </strong>+91-9755944526</p>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

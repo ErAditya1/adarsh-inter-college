@@ -1,0 +1,31 @@
+{% load static %}
+
+<!-- Required Js -->
+   <!-- / Core JS -->
+   <script src="{% static "css/assets/vendor/libs/jquery/jquery.js" %}c"></script>
+   <script src="{% static "css/assets/vendor/libs/popper/popper.js" %}"></script>
+   <script src="{% static "css/assets/vendor/js/bootstrap.js" %}"></script>
+   <script src="{% static "css/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
+
+   <script src="{% static "css/assets/vendor/js/menu.js" %}"></script>
+   <!-- endbuild -->
+
+   <!-- Vendors JS -->
+   <script src="{% static "css/assets/vendor/libs/apex-charts/apexcharts.js" %}"></script>
+   <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
+   <!-- Main JS -->
+   <script src="{% static "css/assets/js/main.js" %}"></script>
+
+   <!-- Page JS -->
+   <script src="{% static "css/assets/js/dashboards-analytics.js" %}"></script>
+
+   <!-- Place this tag in your head or just before your close body tag. -->
+   <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.bundle.js' %}"></script>
+
+<!-- Optional Js -->
+ {% block extrajs %}{% endblock %}

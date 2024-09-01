@@ -1,0 +1,667 @@
+{% extends 'layouts/layout.html' %} 
+{% load static %} 
+{% block title %} Home {% endblock %} 
+{% block main %}
+
+
+  <div class="row  ">
+    
+    <div class="col-md-12 p-0 w-full">
+      <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel" class="w-full">
+        <div class="carousel-inner w-full">
+          <div class="carousel-item active w-full">
+            <img style="clip-path: polygon(100% 0, 100% 100%, 43% 89%, 0 100%, 0 0);" class="h-[400px] w-screen" src="{% static 'image/banner1.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img style="clip-path: polygon(50% 0%, 100% 0, 100% 35%, 100% 100%, 82% 89%, 56% 100%, 38% 89%, 23% 100%, 0 89%, 0 0);" class="h-[400px] w-screen" src="{% static 'image/b2.jpeg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item  w-full">
+            <img class="h-[400px] w-screen" src="{% static 'image/b14.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item  w-full">
+            <img class="h-[400px] w-screen" src="{% static 'image/b16.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item  w-full">
+            <img class="h-[400px] w-screen" src="{% static 'image/b18.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img class="h-[400px] w-screen" src="{% static 'image/b19.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+          <span class="" aria-hidden="true"><i class="fa-solid fa-circle-chevron-left text-gray-200 text-4xl "></i></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+          <span class="" aria-hidden="true"><i class="fa-solid fa-circle-chevron-right text-gray-200 text-4xl "></i></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    
+    </div>
+  </div>
+
+
+  {% comment %} <div class="row" style="background-color: orange;">
+    <div class="col-12">
+      <marquee onMouseOver="this.stop()" onMouseOut="this.start()" behavior="" direction="" scrollamount="12"
+        class=" my-auto p-2 ">
+        <div class="d-flex flex-row fw-bold bg-orange-500 text-light">
+          <div class="box b1 bg-danger p-4 mx-2 col-md-  ">
+            <span>The portal is easy to access & highly user friendly for the students & study centres.</span>
+          </div>
+          <div class="box b1 bg-danger p-4 mx-2 col-md-">
+            <span>The portal is fully secured and accessible
+              24 x 7 to its authorised users.</span>
+          </div>
+          <div class="box b1 bg-danger p-4 mx-2 col-md-">
+            <span>The portal is easy to access & highly user
+              friendly for the students & study centres.</span>
+          </div>
+        </div>
+      </marquee>
+    </div>
+  </div> {% endcomment %}
+
+
+  <section id="about" class="about">
+    <div class="container">
+      <div class="section-title aos-init aos-animate" data-aos="zoom-out">
+        <h2>Description</h2>
+        <p class="dark:text-white">About <span>NOU <span style="  text-transform: lowercase;">e</span>-Gyan Portal </span></p>
+      </div>
+    </div>
+    <div class="container-fluid p-0">
+      <div class="row content aos-init aos-animate" data-aos="fade-up">
+        <div class="col-sm-1"></div>
+        <div class="col-lg-6">
+          <p>
+            <strong> Nalanda Open University </strong> welcomes all our students, faculties &amp; study centres to the
+            very new &amp; innovative online study portal <strong>NOU e-Gyan</strong>. The portal is a unique initiative
+            by Hon'ble Vice-Chancellor <strong>Prof. (Dr.) K C Sinha</strong>, which aims at providing online study
+            material to the students of NOU.
+            <br><br>
+            The portal is accessible from any hook and corner of the world if the system allows the permission to its
+            users. It is also fully secured and accessible 24 x 7 to its authorised users. It will resolve the academic
+            issues such as E-content Distribution, Delivery, Tracking, Assessment, Progress Monitoring &amp; Controlling
+            of all stakeholders of the system i.e. students, teachers, study centre administrators as well as Nalanda
+            Open University Admins when they are at a distance.
+          </p>
+        </div>
+        <div class="col-sm-1"></div>
+        <div class="col-sm-4 mx-3 mx-lg-0 aos-init aos-animate" data-aos="zoom-in"
+          style="background:linear-gradient(-15deg,rgba(255,255,255,.4),rgba(0,0,0,.7)),url(../static/image/banner7.jpg);min-height:55vh;background-repeat:no-repeat;background-size:100% 100%;">
+          <div class="video-box d-flex justify-content-centre align-items-stretch position-relative me-4">
+            <a href="https://youtu.be/jVl8uLz8f9w" class=" play-btn " data-lity=""
+              data-lity-target="https://youtu.be/jVl8uLz8f9w"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="portal relative">
+   
+
+    <div class="container">
+      <div class="row">
+        <div class="section-title py-0">
+          <h2>Portal</h2>
+          <p class="dark:text-white">Users <span> of the Portal</span></p>
+        </div>
+        <div class="col-sm-12">
+          <div class="container ">
+            <div class="row mt-5 " style="margin:0px auto;">
+              <div class="col-sm-4 mt-3 mt-lg-0 px-4">
+                <div class="card_outer">
+                  <div class="card_box bg-blue-100 text-blue-950 dark:text-white  dark:bg-sky-950 pb-3">
+                    <div class="card_content">
+                      <span class="fa fa-lock services_ic"
+                        style="padding:15px 20px 15px 20px;margin-top:-.5rem;"></span>
+                      <h2>01</h2>
+                      <p class="">The university admin can login to monitor the portal, provide access to authorised
+                        stake holders &amp; upload study material.</p>
+                      <div class="st-c mt-8 mb-0">
+                        <a href="http://dls.nouegyan.in/" target="_blank">University Admin</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 mt-5 mt-lg-0 px-4">
+                <div class="card_outer">
+                  <div class="card_box bg-blue-100 text-blue-950 dark:text-white  dark:bg-sky-950  pb-3 ">
+                    <div class="card_content mb-3 ">
+                      <span class="fa fa-book services_ic mt-4"></span>
+                      <h2>02</h2>
+                      <p class="">
+                        The study centres authorised personnel can login to track students progress, enroll students,
+                        schedule assignments &amp; generate reports.
+                      </p>
+                      <div class="st-c mt-8">
+                        <a href="http://dls.nouegyan.in/" target="_blank">Study centre</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 px-4 mt-5 mt-lg-0">
+                <div class="card_outer">
+                  <div class="card_box bg-blue-100 text-blue-950 dark:text-white  dark:bg-sky-950  pb-3">
+                    <div class="card_content">
+                      <span class="fa fa-users services_ic mt-3"></span>
+                      <h2>03</h2>
+                      <p class=" ">
+                        The university enrolled students can login to view the notification by university, access the
+                        e-contents, give assignments &amp; track thier progress report.</p>
+                      <div class="st-c mb-4 mb-lg-0 mt-8">
+                        <a href="http://dls.nouegyan.in/" target="_blank">NOU Students</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="services">
+    <div class="container">
+      <div class="row">
+        <div class="section-title">
+          <h2>Features</h2>
+          <p class="dark:text-white">Student <span>Services</span></p>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1 ">
+            <img src="../static/image/thumbnail.jpg" class="img-fluid h-full">
+          </div>
+          <div class="text">
+            <h4>Login</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/dashboard.jpg" class="img-fluid">
+          </div>
+          <div class="text">
+            <h4>Dashboard</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/online-courses.jpg" class="img-fluid">
+          </div>
+          <div class="text">
+            <h4>Self Learning Material (SLM)</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/e-lectures.jpg" class="img-fluid ">
+          </div>
+          <div class="text">
+            <h4>e-Books</h4>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/self-assessment.svg" class="img-fluid p-5">
+          </div>
+          <div class="text">
+            <h4>Self-Assessment Tools</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/performance.jpg" class="img-fluid pb-2">
+          </div>
+          <div class="text">
+            <h4>Performance</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/feedback.jpg" class="img-fluid pb-2">
+          </div>
+          <div class="text">
+            <h4>Feedback</h4>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="image1 mx-5 mx-lg-0 ratio ratio-1x1">
+            <img src="../static/image/services/course-catlog.jpg" class="img-fluid pb-2">
+          </div>
+          <div class="text">
+            <h4>Courses-Catalogue</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="team" class="team dark:bg-sky-950">
+    <div class="container">
+      <div class="section-title aos-init aos-animate" data-aos="zoom-out">
+        <h2>Our Mentors</h2>
+        <p class="dark:text-white">Administrative <span>Setup </span></p>
+      </div>
+      <div class="row">
+        <div class="col-lg-3 col-md-6 d-flex align-items-stretch ">
+          <div class="member  mx-5 mx-lg-0 aos-init aos-animate" data-aos="fade-up">
+            <div class="member-img">
+              <img src="../static/image/mentor/vc.jpg" class="img-fluid mx-5 mt-3" alt="">
+              <div class="social">
+                <h4>Prof. (Dr.) K. C. Sinha </h4>
+                <span>VICE CHANCELLOR</span>
+              </div>
+            </div>
+            <div class="member-info">
+              <h4  >Prof. (Dr.) K. C. Sinha </h4>
+              <span >VICE CHANCELLOR</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+          <div class="member mx-5 mx-lg-0 aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="../static/image/mentor/pvc.jpg" class="img-fluid mx-5 mt-3" alt="">
+              <div class="social">
+                <h4>Prof. (Dr.) Sanjoy Kumar</h4>
+                <span>PRO VICE CHANCELLOR</span>
+              </div>
+            </div>
+            <div class="member-info">
+              <h4>Prof. (Dr.) Sanjoy Kumar</h4>
+              <span>PRO VICE CHANCELLOR</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+          <div class="member mx-5 mx-lg-0 aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+            <div class="member-img">
+              <img src="../static/image/mentor/registrar1.jpeg" class="img-fluid mx-5 mt-3" alt="">
+              <div class="social">
+                <h4>Dr. Md. Habibur Rahman</h4>
+                <span>REGISTRAR</span>
+              </div>
+            </div>
+            <div class="member-info">
+              <h4> Dr. Md. Habibur Rahman</h4>
+              <span>REGISTRAR</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+          <div class="member mx-5 mx-lg-0 aos-init aos-animate" data-aos="fade-up" data-aos-delay="300">
+            <div class="member-img">
+              <img src="../static/image/mentor/examreg.jpg" class="img-fluid mx-5 mt-3" alt="">
+              <div class="social">
+                <h4>Dr. Neelam Kumari</h4>
+                <span>REGISTRAR (Exam)</span>
+              </div>
+            </div>
+            <div class="member-info">
+              <h4>Dr. Neelam Kumari</h4>
+              <span>REGISTRAR (Exam)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta" class="cta p-0">
+    <div class="container">
+      <div class="row py-4 aos-init aos-animate" data-aos="zoom-out">
+        <div class="section-title pb-1">
+          <h2>How to use</h2>
+          <p style="color:#fff">NOU <span style="  text-transform: lowercase;color:#fff">e</span>-Gyan Portal Tutorial Videos</p>
+        </div>
+        <p class="text-white font-semibold space-x-1 text-xl m-2">For any queries regarding the access into the Portal, the users can watch the tutorial videos provided or feel free to communicate their issues via the given contact helpline number or helpline email ID.</p>
+        <div class="col-lg-6 text-center flex justify-center text-lg-start ">
+          <div class="video-1">
+            <iframe width="500" height="280" src="https://www.youtube.com/embed/Sh9VxOBoYbk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
+
+            </iframe>
+    
+            <a href="#" class="cta-btn">How to login at NOU <span style="color:#fff;text-transform: lowercase;"></span>e-Gyan Portal</a>
+          </div>
+        </div>
+    <div class="col-lg-6 text-center flex justify-center text-lg-start">
+    <div class="video-1">
+    <iframe width="500" height="280" src="https://www.youtube.com/embed/cEaTY8EfdRs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+    
+    <a href="#" class="cta-btn">How to access content at NOU <span style="color:#fff;text-transform: lowercase;"></span>e-Gyan Portal</a>
+    </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+  <section id="testimonials" class="testimonials  pt-0">
+    <div class="container">
+      <div class="section-title aos-init aos-animate" data-aos="zoom-out">
+        <h2>Courses</h2>
+        <p class="dark:text-white">Our <span>Courses</span></p>
+        <div class="courses-btn text-right "><a href=""><button class=" bg-sky-950 rounded p-2 text-xl">View All Courses</button></a></div>
+      </div>
+      <div
+        class="testimonials-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events aos-init aos-animate"
+        data-aos="fade-up" data-aos-delay="100">
+        <div class="swiper-wrapper" id="swiper-wrapper-4118f35e33a93680" aria-live="off"
+          style="transform: translate3d(-5700px, 0px, 0px); transition-duration: 0ms;">
+          <div class="swiper-slide  swiper-slide-duplicate swiper-slide-next swiper-slide-duplicate-prev"
+            data-swiper-slide-index="4" role="group" aria-label="5 / 5" style="width: 930px; margin-right: 20px;">
+            <div class="testimonial-item dark:bg-sky-950 rounded shadow">
+              <img  src="{% static 'image/course1.png' %}" class="testimonial-img h-20 w-20 m-2" alt="">
+              <h3 class="text-xl my-auto">Certification in Interior Decoration</h3>
+              <span class="bottom-0"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                  class="fa fa-star"></i> <i class="fa fa-star"></i></span>
+            </div>
+          </div>
+          <div class="swiper-slide " data-swiper-slide-index="0" role="group"
+            aria-label="1 / 5" style="width: 930px; margin-right: 20px;">
+            <div class="testimonial-item dark:bg-sky-950 rounded shadow">
+              <img  src="{% static 'image/course1.png' %}" class="testimonial-img h-20 w-20 m-2" alt="">
+              <h3 class="text-xl my-auto">Certification in Interior Decoration</h3>
+              <span class="bottom-0"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                  class="fa fa-star"></i> <i class="fa fa-star"></i></span>
+            </div>
+          </div>
+          <div class="swiper-slide " data-swiper-slide-index="0" role="group"
+          aria-label="1 / 5" style="width: 930px; margin-right: 20px;">
+          <div class="testimonial-item dark:bg-sky-950 rounded shadow">
+            <img  src="{% static 'image/course1.png' %}" class="testimonial-img h-20 w-20 m-2" alt="">
+            <h3 class="text-xl my-auto">Certification in Interior Decoration</h3>
+            <span class="bottom-0"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                class="fa fa-star"></i> <i class="fa fa-star"></i></span>
+          </div>
+        </div>
+        <div class="swiper-slide " data-swiper-slide-index="0" role="group"
+            aria-label="1 / 5" style="width: 930px; margin-right: 20px;">
+            <div class="testimonial-item dark:bg-sky-950 rounded shadow">
+              <img  src="{% static 'image/course1.png' %}" class="testimonial-img h-20 w-20 m-2" alt="">
+              <h3 class="text-xl my-auto">Certification in Interior Decoration</h3>
+              <span class="bottom-0"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                  class="fa fa-star"></i> <i class="fa fa-star"></i></span>
+            </div>
+          </div>
+          <div class="swiper-slide " data-swiper-slide-index="0" role="group"
+            aria-label="1 / 5" style="width: 930px; margin-right: 20px;">
+            <div class="testimonial-item dark:bg-sky-950 rounded shadow">
+              <img  src="{% static 'image/course1.png' %}" class="testimonial-img h-20 w-20 m-2" alt="">
+              <h3 class="text-xl my-auto">Certification in Interior Decoration</h3>
+              <span class="bottom-0"><i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
+                  class="fa fa-star"></i> <i class="fa fa-star"></i></span>
+            </div>
+          </div>
+          
+          
+        </div>
+        <div
+          class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+          <span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button"
+            aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet" tabindex="0" role="button"
+            aria-label="Go to slide 2"></span><span class="swiper-pagination-bullet" tabindex="0" role="button"
+            aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet" tabindex="0" role="button"
+            aria-label="Go to slide 4"></span></div>
+        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+      </div>
+    </div>
+   
+  </section>
+
+  <section id="features" class="features">
+    <div class="container">
+    <div class="row">
+    <div class="section-title">
+    <h2>Helpdesk</h2>
+    <p class="dark:text-white">Always <span>here to support you!</span></p>
+    </div>
+    <div class="col-sm-6">
+    <img src="{% static 'image/helpline.svg' %}" class="img-fluid" style="height:50vh;">
+    </div>
+    <div class="col-sm-6">
+    <ul class="nav nav-tabs">
+    <li class="nav-item aos-init aos-animate" data-aos="zoom-in">
+    <a class="nav-link active show" data-bs-toggle="tab" href="#tab-1">
+    <p>The help desk provides user assistance to navigate and understand the aspects of the portal. This also provides a simple interface for maintenance
+    of student information and issues faced.
+    </p>
+    </a>
+    </li>
+    </ul>
+    <ul class="nav nav-tabs row">
+    <li class="nav-item col-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="200">
+    <a class="nav-link bg-blue-100 shadow dark:bg-sky-950 dark:text-white p-4" data-bs-toggle="tab" href="#tab-3">
+      <h4 > <i class="fa fa-phone"></i> +91 7080102007</h4>
+    </a>
+    </li>
+    <li class="nav-item col-3 aos-init aos-animate" data-aos="zoom-in" data-aos-delay="300">
+    <a class="nav-link bg-blue-100 shadow dark:bg-sky-950 dark:text-white p-4" data-bs-toggle="tab" href="#tab-4">
+    <h4> <i class="fa fa-envelope "></i> nouegyanhelp@gmail.com</h4>
+    </a>
+    </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="testimonial mb-2">
+    <div class="container">
+    <div class="row">
+    <div class="section-title">
+    <h2>Links</h2>
+    <p class="dark:text-white">Quick <span>Links</span></p>
+    </div>
+    <div class="col-sm-12">
+    <div class="testimonials-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
+    <div class="swiper-wrapper" id="swiper-wrapper-16108e4627a5e941a" aria-live="off" style="transform: translate3d(-2130px, 0px, 0px); transition-duration: 0ms;"><div class="swiper-slide quick-link1 swiper-slide-duplicate swiper-slide-duplicate-next" role="group" aria-label="4 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="3">
+    <div class="quick-link">
+    <a href="https://state.bihar.gov.in/dst/CitizenHome.html" target="_blank"> <img  src="{% static 'image/link3.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>STD</h4>
+    <h5>Science &amp; Technology Department </h5>
+    </div>
+    </div>
+    <div class="swiper-slide quick-link1" role="group" aria-label="1 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="0">
+    <div class="quick-link">
+    <a href="http://www.nou.ac.in/examination.html" target="_blank"><img src="{% static 'image/link1.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>NOU</h4>
+    <h5>Nalanda Open University </h5>
+    </div>
+    </div>
+    
+    <div class="swiper-slide quick-link1 swiper-slide-prev" role="group" aria-label="2 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="1">
+    <div class="quick-link">
+    <a href="http://bshec.in/" target="_blank"> <img src="{% static 'image/link2.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>BSHEC</h4>
+    <h5> Bihar State Higher Education Council</h5>
+    </div>
+    </div>
+    
+    <div class="swiper-slide quick-link1 swiper-slide-active" role="group" aria-label="3 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="2">
+    <div class="quick-link">
+    <a href="https://www.ugc.ac.in/" target="_blank"> <img src="{% static 'image/link3.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>UGC</h4>
+    <h5>University Grants Commission</h5>
+    </div>
+    </div>
+    
+    <div class="swiper-slide quick-link1 swiper-slide-next" role="group" aria-label="4 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="3">
+    <div class="quick-link">
+    <a href="https://state.bihar.gov.in/dst/CitizenHome.html" target="_blank"> <img src="{% static 'image/link2.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>STD</h4>
+    <h5>Science &amp; Technology Department </h5>
+    </div>
+    </div>
+    
+    <div class="swiper-slide quick-link1 swiper-slide-duplicate" role="group" aria-label="1 / 4" style="width: 690px; margin-right: 20px;" data-swiper-slide-index="0">
+    <div class="quick-link">
+    <a href="http://www.nou.ac.in/examination.html" target="_blank"><img src="{% static 'image/link1.png' %}" class="testimonial-img h-20 w-20" alt=""></a>
+    </div>
+    <div class="txt-1">
+    <h4>NOU</h4>
+    <h5>Nalanda Open University </h5>
+    </div>
+    </div></div>
+    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+  <section class="spacer">
+    <div class="container py-4">
+    <div class="section-title">
+    <h2>Feedback</h2>
+    <p class="dark:text-white">Feedback <span>From Our Students</span></p>
+    </div>
+    <div class="row">
+    <div class="col-sm-12 pt-3 mt-3 supporter-main">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4" class=""></button>
+    </div>
+    <div class="carousel-inner">
+    <div class="carousel-item carousel-item-next carousel-item-start">
+    <div class="supporter container">
+    <div class="row">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-2">
+    <div style="height:150px; width:150px;">
+    <img src="{% static 'image/p4.jpg' %}" alt="" style="height:100%; width:100%;">
+    </div>
+    </div>
+    <div class="col-sm-9 supt-txt">
+    <p>“This is best and biggest unified platform
+    for instant online learning. We can easily
+    access any content of our enrolled course from the portal. Thank you NOU e-Gyan!!“</p>
+    <h6 class="my-2  text-xl">-Rani Verma-</h6>
+    <h6 class="my-2  text-xl">University Student</h6>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="carousel-item">
+    <div class="supporter container">
+    <div class="row">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-2">
+    <div style="height:150px; width:150px;">
+    <img src="{% static 'image/p3.jpg' %}" alt="" style="height:100%; width:100%;">
+    </div>
+    </div>
+    <div class="col-sm-9">
+    <p> “This is best and biggest unified platform
+    for instant online learning. We can easily
+    access any content of our enrolled course from the portal. Thank you NOU e-Gyan!!“</p>
+    <h6 class="my-2  text-xl">-Aditya Kumar-</h6>
+    <h6 class="my-2  text-xl">University Student</h6>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="carousel-item">
+    <div class="supporter container">
+    <div class="row">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-2">
+    <div class="supt-img" style="height:150px; width:150px;">
+    <img src="{% static 'image/p2.webp' %}" alt="" style="height:100%; width:100%;">
+    </div>
+    </div>
+    <div class="col-sm-9">
+    <p>“This is best and biggest unified platform
+    for instant online learning. We can easily
+    access any content of our enrolled course from the portal. Thank you NOU e-Gyan!!“</p>
+    <h6 class="my-2  text-xl">-Rani Verma-</h6>
+    <h6 class="my-2  text-xl">University Student</h6>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="carousel-item active carousel-item-start">
+    <div class="supporter container">
+    <div class="row">
+    <div class="col-sm-1">
+    </div>
+    <div class="col-sm-2">
+    <div style="height:150px; width:150px;">
+    <img src="{% static 'image/p1.jpg' %}" alt="" style="height:100%; width:100%;">
+    </div>
+    </div>
+    <div class="col-sm-9">
+    <p>“This is best and biggest unified platform
+    for instant online learning. We can easily
+    access any content of our enrolled course from the portal. Thank you NOU e-Gyan!!“</p>
+    <h6 class="my-2  text-xl">-Rani Verma-</h6>
+    <h6 class="my-2  text-xl">University Student</h6>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden" style="color:red;">Next</span>
+    </button>
+    </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+ 
+   
+
+
+   
+
+        
+  
+  
+  
+  
+   
+</div>
+<button class="lity-close" type="button" aria-label="Close (Press escape to close)" data-lity-close="">×</button>
+</div>
+</div>
+
+
+
+  {% endblock %}
+
+

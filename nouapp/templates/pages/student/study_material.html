@@ -1,0 +1,55 @@
+
+
+{% extends "layouts/slayout.html" %}
+{% load static %}
+
+
+{% block title %}study_material{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block student %}
+<h1 class="text-center text-3xl font-semibold">Study Material</h1>
+<div class="min-h-screen my-2 container-fluid">
+  
+    <table class="table table-bordered">
+      <thead>
+        <tr class="table-dark text-center">
+          <th>id</th>
+          <th>Program</th>
+          <th>Branch</th>
+          <th>Year</th>
+          <th>Subject</th>
+          <th>File Name</th>
+          <th>Download</th>
+        </tr>
+      <tbody class="bg-blue-100">
+        
+        {% for i in studymaterials  %}
+        <tr class="text-center">
+          <td>{{i.id}}</td>
+          <td>{{i.program}}</td>
+          <td>{{i.branch}}</td>
+          <td>{{i.year}}</td>
+          <td>{{i.subject}}</td>
+          <td>{{i.file_name}}</td>
+          <td>
+            {% if i.file %}<a href="{{i.file.url}}">Read More</a>{% endif %}
+            
+          </td>
+          
+        </tr>
+        {% endfor %}
+       
+      </tbody>
+      </thead>
+    </table>
+</div>
+{% endblock %}
