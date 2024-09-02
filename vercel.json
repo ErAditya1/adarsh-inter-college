@@ -14,7 +14,8 @@
       }
     ],
     "env": {
-    "DJANGO_SETTINGS_MODULE": "nouegyan.settings"
+    "DJANGO_SETTINGS_MODULE": "nouegyan.settings",
+    "SECRET_KEY" : "django-insecure-o11l-(*9y(n#pihmxf8m*_hgv_zb-@cx+lj-2rc-uof&x((mba"
     
   }
   }
