@@ -12,6 +12,10 @@
         "src": "/(.*)",
         "dest": "nouegyan/wsgi.py"
       }
-    ]
+    ],
+    "env": {
+    "DJANGO_SETTINGS_MODULE": "nouegyan.settings"
+    
+  }
   }
   
