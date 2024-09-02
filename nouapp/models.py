@@ -187,6 +187,7 @@ class Notification(models.Model):
     admin = models.ForeignKey(Admin, on_delete=models.CASCADE, related_name='notifications', null=True)
     text = models.CharField(max_length=500)
     link = models.CharField( max_length=350)
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

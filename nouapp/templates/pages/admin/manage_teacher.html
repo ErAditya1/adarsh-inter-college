@@ -4,7 +4,7 @@
 {% load static %}
 
 
-{% block title %}manage_teacher.html{% endblock %}
+{% block title %}manage Teacher{% endblock %}
 
 
 {% block css %}
@@ -16,63 +16,48 @@
 {% endblock %}
 
 {% block admin %}
-<h1 class="text-center text-3xl font-semibold">manage_teacher.html</h1>
-{% if teachers %}
+<h1 class="text-center text-3xl font-semibold"> Manage Teacher</h1>
 <div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
   
-  <table class="table table-bordered " id="example">
-    <thead>
-      <tr class="table-dark text-center">
-        <th>id</th>
-        <th>Name</th>
-        <th>age</th>
-        <th>Father Name</th>
-        <th>Mother Name</th>
-        <th>Gender</th>
-        <th>Address</th>
-        <th>Progran</th>
-        <th>Branch</th>
-        <th>Year</th>
-        <th>Mobile</th>
-        <th>Roll No.</th>
-        <th>Avatar</th>
-        <th>Created At</th>
-        <th>
-          <a href="">
-            user_id
-          </a>
-        </th>
-        <th>Action</th>
-
-      </tr>
-    <tbody class="">
-      {% for student in students %}
-      <tr class="text-center">
-        <td>{{ student.id }}</td>
-        <td>{{ student.name }} {{student.last_name}}</td>
-        <td>{{ student.age }}</td>
-        <td>{{ student.fname }}</td>
-        <td>{{ student.mname }}</td>
-        <td>{{ student.gender }}</td>
-        <td>{{ student.address }}</td>
-        <td>{{ student.program }}</td>
-        <td>{{ student.branch }}</td>
-        <td>{{ student.year }}</td>
-        <td>{{ student.mobile }}</td>
-        <td>{{ student.rollno }}</td>
-        <td>{{ student.avatar }}</td>
-        <td>{{ student.created_at }}</td>
-        <td>{{ student.user_id }}</td>
-        <td>
-          <a href=""><i class="fa-solid fa-pen-to-square"></i></a> |
-          <a href=""><i class="fa-solid fa-trash" style="color: #ab0303;"></i></a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-    </thead>
-  </table>
-</div>
-{% endif %}
+    <table class="table table-bordered " id="example">
+      <thead>
+        <tr class="table-dark text-center">
+          <th>id</th>
+          <th>Name</th>
+          
+          <th>Mobile</th>
+          <th>Email</th>
+          <th>Roll No.</th>
+          <th>Avatar</th>
+          <th>Specialization</th>
+          <th>Created At</th>
+          <th>
+            <a href="">
+              user_id
+            </a>
+          </th>
+          
+  
+        </tr>
+      <tbody class="">
+        {% for i in teachers %}
+        <tr class="text-center">
+          <td>{{ i.id }}</td>
+          <td>{{ i.user.first_name }} {{i.user.last_name}}</td>
+          
+          <td>{{ i.user.mobile }}</td>
+          <td>{{ i.user.email }}</td>
+          <td>{{ i.employee_id }}</td>
+          <td>AV</td>
+          <td>{{i.specialization}}</td>
+          <td>{{ i.created_at }}</td>
+          <td>{{ i.user_id }}</td>
+          
+        </tr>
+        {% endfor %}
+      </tbody>
+      </thead>
+    </table>
+  </div>
 {% endblock %}
 {% block js %}{% endblock %}

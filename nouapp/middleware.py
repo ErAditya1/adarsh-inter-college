@@ -1,5 +1,6 @@
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.contrib import messages
 
 class UserTypeMiddleware:
     def __init__(self, get_response):
@@ -45,11 +46,29 @@ class UserTypeMiddleware:
             if request.user.user_type =='guest':
                 return redirect('guest_dashboard')
             if request.user.user_type =='student':
-                return redirect('student_dashboard')
-            if request.user.user_type == 'admin' or request.user.is_superuser:
+                if request.user.is_detailed:
+                    print('Student is detailed')
+                    return redirect('student_dashboard')
+                elif not request.user.is_detailed:
+                    print('Student is not detailed')
+                    return redirect('add_student_details')
+
+            if  request.user.is_superuser:
                 return redirect('admin_dashboard')
-            if request.user.user_type == 'teacher':
+            if request.user.user_type == 'admin' and request.user.is_staff:
+                return redirect('admin_dashboard')
+            elif not request.path.startswith('/guest/') : 
+                messages.error(request, 'You do not have permission to login to admin')
+                return redirect('guest_dashboard')
+             
+            if request.user.user_type == 'teacher' and request.user.is_staff and request.user.is_detailed:
                 return redirect('teacher_dashboard')
+            elif request.user.user_type == 'teacher' and not request.user.is_detailed:
+                print('Teacher is not detailed')
+                return redirect('add_teacher_details')
+            elif not request.path.startswith('/guest/'): 
+                messages.error(request, 'You do not have permission to login to teacher')
+                return redirect('guest_dashboard')
 
             if  request.user.is_superuser:
                 print("in super admin")
@@ -62,7 +81,7 @@ class UserTypeMiddleware:
             if request.path.startswith(url_prefix):
                 print("In protected url prefix")
                 
-
+            
                 if not request.user.is_authenticated :
                     print ('Not Authenticated')
                     return redirect('login')
@@ -72,7 +91,8 @@ class UserTypeMiddleware:
                 elif request.user.is_authenticated and request.user.user_type != user_type :
                      # Redirect to user page or an error page
                     
-                    
+                    if request.path.startswith('/guest/'):
+                        return None
                     if request.user.user_type =='student':
                         if request.user.is_detailed:
                             print('Student is detailed')
@@ -81,27 +101,31 @@ class UserTypeMiddleware:
                             print('Student is not detailed')
                             return redirect('add_student_details')
 
-                    if request.user.user_type == 'teacher':
-                            return redirect('teacher_dashboard')
+                    
 
-                    if request.user.user_type =='teacher' :
+                    if request.user.user_type =='teacher' and not request.user.is_detailed:
                         return redirect('add_teacher_details')
 
-                    if  request.user.is_staff:
-                        if request.path == reverse('superadmin_dashboard') and request.user.is_superuser:
-                            return None
-                        
-                        if request.user.user_type == 'admin':
-                            print("print in admin")
-                            return redirect('admin_dashboard')
-                        # if  request.user.is_superuser:
-                        #     print("in super admin ")
-                        #     # return redirect('superadmin_dashboard')
-                        
-                        
-                    else:
-                        
+                    if request.user.user_type == 'admin' and request.user.is_staff and request.user.is_detailed:
+                        return redirect('admin_dashboard')
+                    else: 
+                        messages.error(request, 'You do not have permission to login to admin')
                         return redirect('guest_dashboard')
+             
+                    if request.user.user_type == 'teacher' and request.user.is_staff:
+                        return redirect('teacher_dashboard')
+                    else: 
+                        messages.error(request, 'You do not have permission to login to teacher')
+                        return redirect('guest_dashboard')
+
+                    if  request.user.is_superuser:
+                        print("in super admin")
+                        return redirect('superadmin_dashboard')
+                
+                        
+                else:
+                    
+                    return redirect('guest_dashboard')
                
         return None
 

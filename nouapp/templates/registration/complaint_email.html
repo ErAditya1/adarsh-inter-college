@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Received - We’re Here to Help</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .email-header {
+            background-color: #dc3545;
+            padding: 20px;
+            color: #ffffff;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            text-align: center;
+        }
+        .email-content {
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .email-footer {
+            text-align: center;
+            padding: 20px;
+            color: #888888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h2>Complaint Received - We’re Here to Help</h2>
+        </div>
+        <div class="email-content">
+            <p>Dear {{ user.first_name }},</p>
+            <p>Thank you for bringing your concerns to our attention. We have received your complaint regarding [Briefly describe the nature of the complaint, e.g., "a recent service experience," "a billing issue," etc.].</p>
+            <p>Please rest assured that we take every complaint seriously and will thoroughly investigate the matter. Our team is already looking into the issue, and we aim to resolve it as quickly as possible.</p>
+            <p>We will keep you updated on the progress and may reach out for additional information if needed. In the meantime, if you have any further details that you believe could help, please feel free to reply to this email or contact our support team directly at [support email or phone number].</p>
+            <p>We apologize for any inconvenience this has caused and appreciate your patience and understanding.</p>
+            <p>Best regards,<br>[Your Name or Support Team]<br>The {{ site_name }} Team</p>
+        </div>
+        <div class="email-footer">
+            <p>[Include a reassurance about how the user's concerns are being prioritized]</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            background-color: #4CAF50;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .email-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .email-body {
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .email-body h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .email-body p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .email-footer {
+            background-color: #f4f4f4;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .email-footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>Welcome to NOU e-Gyan Portal !</h1>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <h2>Registration Successful</h2>
+            <p>Dear {{username}},</p>
+            <p>Thank you for registering with NOU e-Gyan Portal. Your account has been successfully created.</p>
+            <p>We are excited to have you on board and look forward to providing you with the best learning experience. You can now log in to your account and start exploring our courses.</p>
+            <p>If you have any questions, feel free to contact our support team.</p>
+            <p>Best Regards,<br>The NOU e-Gyan Portal Team</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="email-footer">
+            <p>&copy; 2024 Aditya Kumar. All rights reserved.</p>
+            <p><a href="#">Visit our website</a> | <a href="#">Contact Support</a></p>
+        </div>
+    </div>
+</body>
+
+</html>

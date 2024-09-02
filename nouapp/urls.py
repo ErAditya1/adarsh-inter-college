@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from .views import *
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('superadmin/', super_admin , name='superadmin_dashboard'),
@@ -14,7 +15,10 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('login/', login_user, name='login'),
     path('logout/', logout_user, name='logout'),
-    
+
+    path('reset_password/', reset_password, name='reset_password'),
+    path('reset/<uidb64>/<token>/', custom_password_reset_confirm, name='custom_password_reset_confirm'),
+
     
 
     path('load_branches/', load_branches, name='load_branches'),
@@ -58,7 +62,7 @@ urlpatterns = [
     # teacher urls --------------------------------
     path('teacher/add_teacher_details/', add_teacher_details, name="add_teacher_details"),
     path("teacher/dashboard/", TeacherViews.dashboard, name="teacher_dashboard"),
-
+    path("teacher/delete_profile/<int:id>/", AdminViews.delete_user, name="delete_profile"),
 
 
 
@@ -74,13 +78,21 @@ urlpatterns = [
     path("admin/upload_studymaterial",AdminViews.upload_studymaterial, name="upload_studymaterial"),
     path("admin/upload_lectures",AdminViews.upload_lectures, name="upload_lectures"),
     path("admin/upload_assesments",AdminViews.upload_assesments, name="upload_assesments"),
+    path("admin/delete_study_material/<int:id>/",AdminViews.delete_study_material, name="delete_study_material"),
+    path("admin/delete_assessment/<int:id>/",AdminViews.delete_assessment, name="delete_assessment"),
+    path("admin/delete_lecture/<int:id>/",AdminViews.delete_lecture, name="delete_lecture"),
     path("admin/view_feedback",AdminViews.view_feedback, name="view_feedback"),
     path("admin/view_complaint",AdminViews.view_complaint, name="view_complaint"),
     path("admin/view_enquries",AdminViews.view_enquries, name="view_enquries"),
     path("admin/view_feedback",AdminViews.view_feedback, name="view_feedback"),
     path("admin/add_notification",AdminViews.add_notification, name="add_notification"),
     path("admin/show_programs", AdminViews.show_programs, name="show_programs"),
-
+    path("admin/delete_user/<int:id>/",AdminViews.delete_user, name="delete_user"),
+    path("admin/delete_student/<int:id>/",AdminViews.delete_student, name="delete_student"),
+    path("admin/delete_teacher/<int:id>/",AdminViews.delete_teacher, name="delete_teacher"),
+    path("admin/delete_admin/<int:id>/",AdminViews.delete_admin, name="delete_admin"),
+    path("admin/edit_student/<int:id>/",AdminViews.edit_student, name="edit_student"),
+   
 
 
 
@@ -89,5 +101,8 @@ urlpatterns = [
     path('admin/add_year/', AdminViews.add_year, name='add_year'),
     path('admin/load_branches/', load_branches, name='load_branches'),
     path('admin/load_years/', load_years, name='load_years'),
+    path('admin/edit_student/<int:id>/load_branches/', load_branchese, name='load_branches'),
+    path('admin/edit_student/<int:id>/load_years/', load_yearse, name='load_years'),
+
 
 ]

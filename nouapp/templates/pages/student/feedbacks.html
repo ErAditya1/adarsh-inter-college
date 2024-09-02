@@ -69,4 +69,48 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+<div class="min-h-screen my-2 container-fluid">
+  
+    <table class="table table-bordered">
+      <thead>
+        <tr class="table-dark text-center">
+          <th>#</th>
+          <th>Name</th>
+          <th>Program</th>
+          <th>Branch</th>
+          <th>Contact No.</th>
+          <th>Email Address</th>
+          <th>Subject</th>
+          <th>Feedback Text </th>
+          <th>Posted Date </th>
+        </tr>
+      <tbody class="bg-blue-100">
+        
+        {% for i in feedbacks %}
+        <tr class="text-center">
+          <td>{{i.id}}</td>
+          <td>{{i.student.name}}</td>
+          <td>{{i.student.program}}</td>
+          <td>{{i.student.branch}}</td>
+          <td>{{i.student.mobile}}</td>
+          <td>{{i.student.user.email}}</td>
+          <td>{{i.subject}}</td>
+          <td>{{i.feed}}</td>
+          <td>{{i.created_at}}</td>
+
+          
+        </tr>
+        {% endfor %}
+       
+      </tbody>
+      </thead>
+    </table>
+</div>
+
+{% block js %}{% endblock %}
 {% endblock %}
