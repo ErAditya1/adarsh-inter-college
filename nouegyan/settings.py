@@ -40,7 +40,7 @@ EMAIL_HOST_USER= 'mradityaji2@gmail.com'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh']
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
