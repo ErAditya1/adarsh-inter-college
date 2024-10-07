@@ -4,13 +4,22 @@
       {
         "src": "nouegyan/wsgi.py",
         "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb" }
+        "config": { "maxLambdaSize": "15mb","runtime": "python3.9" }
+      },
+      {
+        "src": "build_files.sh",
+        "use": "@vercel/static-build",
+        "config": { "distDir":"staticfiles_build" }
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
         "dest": "nouegyan/wsgi.py"
+      },
+      {
+        "src": "/static/(.*)",
+        "dest": "/static/$1"
       }
       
     ],
@@ -18,6 +27,6 @@
     "DJANGO_SETTINGS_MODULE": "nouegyan.settings",
     "SECRET_KEY" : "django-insecure-o11l-(*9y(n#pihmxf8m*_hgv_zb-@cx+lj-2rc-uof&x((mba"
     
-  }
+    }
   }
   

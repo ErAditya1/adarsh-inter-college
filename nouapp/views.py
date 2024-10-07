@@ -15,6 +15,7 @@ from .utils import send_registration_success_email, send_password_reset_email ,s
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
+import sweetify
 
 
 # Create your views here.
@@ -24,11 +25,13 @@ def super_admin(request):
     return redirect('/superadmin/')
 
 def home(request):
+    sweetify.success(request, 'You did it', text='Good job! You successfully showed a SweetAlert message', persistent='Hell yeah')
     return render(request, 'pages/home.html')
 
 # Create your views here.
 def about(request):
     return render(request, 'pages/about.html')
+
 
 
 def contact(request):
@@ -66,7 +69,7 @@ def register(request):
         # Create the user
         password_hashed = make_password(password1)
 
-       
+      
 
         
         user = User(username=username, email=email, first_name = first_name , last_name = last_name , mobile = mobile, user_type=user_type, password= password_hashed)
@@ -101,6 +104,7 @@ def register(request):
             return redirect('guest_dashboard')
         elif user.user_type == 'teacher':
 
+            messages.info(request, 'You are eequired to filled details')
             employee_id = f"S{collegeCode}{current_year}{current_month}{current_day}{user.id}"
 
             teacher = Teacher.objects.create(user=user,employee_id=employee_id)
@@ -112,7 +116,7 @@ def register(request):
             admin = Admin.objects.create(user=user,employee_id=employee_id)
             return redirect('admin_dashboard')
         elif user.user_type == 'student':
-            
+            messages.info(request, 'You are eequired to filled details')
             name = user.first_name+' '+user.last_name
             mobile = user.mobile
             
@@ -124,79 +128,6 @@ def register(request):
 
     return render(request, 'registration/signup.html')
 
-def add_student_details(request):
-    
-    # user = User.objects.get(pk=id)
-    user = request.user
-    
-    name = user.first_name+' '+user.last_name
-    mobile = user.mobile
-
-    student = Student.objects.get(user=user)
-    programs = Program.objects.all()
-    if request.method == 'POST':
-        # rollno = request.POST.get('rollno')
-        age = request.POST.get('age')
-        avatar = request.POST.get('avatar')
-        address = request.POST.get('address')
-        fname = request.POST.get('fname')
-        mname = request.POST.get('mname')
-        gender = request.POST.get('gender')
-        program = request.POST.get('program')
-        branch = request.POST.get('branch')
-        year = request.POST.get('year')
-        program  = Program.objects.get(pk=program).name
-        branch = Branch.objects.get(pk=branch).name
-        year = Year.objects.get(pk=year).name
-        
-        
-        # student.rollno = rollno
-        student.age = age
-        student.avatar = avatar
-        student.address = address
-        student.fname = fname
-        student.mname = mname
-        student.gender = gender
-        student.program = program
-        student.branch = branch
-        student.year = year
-        print(student)    
-        # print(student)
-        if student:
-            student.save()
-            
-            us= User.objects.get(username=user.username)
-            us.is_detailed = True
-            us.save()
-            return redirect('student_dashboard')
-            
-            messages.success(request, "Student details added successfully")
-            return redirect('student_dashboard')
-        
-           
- 
-    return render (request, 'registration/studendetails.html',{"user":user,'programs':programs, "student":student})
-    
-def add_teacher_details(request):
-    user = request.user
-    teacher = Teacher.objects.get(user=user)
-    print(teacher)
-    if request.method == 'POST':
-        
-        specialization = request.POST.get('specialization')
-
-        
-        print(specialization)
-        print(teacher)
-        teacher.specialization = specialization
-        teacher.save()
-        if teacher :
-            user.is_detailed = True
-            user.save()
-            messages.success(request, "Teacher details added successfully")
-            return redirect('teacher_dashboard')
-    return render (request, 'registration/teacher.html',{"employee_id":teacher.employee_id})
-    
 
 
    
@@ -208,68 +139,88 @@ def login_user(request):
        
         
        
-        # Add success message and redirect
-        messages.success(request, 'Registration successful! Please check your email for confirmation.')
+        
 
         
         user=authenticate(request,username=username,password=password)
         
         print("User:",user)
+      
+            
         if user is not None:
             print("Authenticated")
             login(request,user)
+
+            messages.success(request,'Login Successfully')
+            
                 # Redirect to a success page
             
             if user.user_type =='guest':
                 return redirect('guest_dashboard')
             if user.user_type =='student':
-                return redirect('student_dashboard')
+                if not user.is_detailed:
+                    return redirect('add_student_details')
+                else:
+                    return redirect('student_dashboard')
             
             if user.user_type == 'admin' or user.is_superuser:
-                return redirect('admin_dashboard')
+                if user.is_staff:
+                    return redirect('admin_dashboard')
+                else:
+                    return HttpResponse("You are not verified")
+                
             if user.user_type == 'teacher':
-                return redirect('teacher_dashboard')
+                
+                if user.is_staff:
+                    return redirect('teacher_dashboard')
+                else:
+                    return HttpResponse("You are not verified")
+                
         else:
-            return HttpResponse ("Username or Password is incorrect!!!") 
+            messages.error(request, 'Invalid credentials')
+            return redirect('login')
         
 
-    else:
-        messages.error(request, "Invalid username or password")
+  
 
     return render(request, 'registration/login.html')
 
 def logout_user(request):
     logout(request)
+    messages.success(request, 'Logged out successfully')
     return redirect('login')
 
 
 def reset_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+        
         try:
             user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            reset_url = request.build_absolute_uri(f'/reset/{uid}/{token}/')
+            send_password_reset_email(user.email,user, reset_url)
+            email_subject = 'Password Reset Requested'
+            messages.success(request,"Reset passsword link has sent ! Please Check your Email")
+
         except User.DoesNotExist:
             messages.error(request,'No user found with this email address.')
             
 
-        token = default_token_generator.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-
-        reset_url = request.build_absolute_uri(f'/reset/{uid}/{token}/')
-        send_password_reset_email(user.email,user, reset_url)
-        email_subject = 'Password Reset Requested'
         
-
-        return HttpResponse('Password reset link has been sent to your email address.')
 
     return render(request, 'registration/reset_password.html')
 
-def custom_password_reset_confirm(request, uidb64, token):
+def reset_confirm(request, uidb64, token):
+
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
+
 
     if user is not None and default_token_generator.check_token(user, token):
         if request.method == 'POST':
@@ -331,19 +282,76 @@ def save_enquiry(request):
         user=None
     enquiry = Enquiry(user = user, name=name, gender=gender, address=address, email=email, mobile=mobile, text=text)
     enquiry.save()
+    messages.success(request, 'Enquiry submitted successfully')
     return redirect('contact')
 
 
 
 # Student Dashboard ----------------------------------------------------------------
 
-
+# @user_type_required('student')
 
 class StudentViews():
 
+        
+    def add_student_details(request):
+        
+        # user = User.objects.get(pk=id)
+        user = request.user
+        
+        name = user.first_name+' '+user.last_name
+        mobile = user.mobile
+
+        student = Student.objects.get(user=user)
+        programs = Program.objects.all()
+        if request.method == 'POST':
+            # rollno = request.POST.get('rollno')
+            age = request.POST.get('age')
+            avatar = request.FILES.get('avatar')
+            address = request.POST.get('address')
+            fname = request.POST.get('fname')
+            mname = request.POST.get('mname')
+            gender = request.POST.get('gender')
+            program = request.POST.get('program')
+            branch = request.POST.get('branch')
+            year = request.POST.get('year')
+            program  = Program.objects.get(pk=program).name
+            branch = Branch.objects.get(pk=branch).name
+            year = Year.objects.get(pk=year).name
+            
+            
+            # student.rollno = rollno
+            student.age = age
+            student.avatar = avatar
+            student.address = address
+            student.fname = fname
+            student.mname = mname
+            student.gender = gender
+            student.program = program
+            student.branch = branch
+            student.year = year
+            print(student)    
+            # print(student)
+            if student:
+                student.save()
+                
+                us= User.objects.get(username=user.username)
+                us.is_detailed = True
+                us.save()
+                messages.success(request,"Student details added succesfully!")
+                return redirect('student_dashboard')
+             
+            
+            
+    
+        return render (request, 'registration/studendetails.html',{"user":user,'programs':programs, "student":student})
+
+
+    
+
     def dashboard(request):
 
-       
+        
         allAssesment = Assesment.objects.count()
         allLecture = Lecture.objects.count()
         allStudyMaterial = StudyMaterial.objects.count()
@@ -428,7 +436,7 @@ class StudentViews():
             student.year = year
             student.save()
             
-            print("Student saved")
+            
 
             messages.success(request, "Profile updated successfully")
             return redirect('student-profile')
@@ -438,7 +446,7 @@ class StudentViews():
 
         return render(request, 'pages/student/update_profile.html', {'programs': programs, 'student': student, 'user':user})
 
-    # def save_profile(request):
+   
         programs = Program.objects.all()
         user = request.user
         student = Student.objects.get(user_id=request.user.id)
@@ -505,17 +513,23 @@ class StudentViews():
 
     def study_material(request):
 
-        studymaterials = StudyMaterial.objects.all()
+        student = get_object_or_404(Student, user_id=request.user.id)
+        studymaterials = StudyMaterial.objects.filter(program=student.program, branch=student.branch, year=student.year)
 
         return render(request, 'pages/student/study_material.html',{'studymaterials':studymaterials})
 
     def assesments(request):
-        assesments = Assesment.objects.all()
+        student = get_object_or_404(Student, user_id=request.user.id)
+        assesments = Assesment.objects.filter(program=student.program, branch=student.branch, year=student.year)
+
         return render(request, 'pages/student/assignments.html',{'assesments': assesments})
 
 
     def lectures(request):
         lectures = Lecture.objects.all()
+        student = get_object_or_404(Student, user_id=request.user.id)
+        lectures = Lecture.objects.filter(program=student.program, branch=student.branch, year=student.year)
+
         return render(request, 'pages/student/lectures.html',{'lectures':lectures})
 
     def doubt_session(request):
@@ -568,6 +582,8 @@ class StudentViews():
         notifications = Notification.objects.all()
         return render(request, 'pages/student/notifications.html', {'notifications': notifications})
    
+      
+   
 
 
 
@@ -600,16 +616,23 @@ class GuestViews():
 
     
     def study_material(request):
-        return render(request, 'pages/guest/study_material.html')
+        study_material = StudyMaterial.objects.all()
+        return render(request, 'pages/guest/study_material.html',{'studymaterial': study_material})
 
-   
+    def lectures(request):
+        lectures = Lecture.objects.all()
+        return render(request, 'pages/guest/lectures.html',{'lectures':lectures})
+
+    def assessment(request):
+        assesments = Assesment.objects.all()
+        return render(request, 'pages/guest/assignments.html',{'assesments':assesments})
+
 
     def feedbacks(request):
         if request.method == 'POST':
             subject = request.POST.get('subject')
             feed = request.POST.get('feed')
-            student = Student.objects.get(user_id=request.user.id)
-            feedback = Feedback(student=student, subject=subject, feed=feed)
+            feedback = Feedback( subject=subject, feed=feed)
             feedback.save()
             print(feedback)
             messages.success(request, "Feedback submitted successfully")
@@ -619,31 +642,330 @@ class GuestViews():
     
     
     
-    def lectures(request):
-        return render(request, 'pages/guest/lectures.html')
-
+  
 
 
 
 # Teachers dash views ------------------------------------------------------------
 
-
+# @user_type_required('teacher')
 class TeacherViews():
+    def add_teacher_details(request):
+        user = request.user
+        teacher = Teacher.objects.get(user=user)
+        print(teacher)
+        if request.method == 'POST':
+            
+            specialization = request.POST.get('specialization')
 
+            
+            print(specialization)
+            print(teacher)
+            teacher.specialization = specialization
+            teacher.save()
+            if teacher :
+                user.is_detailed = True
+                user.save()
+                messages.success(request, "Teacher details added successfully")
+                return redirect('teacher_dashboard')
+        return render (request, 'registration/teacher.html',{"employee_id":teacher.employee_id})
+        
     def dashboard(request):
+
     
-        return render(request, 'pages/teacher/home.html')
+        allAssesment = Assesment.objects.count()
+        allLecture = Lecture.objects.count()
+        allStudyMaterial = StudyMaterial.objects.count()
+        allUser = User.objects.count()
+        allNotification = Notification.objects.count()
+    
+        return render(request, 'pages/teacher/home.html',{'allAssesment':allAssesment,'allLecture':allLecture,'allStudyMaterial':allStudyMaterial,'allNotification':allNotification})
+
+    def upload_studymaterial(request):
+        programs = Program.objects.all()
+        if request.method == 'POST':
+            program = request.POST.get('program')
+            branch = request.POST.get('branch')
+            year = request.POST.get('year')
+            subject = request.POST.get('subject')
+            file_name = request.POST.get('file_name')
+            file = request.FILES.get('file')
+            is_protected = request.POST.get('is_protected')
+            if is_protected == 'True':
+                is_protected =True
+            if is_protected == 'False':
+                is_protected = False
+            print(file)
+            program  = Program.objects.get(pk=program).name
+            branch = Branch.objects.get(pk=branch).name
+            year = Year.objects.get(pk=year).name
+
+            study_material = StudyMaterial(user=request.user,program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file,is_protected=is_protected)
+            print(study_material)
+            study_material.save()
+            return redirect('upload_studymaterial')
+
+        allStudyMaterials = StudyMaterial.objects.all()
+
+        return render(request, 'pages/teacher/upload_study.html',{'programs':programs,  'studymaterials':allStudyMaterials})
+
+    def delete_study_material(request,id):
+        
+        study_material = StudyMaterial.objects.get(pk=id)
+        study_material.delete()
+        return redirect('upload_studymaterial')
+
+    def upload_lectures(request):
+        programs = Program.objects.all()
+        if request.method == 'POST':
+            program = request.POST.get('program')
+            branch = request.POST.get('branch')
+            year = request.POST.get('year')
+            subject = request.POST.get('subject')
+            file_name = request.POST.get('file_name')
+            link = request.POST.get('link')
+            is_protected = request.POST.get('is_protected')
+            if is_protected == 'True':
+                is_protected =True
+            else:
+                is_protected =False
+            program  = Program.objects.get(pk=program).name
+            branch = Branch.objects.get(pk=branch).name
+            year = Year.objects.get(pk=year).name
+
+            lecture = Lecture(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, link=link, is_protected=is_protected)
+            print(lecture)
+            lecture.save()
+            return redirect('upload_lectures')
+        allLectures = Lecture.objects.all()
+        return render(request, 'pages/teacher/upload_lectures.html',{'programs':programs, "lectures":allLectures})
+
+    def delete_lecture(request,id):
+        
+        lecture = Lecture.objects.get(pk=id)
+        lecture.delete()
+        return redirect('upload_lectures')
+
+    def upload_assesments(request):
+        programs = Program.objects.all()
+        if request.method == 'POST':
+            program = request.POST.get('program')
+            branch = request.POST.get('branch')
+            year = request.POST.get('year')
+            subject = request.POST.get('subject')
+            file_name = request.POST.get('file_name')
+            file = request.FILES.get('file')
+            is_protected = request.POST.get('is_protected')
+            if is_protected == 'True':
+                is_protected =True
+            else:
+                is_protected =False
+
+            program  = Program.objects.get(pk=program).name
+            branch = Branch.objects.get(pk=branch).name
+            year = Year.objects.get(pk=year).name
+
+            assessment = Assesment(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file, is_protected=is_protected)
+            print(assessment)
+            assessment.save()
+            return redirect('upload_assesments')
+        allAssessments = Assesment.objects.all()
+
+        return render(request, 'pages/teacher/upload_assesments.html',{'programs':programs, 'assessments':allAssessments})
+
+    def delete_assessment(request,id):
+        
+        assessment = Assesment.objects.get(pk=id)
+        assessment.delete()
+        return redirect('upload_assesments')
+
+
+
+
+
+    def profile(request):
+        
+        user = request.user  
+        print(user)
+        
+        # student = get_object_or_404(Student,user_id=user.id)
+        return render(request, 'pages/teacher/profile.html', {'user': user})
+    
+
+
+    def update_profile(request):
+        programs = Program.objects.all()
+        user = request.user
+        student = Student.objects.get(user_id=request.user.id)
+        if request.method == 'POST':
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            mobile = request.POST.get('mobile')
+           
+
+            program  = Program.objects.get(pk=program).name
+            branch = Branch.objects.get(pk=branch).name
+            year = Year.objects.get(pk=year).name
+
+            print(first_name, last_name, email, mobile, fname, mname)
+                
+            user.first_name = first_name
+        
+            user.last_name = last_name
+        
+            user.email = email
+        
+            user.mobile = mobile
+
+            user.save()
+
+        
+        
+        
+            
+            
+            print("Student saved")
+
+            messages.success(request, "Profile updated successfully")
+            return redirect('teacher_profile')
+            # return redirect('student_dashboard')
+                
+            
+
+        return render(request, 'pages/teacher/updateprofile.html', {'programs': programs,  'user':user})
+
+      # def save_profile(request):
+        programs = Program.objects.all()
+        user = request.user
+        student = Student.objects.get(user_id=request.user.id)
+    
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        fname = request.POST.get('fname')
+        mname = request.POST.get('mname')
+        age = request.POST.get('age')
+        avatar = request.FILES.get('avatar')
+        address = request.POST.get('address')
+        gender = request.POST.get('gender')
+        program = request.POST.get('program')
+        branch = request.POST.get('branch')
+        year = request.POST.get('year')
+        if first_name:
+            user.first_name = first_name
+        if last_name:
+            user.last_name = last_name
+        if email:
+            user.email = email
+        if mobile:
+            user.mobile = mobile
+        user.save()
+
+        
+        if avatar :
+            student.avatar = avatar
+        if first_name or last_name:
+            student.name = first_name + ' ' + last_name
+        if mobile:
+            student.mobile = mobile
+        if address:
+            student.address = address
+        if gender:
+            student.gender = gender
+        if program:
+            student.program = program
+        if age :
+            student.age = age
+        if fname:
+            student.fname = fname
+        if mname:
+            student.mname = mname
+        if branch:
+            student.branch = branch
+        if year:
+            student.year = year
+        student.save()
+        print("Student saved")
+
+        messages.success(request, "Profile updated successfully")
+        # return redirect('student_profile')
+        return render(request, 'pages/student/update_profile.html', {'programs': programs, 'user':user})
+        # return redirect('student_dashboard')
+            
+            
+
+        # return render(request, 'pages/student/update_profile.html', {'programs': programs, 'student': student, 'user':user})
+
+    def doubt_session(request):
+        return render(request, 'pages/student/doubts_session.html')
+
+
+    def feedbacks(request):
+
+
+        if request.method == 'POST':
+            subject = request.POST.get('subject')
+            feed = request.POST.get('feed')
+            student = get_object_or_404(Student,user_id=request.user.id)
+            feedback = Feedback(student=student, subject=subject, feed=feed)
+            feedback.save()
+            
+            messages.success(request, "Feedback submitted successfully")
+            return redirect('feedbacks')
+        try:
+            student = get_object_or_404(Student,user_id=request.user.id)
+            feedbacks = Feedback.objects.filter(student_id=student.id)
+            return render(request, 'pages/student/feedbacks.html',{'feedbacks':feedbacks})
+
+        except :
+            return render(request, 'pages/student/feedbacks.html', {})
+        # return render(request, 'pages/student/feedbacks.html',{'feedbacks':feedbacks})
+
+    def read_notifications(request):
+        notifications = Notification.objects.all()
+        return render(request, 'pages/student/notifications.html', {'notifications': notifications})
+
+
 
 
 
 
 
 # Admin Dashboard and views --------------------------------------------------------
-
+# @user_type_required('admin')
 class AdminViews():
 
+    def verify_user(request,id):
+        user = get_object_or_404(User,pk=id)
+        if user.is_verified:
+            user.is_verified = False
+        else:
+            user.is_verified = True
+        user.save()
+        return redirect('manage_user')
+
+    def verify_admin(request,id):
+        staff = get_object_or_404(User,pk=id)
+        if staff.is_staff:
+            staff.is_staff = False
+        else:
+            staff.is_staff = True
+        staff.save()
+        return redirect('manage_admin')
+    def verify_teacher(request,id):
+        
+        teacher = get_object_or_404(User,pk=id)
+        if teacher.is_staff:
+            teacher.is_staff = False
+        else:
+            teacher.is_staff = True
+        teacher.save()
+        return redirect('manage_teacher')
 
     def dashboard(request):
+       
         allStudent = Student.objects.count() 
         allTeacher = Teacher.objects.count()
         allAssesment = Assesment.objects.count()
@@ -917,8 +1239,16 @@ class AdminViews():
            
             send_notification_email(emails, subject=notification.text, message=notification.link)
             return redirect('add_notification')
-        return render(request, 'pages/admin/add_notification.html')
+        admin = Admin.objects.filter(user_id=request.user.id)
+        print(admin)
+        notifications = Notification.objects.filter()
+        return render(request, 'pages/admin/add_notification.html',{'notifications':notifications})
 
+    def delete_notification(request,id):
+       
+        notification = Notification.objects.get(id=id)
+        notification.delete()
+        return redirect('add_notification')
 
     def show_programs(request):
         programs = Program.objects.all()

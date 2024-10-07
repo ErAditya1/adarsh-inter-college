@@ -51,6 +51,41 @@
           </div>
     </div>
 </form>
+<div class=" my-2 container-fluid">
+  
+  <table class="table table-bordered" id="example">
+    <thead>
+      <tr class="table-dark text-center">
+        <th>id</th>
+        <th>Text</th>
+        <th>Read More</th>
+        <th>Action</th>
+        
+      </tr>
+    <tbody class="bg-blue-100">
+      
+      {% for i in notifications  %}
+      <tr class="text-center">
+        <td>{{i.id}}</td>
+        <td>{{i.text}}</td>
+        
+        
+        <td>
+          <a href="{{i.link}}">Read More</a>
+        </td>
+        
+        <td>
+          <a href="{% url 'delete_notification' i.id %}"><i class="fa-solid fa-trash text-xl" style="color: #ab0303;"></i>
+        </a>
+        </td>
+        
+      </tr>
+      {% endfor %}
+     
+    </tbody>
+    </thead>
+  </table>
+</div>
 {% endblock %}
 
 {% block js %}{% endblock %}

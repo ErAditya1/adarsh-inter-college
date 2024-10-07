@@ -23,6 +23,7 @@
       <thead>
         <tr class="table-dark text-center">
           <th>id</th>
+          <th>Username</th>
           <th>Name</th>
           
           <th>Mobile</th>
@@ -30,6 +31,7 @@
           <th>Roll No.</th>
           <th>Avatar</th>
           <th>Specialization</th>
+          <th>Staff Status</th>
           <th>Created At</th>
           <th>
             <a href="">
@@ -42,6 +44,7 @@
       <tbody class="">
         {% for i in teachers %}
         <tr class="text-center">
+          <td>{{ i.user.username }}</td>
           <td>{{ i.id }}</td>
           <td>{{ i.user.first_name }} {{i.user.last_name}}</td>
           
@@ -50,6 +53,20 @@
           <td>{{ i.employee_id }}</td>
           <td>AV</td>
           <td>{{i.specialization}}</td>
+          <td id="verify_staff">
+           <a href="{% url "verify_teacher" i.user.id %}">
+            {% if  i.user.is_staff%}
+            <div
+            class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
+            <span class="">Verified</span>
+          </div>
+            {% else %}<div
+            class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-red-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
+            <span class="">Un Verified</span>
+          </div>
+          {% endif %}
+           </a>
+          </td>
           <td>{{ i.created_at }}</td>
           <td>{{ i.user_id }}</td>
           

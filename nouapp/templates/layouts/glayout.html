@@ -10,6 +10,8 @@
     <title>{% block title %}Student layout{% endblock %}</title>
     {% tailwind_css %}
     {% block css %}{% endblock %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
   </head>
 
   <body style=" font-family: Ubuntu, sans-serif " class=" bg-blue-50 text-black-800 dark:bg-sky-900 dark:text-white">
@@ -90,6 +92,22 @@
       }
   </script>
 
-    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <script>
+      $(document).ready(function() {
+          {% if messages %}
+              {% for message in messages %}
+                  toastr.options = {
+                      "closeButton": true,
+                      "positionClass": "toast-top-center", // Or another position like 'toast-top-right'
+                      "timeOut": "5000", // 3 seconds
+                  };
+                  toastr["{{ message.tags }}"]("{{ message }}");
+              {% endfor %}
+          {% endif %}
+      });
+  </script>
   </body>
 </html>

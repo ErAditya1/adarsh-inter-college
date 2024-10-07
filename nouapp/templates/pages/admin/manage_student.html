@@ -24,6 +24,7 @@
     <thead>
       <tr class="table-dark text-center">
         <th>id</th>
+        <th>Username</th>
         <th>Name</th>
         <th>age</th>
         <th>Father Name</th>
@@ -49,6 +50,7 @@
       {% for student in students %}
       <tr class="text-center">
         <td>{{ student.id }}</td>
+        <td>{{student.user.username}}</td>
         <td>{{ student.name }} {{student.last_name}}</td>
         <td>{{ student.age }}</td>
         <td>{{ student.fname }}</td>
@@ -61,7 +63,7 @@
         <td>{{ student.mobile }}</td>
         <td>{{ student.rollno }}</td>
         <td>
-          {% if student.avatar %}<img class ="h-10 w-10 rounded-full overflow-hidden" src="{{ student.avatar.url }}" alt="">{% else %}AV{% endif %}
+          {% if student.avatar %}<img class ="h-7 w-7 rounded-full overflow-hidden" src="{{ student.avatar.url }}" alt="">{% else %}AV{% endif %}
         </td>
         <td>{{ student.created_at }}</td>
         <td>{{ student.user_id }}</td>

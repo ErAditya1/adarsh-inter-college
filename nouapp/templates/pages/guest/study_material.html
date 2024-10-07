@@ -17,34 +17,39 @@
 
 {% block guest %}
 <h1 class="text-center text-3xl font-semibold">Study Material</h1>
-<div class="min-h-screen my-2 container-fluid">
+<div class=" my-2 container-fluid">
   
-    <table class="table table-bordered">
-      <thead>
-        <tr class="table-dark text-center">
-          <th>id</th>
-          <th>Program</th>
-          <th>Branch</th>
-          <th>Year</th>
-          <th>Subject</th>
-          <th>File Name</th>
-          <th>Download</th>
-        </tr>
-      <tbody class="bg-blue-100">
-        
-        <tr class="text-center">
-          <td>1</td>
-          <td>Diploma</td>
-          <td>Computer Science</td>
-          <td>First Year</td>
-          <td>C Language</td>
-          <td>Python</td>
-          <td><a href="Python.png">python.pnt</a></td>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="table-dark text-center">
+        <th>id</th>
+        <th>Program</th>
+        <th>Branch</th>
+        <th>Year</th>
+        <th>Subject</th>
+        <th>File Name</th>
+        <th>Download</th>
+      </tr>
+    <tbody class="bg-blue-100">
+      
+      {% for i in studymaterial  %}
+      <tr class="text-center">
+        <td>{{i.id}}</td>
+        <td>{{i.program}}</td>
+        <td>{{i.branch}}</td>
+        <td>{{i.year}}</td>
+        <td>{{i.subject}}</td>
+        <td>{{i.file_name}}</td>
+        <td>
+          {% if i.file %}<a href="{{i.file.url}}">Read More</a>{% endif %}
           
-        </tr>
-       
-      </tbody>
-      </thead>
-    </table>
+        </td>
+        
+      </tr>
+      {% endfor %}
+     
+    </tbody>
+    </thead>
+  </table>
 </div>
 {% endblock %}

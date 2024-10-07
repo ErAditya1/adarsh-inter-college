@@ -33,7 +33,7 @@
         <th>Email</th>
         <th>User type</th>
         <th>Status</th>
-        <th>Staff</th>
+        
         <th>Action</th>
       </tr>
     <tbody class="">
@@ -45,9 +45,10 @@
         <td>{{ user.mobile }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.user_type }}</td>
-        <td>
+        <td >
           
-          {% if  user.is_verified%}
+          <a href="{% url "verify_user" user.id %}">
+            {% if  user.is_verified%}
           
         <div
           class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
@@ -58,21 +59,9 @@
           <span class="">Un Verified</span>
         </div>
         {% endif %}
+          </a>
         </td>
-        <td>
-          
-          
-          {% if  user.is_staff%}
-          <div
-          class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
-          <span class="">Verified</span>
-        </div>
-          {% else %}<div
-          class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-red-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
-          <span class="">Un Verified</span>
-        </div>
-        {% endif %}
-        </td>
+        
         <td>
           {% comment %} <a href="{% url "edit_user" user.id %}"><i class="fa-solid fa-pen-to-square mx-2 text-xl"></i></a> | {% endcomment %}
           <a href="{% url "delete_user" user.id %}"><i class="fa-solid fa-trash text-xl mx-2" style="color: #ab0303;"></i></a>

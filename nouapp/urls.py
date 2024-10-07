@@ -17,7 +17,7 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
 
     path('reset_password/', reset_password, name='reset_password'),
-    path('reset/<uidb64>/<token>/', custom_password_reset_confirm, name='custom_password_reset_confirm'),
+    path('reset/<uidb64>/<token>/', reset_confirm, name='reset_confirm'),
 
     
 
@@ -30,7 +30,7 @@ urlpatterns = [
 
 
 # student urls---------------------------------------------
-    path('student/add_student_details/', add_student_details, name="add_student_details"),
+    path('student/add_student_details/', StudentViews.add_student_details, name="add_student_details"),
     path('student/add_student_details/load_branches/', load_branches, name='load_branches'),
     path('student/add_student_details/load_years/', load_years, name='load_years'),
     path("student/dashboard/", StudentViews.dashboard, name="student_dashboard"),
@@ -54,16 +54,23 @@ urlpatterns = [
     path("guest/study_material/", GuestViews.study_material, name="guest_study_material"),
     path("guest/feedbacks/", GuestViews.feedbacks, name="guest_feedbacks"),
     path("guest/lectures/", GuestViews.lectures, name="guest_lectures"),
+    path("guest/assessment", GuestViews.assessment, name="guest_assessment"),
     path("guest/update_profile", GuestViews.update_profile, name="guest_update_profile"),
 
 
 
 
     # teacher urls --------------------------------
-    path('teacher/add_teacher_details/', add_teacher_details, name="add_teacher_details"),
+    path('teacher/add_teacher_details/', TeacherViews.add_teacher_details, name="add_teacher_details"),
     path("teacher/dashboard/", TeacherViews.dashboard, name="teacher_dashboard"),
     path("teacher/delete_profile/<int:id>/", AdminViews.delete_user, name="delete_profile"),
-
+    path("teacher/upload_studymaterial",TeacherViews.upload_studymaterial, name="upload_studymaterial_teacher"),
+    path("teacher/upload_lectures",TeacherViews.upload_lectures, name="upload_lectures_teacher"),
+    path("teacher/upload_assesments",TeacherViews.upload_assesments, name="upload_assesments_teacher"),
+    path('teacher/load_branches/', load_branches, name='load_branches'),
+    path('teacher/load_years/', load_years, name='load_years'),
+    path('teacher/profile/', TeacherViews.profile, name='teacher_profile'),
+    path('teacher/update_profile/', TeacherViews.update_profile, name='update_profile_teacher'),
 
 
 
@@ -92,7 +99,12 @@ urlpatterns = [
     path("admin/delete_teacher/<int:id>/",AdminViews.delete_teacher, name="delete_teacher"),
     path("admin/delete_admin/<int:id>/",AdminViews.delete_admin, name="delete_admin"),
     path("admin/edit_student/<int:id>/",AdminViews.edit_student, name="edit_student"),
-   
+    path ("admin/delete_notification/<int:id>/",AdminViews.delete_notification, name="delete_notification"),
+    path("admin/verify_user/<int:id>/",AdminViews.verify_user, name="verify_user"),
+    path("admin/verify_teacher/<int:id>/", AdminViews.verify_teacher, name="verify_teacher"),
+    path("admin/verify_admin/<int:id>/", AdminViews.verify_admin, name="verify_admin"),
+    
+    
 
 
 

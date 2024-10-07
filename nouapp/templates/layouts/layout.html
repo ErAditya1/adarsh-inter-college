@@ -6,7 +6,20 @@
       {% include 'includes/head.html' %}
       <title>{% block title %}layout{% endblock %}</title>
       {% tailwind_css %}
-      {% block css %}{% endblock %}
+      {% block css %}
+        <style>
+          .toastify-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 20px; /* Adjust this value to control the vertical positioning */
+            z-index: 9999; /* Ensure it appears above other elements */
+        }
+        </style>
+        
+      {% endblock %}
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
   </head>
   <body id="body" class="bg-blue-50  text-black-800 dark:bg-sky-900 dark:text-white">
     <div class="container-fluid m-0  p-0 ">
@@ -24,44 +37,25 @@
 
 
     
-   <script>
-    date_id = document.getElementById("date")
-    function displayDateTime() {
-        
-        let now = new Date();
-    
-        // Convert to a string which automatically includes the timezone information
-        let istTimeString = now.toString();
-    
-         date_id.innerHTML = istTimeString
-        
-        
-        setTimeout(displayDateTime, 1000); // Update the date every second
-    
-    }
-    displayDateTime();
-   </script>
-   <script>
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            {% if messages %}
+                {% for message in messages %}
+                    toastr.options = {
+                        "closeButton": true,
+                        "positionClass": "toast-top-center", // Or another position like 'toast-top-right'
+                        "timeOut": "5000", // 3 seconds
+                    };
+                    toastr["{{ message.tags }}"]("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+  
     {% endblock %}
-    </div>
-    
+
   </body>
 </html>

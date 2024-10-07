@@ -220,8 +220,13 @@
 
       <!-- Profile Image -->
       <div class="sm:w-[80%] xs:w-[90%] mx-auto flex">
+          {% comment %} {% if student.avatar %}
+          <img src="{{student.avatar.url}}"
+          class="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
+          {% else %}
           <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw3fHxwZW9wbGV8ZW58MHwwfHx8MTcxMTExMTM4N3ww&ixlib=rb-4.0.3&q=80&w=1080" alt="User Profile"
-                  class="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
+          class="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
+          {% endif %} {% endcomment %}
 
           <!-- FullName -->
           <h1
@@ -238,44 +243,44 @@
 
           <!-- Detail -->
           <div class="w-full my-auto py-6 flex flex-col justify-center gap-2">
+           
               <div class="w-full flex sm:flex-row xs:flex-col gap-2 justify-center">
+                
                   <div class="w-full">
+                    
                       <dl class="text-gray-900 divide-y w-full divide-gray-200 dark:text-blue-50 dark:divide-gray-700">
                           <div class="flex flex-col pb-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg "> Name</dt>
-                              <dd class="text-lg ">{{student.name}}</dd>
+                              <dt class="mb-1 text-gray-500 md:text-lg ">First Name</dt>
+                              <dd class="text-lg ">{{user.first_name}} </dd>
                           </div>
                           
+                          
                           <div class="flex flex-col pb-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg ">Date Of Birth</dt>
-                              <dd class="text-lg ">21/02/1997</dd>
+                              <dt class="mb-1 text-gray-500 md:text-lg ">Mobile</dt>
+                              <dd class="text-lg ">{{user.mobile}}</dd>
                           </div>
-                          <div class="flex flex-col pb-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg ">Gender</dt>
-                              <dd class="text-lg ">Male</dd>
-                          </div>
+                          
+                        
+                      
                       </dl>
                   </div>
                   <div class="w-full">
                       <dl class="text-gray-900 divide-y divide-gray-200 dark:text-blue-50 dark:divide-gray-700">
                           <div class="flex flex-col pb-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg ">Location</dt>
-                              <dd class="text-lg ">Ethiopia, Addis Ababa</dd>
+                              <dt class="mb-1 text-gray-500 md:text-lg ">Last Name</dt>
+                              <dd class="text-lg ">{{user.last_name}}</dd>
                           </div>
 
-                          <div class="flex flex-col pt-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg ">Phone Number</dt>
-                              <dd class="text-lg ">+251913****30</dd>
-                          </div>
+
+                          
                           <div class="flex flex-col pt-3">
                               <dt class="mb-1 text-gray-500 md:text-lg ">Email</dt>
-                              <dd class="text-lg ">samuelabera87@gmail.com</dd>
+                              <dd class="text-lg ">{{user.email}}</dd>
                           </div>
 
-                          <div class="flex flex-col pt-3">
-                              <dt class="mb-1 text-gray-500 md:text-lg ">Website</dt>
-                              <dd class="text-lg ">https://www.teclick.com</dd>
-                          </div>
+                         
+                          
+                          
                       </dl>
                   </div>
               </div>

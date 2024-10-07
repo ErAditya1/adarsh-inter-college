@@ -18,9 +18,7 @@
             <img class="mx-auto h-28 rounded-full bg-blue-100 p-2 w-auto" src="{% static "image/logo1.png" %}" alt="NOU e-learning">
             <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900 dark:text-white">Sign in to your account</h2>
           </div>
-          {% if messages %} {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %} {% endif %}
+          
       <form class="space-y-6" action="#" method="POST">
         {% csrf_token %}
         <div>
