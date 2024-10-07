@@ -15,7 +15,7 @@ from .utils import send_registration_success_email, send_password_reset_email ,s
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-import sweetify
+
 
 
 # Create your views here.
@@ -25,7 +25,6 @@ def super_admin(request):
     return redirect('/superadmin/')
 
 def home(request):
-    sweetify.success(request, 'You did it', text='Good job! You successfully showed a SweetAlert message', persistent='Hell yeah')
     return render(request, 'pages/home.html')
 
 # Create your views here.
