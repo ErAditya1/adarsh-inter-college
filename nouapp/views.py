@@ -15,6 +15,7 @@ from .utils import send_registration_success_email, send_password_reset_email ,s
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -36,6 +37,46 @@ def about(request):
 def contact(request):
     return render(request, 'pages/contact.html')
 
+@csrf_exempt
+def check_username_availability(request):
+    print("Request Received")
+    username = request.POST.get("username")
+    print(username)
+    try:
+        user = User.objects.filter(username=username).exists()
+        print("Checked")
+        if user:
+            return HttpResponse(True)
+        return HttpResponse(False)
+    except Exception as e:
+        return HttpResponse(False)
+
+@csrf_exempt
+def check_email_availability(request):
+    
+    email = request.POST.get("email")
+
+    try:
+        user = User.objects.filter(email=email).exists()
+       
+        if user:
+            return HttpResponse(True)
+        return HttpResponse(False)
+    except Exception as e:
+        return HttpResponse(False)
+@csrf_exempt
+def check_mobile_availability(request):
+    
+    mobile = request.POST.get("mobile")
+
+    try:
+        user = User.objects.filter(mobile=mobile).exists()
+       
+        if user:
+            return HttpResponse(True)
+        return HttpResponse(False)
+    except Exception as e:
+        return HttpResponse(False)
 
 
 
@@ -321,7 +362,6 @@ class StudentViews():
             
             # student.rollno = rollno
             student.age = age
-            student.avatar = avatar
             student.address = address
             student.fname = fname
             student.mname = mname
@@ -336,6 +376,7 @@ class StudentViews():
                 
                 us= User.objects.get(username=user.username)
                 us.is_detailed = True
+                us.avatar = avatar
                 us.save()
                 messages.success(request,"Student details added succesfully!")
                 return redirect('student_dashboard')
@@ -392,9 +433,9 @@ class StudentViews():
             branch = request.POST.get('branch')
             year = request.POST.get('year')
 
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            # program  = Program.objects.get(pk=program).name
+            # branch = Branch.objects.get(pk=branch).name
+            # year = Year.objects.get(pk=year).name
 
             print(first_name, last_name, email, mobile, fname, mname)
                 
@@ -405,12 +446,13 @@ class StudentViews():
             user.email = email
         
             user.mobile = mobile
+            user.avatar = avatar
 
             user.save()
 
         
         
-            student.avatar = avatar
+            
         
             student.name = first_name + ' ' + last_name
         
@@ -422,7 +464,6 @@ class StudentViews():
         
             student.gender = gender
         
-            student.program = program
         
             student.age = age
     
@@ -430,9 +471,10 @@ class StudentViews():
         
             student.mname = mname
         
-            student.branch = branch
-        
-            student.year = year
+            # student.program = program
+            # student.branch = branch
+            # student.year = year
+
             student.save()
             
             
@@ -834,7 +876,7 @@ class TeacherViews():
 
         return render(request, 'pages/teacher/updateprofile.html', {'programs': programs,  'user':user})
 
-      # def save_profile(request):
+    def save_profile(request):
         programs = Program.objects.all()
         user = request.user
         student = Student.objects.get(user_id=request.user.id)
@@ -1256,11 +1298,12 @@ class AdminViews():
     
 
     def add_program(request):
-        print('Adding programq ')
+        print('Adding programm')
         program_name = request.POST.get('program_name')
+        print(program_name)
         if program_name:
             Program.objects.create(name=program_name)
-            return redirect('show_programs')  # Redirect after POST
+            return True  # Redirect after POST
       
 
 

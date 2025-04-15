@@ -34,13 +34,13 @@
                   <div
                       class="w-full rounded-sm bg-[url('https://images.unsplash.com/photo-1449844908441-8829872d2607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw2fHxob21lfGVufDB8MHx8fDE3MTA0MDE1NDZ8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat items-center">
                       <!-- Profile Image -->
-                      {% if student.avatar %}
+                      {% if student.user.avatar %}
                       <div 
                       class="mx-auto flex justify-center w-[141px] relative h-[141px] bg-blue-300/20 rounded-full ">
-                      <img src="{{student.avatar.url}}" class="absolute w-full h-full rounded-full" alt="">
+                      <img src="{{student.user.avatar.url}}"  class="absolute w-full h-full rounded-full avatar_new_iamge" alt="">
                       <div class="bg-white/90 rounded-full w-6 h-6 z-10 text-center ml-28 mt-4">
                             
-                          <input type="file" name="avatar" id="avatar"  required>
+                          <input type="file" name="avatar" id="avatar"  required class="hidden" accept="image/*">
 
                           <label for="avatar" >
                                   <svg data-slot="icon" class="w-6 h-5 text-blue-700" fill="none"
@@ -58,11 +58,11 @@
                   </div>
                       {% else %}
                       <div 
-                          class="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full bg-[url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxwcm9maWxlfGVufDB8MHx8fDE3MTEwMDM0MjN8MA&ixlib=rb-4.0.3&q=80&w=1080')] bg-cover bg-center bg-no-repeat">
+                          class="mx-auto flex justify-center w-[141px] h-[141px] bg-blue-300/20 rounded-full relative">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxwcm9maWxlfGVufDB8MHx8fDE3MTEwMDM0MjN8MA&ixlib=rb-4.0.3&q=80&w=1080" class="avatar_new_iamge absolute rounded-full  w-full h-full object-cover top-0 left-0" alt="avatar dummy" />
+                          <div class="bg-white/90 rounded-full w-6 h-6 text-center ml-28 mt-4 z-1">
 
-                          <div class="bg-white/90 rounded-full w-6 h-6 text-center ml-28 mt-4">
-
-                              <input type="file" name="avatar" id="avatar"  >
+                              <input type="file" name="avatar" id="avatar" class="hidden" accept="image/*" >
 
                               <label for="avatar">
                                       <svg data-slot="icon" class="w-6 h-5 text-blue-700" fill="none"
@@ -176,7 +176,7 @@
                         <input type="text" required name="address" id="address" value="{{student.address}}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset bg-white ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
 
                     </div>
-                    <div class="w-full  mb-4 lg:mt-6">
+                    {% comment %} <div class="w-full  mb-4 lg:mt-6">
                         <label for="" class=" dark:text-gray-300">Program</label>
                         <div class="mt-2">
                             <select id="program" required name="program" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
@@ -186,9 +186,9 @@
                               {% endfor %}
                             </select>
                           </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
-                <div class="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
+                {% comment %} <div class="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
                     <div class="w-full  mb-4 mt-6">
                         <label for="" class="mb-2 dark:text-gray-300">Branch</label>
                         <div class="mt-2">
@@ -208,7 +208,7 @@
                           </div>
                         
                     </div>
-                </div>
+                </div> {% endcomment %}
                   <div class="my-4">
                     <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
 
@@ -221,5 +221,16 @@
 {% endblock %}
 
 {% block js %}
+<script>
+    $(document).ready(function() {
+        $('#avatar').change(function() {
+            const avatar_url = URL.createObjectURL(this.files[0]);
+            $('.avatar_new_iamge').attr('src', avatar_url);
+            console.log("avatar_url", avatar_url)
+            student.user.avatar.url = avatar_url
+        });
 
+        
+    });
+</script>
 {% endblock %}

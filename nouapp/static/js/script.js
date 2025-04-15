@@ -20,6 +20,7 @@ function getSlidesPerView() {
 }
 
     document.addEventListener('DOMContentLoaded', function () {
+
         
         var swiper = new Swiper('.swiper', {
            
@@ -52,6 +53,7 @@ function getSlidesPerView() {
         });
        
     });
+    
 
     window.addEventListener('resize',()=>{
         console.log("window resized")

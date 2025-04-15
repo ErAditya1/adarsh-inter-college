@@ -14,6 +14,7 @@ class User(AbstractUser):
 
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
     email = models.EmailField(max_length=254)
+    avatar = models.ImageField(upload_to='avatars', null=True)
     mobile = models.CharField(max_length=15, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     is_detailed = models.BooleanField(default=False)
@@ -72,7 +73,7 @@ class Student(models.Model):
     year = models.CharField( max_length=50)
     mobile = models.CharField(max_length=14)
     # email = models.EmailField( max_length=254)
-    avatar = models.ImageField(upload_to='students')
+    
     created_at = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
 

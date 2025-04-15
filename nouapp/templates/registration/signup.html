@@ -53,7 +53,7 @@
           <div>
             <label for="mobile" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Phone Number</label>
             <div class="mt-2">
-              <input id="mobile" name="mobile" type="text" autocomplete="" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <input id="mobile" name="mobile" pattern="^\+?[0-9]{10,15}$" title="Please enter a valid phone number (10-15 digits, optional + at start)" type="text" autocomplete="" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             </div>
           </div>
           <div class="sm:col-span-3">
@@ -104,4 +104,113 @@
     </div>
   </div>
   
+{% endblock %}
+
+
+{% block js %}
+
+<script>
+  
+  function validateEmail(email) {
+      const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(String(email).toLowerCase());
+  }
+  function validateUsername(username) {
+    const re = /^[a-zA-Z][a-zA-Z0-9_-]{2,29}$/;
+    return re.test(String(username).toLowerCase());
+}
+function validatePhone(phone) {
+  const re = /^\+?[0-9]{10,15}$/;
+  
+  if (!re.test(phone)) {
+      return false;
+  }
+  return true;
+}
+  $(document).ready(function(){
+      $("#email").keyup(function(){
+          
+          var email = $(this).val()
+          if (validateEmail(email)){
+          $.ajax({
+              url: "{% url 'check_email_availability' %}",
+              type: 'POST',
+              data:{email:email}
+          }).done(function(response){
+            console.log(response)
+              if (response == "True"){
+                  $(".email_error").remove()
+                  $("<span class=' email_error text-red-600'>Email Address Already Exist</span>").insertAfter("#email");
+              }
+              else{
+                  $(".email_error").remove()
+
+                  $("<span class=' email_error text-green-600'>Email Address Available</span>").insertAfter("#email");
+              }
+          }).fail(function(response){
+              $("<span class='alert alert-warning text-yellow-400'>Server Could Not Process This</span>").insertAfter("#email");
+          })
+      }else{
+        $(".email_error").remove()
+        $("<span class=' email_error text-red-600'>Invalid email address</span>").insertAfter("#email");
+    }
+      })
+      $("#username").keyup(function(){
+        console.log("username check")
+        var username = $(this).val()
+        if (validateUsername(username)){
+        $.ajax({
+            url: "{% url 'check_username_availability' %}",
+            type: 'POST',
+            data:{username:username}
+        }).done(function(response){
+          console.log(response)
+            if (response == "True"){
+                $(".username_error").remove()
+                $("<span class=' username_error text-red-600'>Username Already Exist</span>").insertAfter("#username");
+            }
+            else{
+                $(".username_error").remove()
+
+                $("<span class=' username_error text-green-700 '>Username Available</span>").insertAfter("#username");
+            }
+        }).fail(function(response){
+            $("<span class='alert alert-warning text-yellow-400'>Server Could Not Process This</span>").insertAfter("#username");
+        })
+    }else{
+        $(".username_error").remove()
+        $("<span class=' username_error text-red-600'>Invalid Username type</span>").insertAfter("#username");
+    }
+    })
+
+    $("#mobile").keyup(function(){
+      var mobile = $(this).val()
+      if (validatePhone(mobile)){
+      $.ajax({
+          url: "{% url 'check_mobile_availability' %}",
+          type: 'POST',
+          data:{mobile:mobile}
+      }).done(function(response){
+        console.log(response)
+          if (response == "True"){
+              $(".mobile_error").remove()
+              $("<span class=' mobile_error text-red-600'>Mobile Already Exist</span>").insertAfter("#mobile");
+          }
+          else{
+              $(".mobile_error").remove()
+
+              $("<span class=' mobile_error text-green-700 '>Mobile Available</span>").insertAfter("#mobile");
+          }
+      }).fail(function(response){
+          $("<span class='alert alert-warning text-yellow-400'>Server Could Not Process This</span>").insertAfter("#mobile");
+      })
+  }else{
+      $(".mobile_error").remove()
+      $("<span class=' mobile_error text-red-600'>Invalid mobile type</span>").insertAfter("#mobile");
+  }
+  })
+  });
+  
+
+</script>
 {% endblock %}
