@@ -4,6 +4,8 @@ from django.db import models
 from django.utils import timezone
 # Create your models here.
 
+def avatar_upload_path(instance, filename):
+    return f'avatars/{instance.username}/{filename}'
 class User(AbstractUser):
     USER_TYPES = (
         ('student', 'Student'),
@@ -12,9 +14,10 @@ class User(AbstractUser):
         ('guest', 'Guest'),
     )
 
-    user_type = models.CharField(max_length=10, choices=USER_TYPES)
+
+    user_type = models.CharField(max_length=10, choices=USER_TYPES, default='guest')
     email = models.EmailField(max_length=254)
-    avatar = models.ImageField(upload_to='avatars', null=True)
+    avatar = models.ImageField(upload_to=avatar_upload_path, null=True)
     mobile = models.CharField(max_length=15, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     is_detailed = models.BooleanField(default=False)
@@ -39,58 +42,194 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
+
+class Program(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Branch(models.Model):
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='branches')
+    name = models.CharField(max_length=100)
+    branch_code = models.CharField(max_length=50, null=True, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Year(models.Model):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='years')
+    name = models.CharField(max_length=50)
+    # fees = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    def __str__(self):
+        return self.name
+    
+class FeesType(models.Model):
+    
+    name = models.CharField(max_length=100)  # eg: Tuition Fee, Exam Fee
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='fees_types')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='fees_types',null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='fees_types',null=True)
+    def __str__(self):
+        return f"{self.name} - {self.year.name}"
+
+
+
+class Entrance(models.Model):
+    name = models.CharField(max_length=100)
+    date = models.DateField()
+    time = models.TimeField()
+    duration = models.IntegerField()
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='entrance_exams')
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='entrance_exams',null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='entrance_exams',null=True)
+
+    def __str__(self):
+        return self.name
+    
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='subjects')
+    subject_code = models.CharField(max_length=50, null=True, unique=True)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='subjects',null=True)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='subjects',null=True)
+    def __str__(self):
+        return self.name
 class Student(models.Model):
     GENDER = (
         ('male', 'Male'),
         ('female', 'Female'),
         ('other', 'Other'),
     )
-    PROGRAMS = (
-        ('bt', 'BTech'),
-        ('mtech', 'MTech'),
-        ('phd', 'PhD'),
-        ('diploma', 'Diploma'),
-        ('bca', 'BCA'),
-        ('mca', 'MCA')
+
+    FEE_STATUS_CHOICES = (
+        ('paid', 'Paid'),
+        ('pending', 'Pending'),
+        ('partial', 'Partial'),
     )
-    YEAR =(
-        ('first', 'First Year'),
-        ('second', 'Second Year'),
-        ('third', 'Third Year'),
-        ('fourth', 'Fourth Year'),
-        
+
+    ADMISSION_STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
     )
+    
     user = models.OneToOneField(User , on_delete=models.CASCADE,  related_name='student' )
     rollno = models.CharField(unique=True, max_length=20)
-    name = models.CharField(max_length=50)
-    age = models.CharField( max_length=4)
+    
+    # form 1
+
+    date_of_birth = models.DateField(null=True, blank=True)
     fname = models.CharField(max_length=50)
     mname = models.CharField(max_length=50)
-    gender = models.CharField(max_length=10, choices= GENDER)
-    address = models.CharField(max_length=255)
-    program = models.CharField(max_length=50)
-    branch = models.CharField(max_length=50)
-    year = models.CharField( max_length=50)
-    mobile = models.CharField(max_length=14)
+    gender = models.CharField(max_length=6, choices= GENDER)
+    program = models.ForeignKey(Program, on_delete=models.SET_NULL, null=True, related_name='students')
+    branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name='students')
+    year = models.ForeignKey(Year, on_delete=models.SET_NULL, null=True, related_name='students')
+    aadhar_number = models.CharField(max_length=12, unique=True, null=True, blank=True)
+    image = models.ImageField(upload_to='student_images', null=True, blank=True)
+    aadhar_imag = models.FileField(upload_to='aadhar_images', null=True, blank=True)
     # email = models.EmailField( max_length=254)
     
+
+
+
+    # form 2>> 🏡 Contact Information
+    address_line_1 = models.CharField(max_length=255)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+
+    #  form 3>> 🎓 Academic Details
+    previous_school = models.CharField(max_length=255, null=True)
+    last_qualification = models.CharField(max_length=100, null= True)
+    year_of_passing = models.PositiveIntegerField(null=True, blank=True)
+    grade = models.CharField(max_length=20, null=True)
+
+    #  📚 Admission Info
+   
+    entrance_exam_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    is_eligible_for_admission = models.BooleanField(default=False)
+    admission_status = models.CharField(max_length=10, choices=ADMISSION_STATUS_CHOICES, default='pending')
+    admission_date = models.DateField(auto_now_add=True, null=True, blank=True)
+   
+
+    # 💳 Fee / Payment Info
+
+    payment_method = models.CharField(max_length=50, blank=True, null=True)
+    scholarship_status = models.BooleanField(default=False)
+
+
     created_at = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
+
+class StudentFee(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_fees')
+    fee_type = models.ForeignKey(FeesType, on_delete=models.CASCADE, related_name='student_fees')
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_date = models.DateField(auto_now_add=True)
+    payment_method = models.CharField(max_length=50)  # e.g., UPI, Card, Bank Transfer
+    transaction_id = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.student.rollno} - {self.fee_type.name} - ₹{self.amount_paid}"
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,  related_name='teacher')
-    employee_id = models.CharField(max_length=20)
-    department = models.CharField(max_length=100)
-    specialization = models.CharField(max_length=500)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile')
+
+    # Personal Info
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10,null=True, choices=[("Male", "Male"), ("Female", "Female"), ("Other", "Other")])
+
+    aadhar_number = models.CharField(max_length=12, unique=True, null=True, blank=True)
+    image = models.ImageField(upload_to='student_images', null=True, blank=True)
+    aadhar_imag = models.FileField(upload_to='aadhar_images', null=True, blank=True)
+    qualification_doc = models.FileField(upload_to='qualification_docs', null=True, blank=True)
+    # Academic Info
+    qualification = models.CharField(max_length=100)
+    specialization = models.CharField(max_length=100, blank=True)
+    experience_years = models.PositiveIntegerField(null=True, blank=True)
+    designation = models.CharField(max_length=100, null=True, blank=True)
+
+        # form 2>> 🏡 Contact Information
+    address_line_1 = models.CharField(max_length=255, null=True, blank=True)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+
+    # System Info
+    join_date = models.DateField(auto_now_add=True, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(default=timezone.now)
-    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.first_name} {self.user.last_name}"
+
+class TeacherInterest(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="interests")
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="interested_teachers")
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('teacher', 'subject', 'year', 'branch', 'program')
+
+    def __str__(self):
+        return f"{self.teacher.user.username} - {self.subject.name} ({self.year.name}/{self.branch.name}/{self.program.name})"
+
 
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,  related_name='admin')
@@ -105,9 +244,9 @@ class Admin(models.Model):
 class StudyMaterial(models.Model):               # upload study material
     id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='study_materials')
-    program = models.CharField(max_length=50)
-    branch = models.CharField(max_length=50)
-    year = models.CharField( max_length=50)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
     subject = models.CharField( max_length=500)
     file_name = models.CharField( max_length=200)
     file = models.FileField(upload_to='myimage')
@@ -120,9 +259,9 @@ class Assesment(models.Model):  #Upload Asignment
     id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, null = True, on_delete=models.CASCADE, related_name='assesments')
 
-    program = models.CharField(max_length=50)
-    branch = models.CharField(max_length=50)
-    year = models.CharField( max_length=50)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
     subject = models.CharField( max_length=500)
     file_name = models.CharField( max_length=200)
     file = models.FileField(upload_to='myimage')
@@ -136,9 +275,9 @@ class Lecture(models.Model):  # Upload Lectures
     id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, null = True, on_delete=models.CASCADE, related_name='lectures')
 
-    program = models.CharField(max_length=200)
-    branch = models.CharField(max_length=50)
-    year = models.CharField( max_length=50)
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
+    year = models.ForeignKey(Year, on_delete=models.CASCADE)
     subject = models.CharField( max_length=50)
     file_name = models.CharField( max_length=200)
     link = models.CharField( max_length=500)
@@ -194,24 +333,5 @@ class Notification(models.Model):
     def __str__(self):
         return self.subject
 
-class Program(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class Branch(models.Model):
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='branches')
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-class Year(models.Model):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='years')
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
 
 

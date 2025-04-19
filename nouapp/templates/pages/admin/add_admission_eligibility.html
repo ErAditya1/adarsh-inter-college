@@ -1,0 +1,84 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}admin_dashboard{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<h1 class="text-center text-3xl font-semibold">Entrance Score & Eligibility Status </h1>
+{% if students %}
+<div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
+  
+  <table class="table table-bordered " id="example" class="display" style="width:100%">
+    <thead>
+      <tr class="table-dark text-center">
+        <th>Roll No.</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Father Name</th>
+        <th>Progran</th>
+        <th>Branch</th>
+        <th>Year</th>
+        
+        <th>
+          Score
+        </th>
+        <th>Status</th>
+        
+
+      </tr>
+    <tbody class="">
+      {% for student in students %}
+      <tr class="text-center">
+        <td>{{ student.rollno }}</td>
+        <td>{{student.user.username}}</td>
+        <td>{{ student.user.first_name }} {{student.user.last_name}}</td>
+        
+        <td>{{ student.fname }}</td>
+        <td>{{ student.program }}</td>
+        <td>{{ student.branch }}</td>
+        <td>{{ student.year }}</td>
+
+        <td>
+          <form action={% url "add_entrance_exam_score" student.id %} method="POST">
+            {% csrf_token %}
+            <input type="number" name="entrance_exam_score" value="{{ student.entrance_exam_score }}" class="border-2 border-gray-300 rounded-md p-1 w-20 text-center" required>
+            <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded-md">Save</button>
+          </form>
+        </td>
+        <td class="text-yellow-600">
+          <a href="{% url "add_admission_eligibility_save" student.id %}">
+            {% if student.is_eligible_for_admission %}        <p><div   class="bg-green-600 p-1 rounded-sm">Eligibile</div></p>
+            {% else %}
+            <p ><div class="bg-red-600 rounded-sm p-1">Not Eligible</div></p>
+
+            {% endif %}
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </thead>
+  </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+  <script>
+    
+
+    
+  </script>
+{% endblock%}

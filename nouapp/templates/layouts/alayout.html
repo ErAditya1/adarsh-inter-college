@@ -10,9 +10,14 @@
     {% block link %}{% endblock %}
     <title>{% block title %}admin layout{% endblock %}</title>
     {% tailwind_css %}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+
+
+    <!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+
 
     {% block css %}{% endblock %}
   </head>
@@ -74,122 +79,13 @@
     {% include 'includes/scripts.html' %}
     
     {% include "includes/select_program_script.html" %}
-    <script>
-      $(document).ready(function() {
-          $('#program').change(function() {
-              var programId = $(this).val();
-              if (programId) {
-                  $.ajax({
-                      url: 'load_branches/',
-                      data: {
-                          'program_id': programId
-                      },
-                      success: function(data) {
-                          $('#branch').html('<option value="">--Select Branch--</option>');
-                          $('#year').html('<option value="">--Select Year--</option>'); // Clear year when program changes
-                          $.each(data, function(key, value) {
-                              $('#branch').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
-                          });
-                      }
-                  });
-              } else {
-                  console.log("gygtgr")
-                  $('#branch').html('<option value="">--Select Branch--</option>');
-                  $('#year').html('<option value="">--Select Year--</option>');
-              }
-          });
+    
+ 
   
-          $('#branch').change(function() {
-              var branchId = $(this).val();
-              if (branchId) {
-                  $.ajax({
-                      url: 'load_years/',
-                      data: {
-                          'branch_id': branchId
-                      },
-                      success: function(data) {
-                          $('#year').html('<option value="">--Select Year--</option>');
-                          $.each(data, function(key, value) {
-                              $('#year').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
-                          });
-                      }
-                  });
-              } else {
-                  $('#year').html('<option value="">--Select Year--</option>');
-              }
-          });
-      });
-  </script>
-  <script>
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
-</script>
-  
-    <script type="text/javascript">
+    
+    
 
 
-
-      $(document).ready(function () {
-    
-          $('#example').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                  'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
-              ],
-              lengthMenu: [
-                  [10, 25, 50, 100, -1],
-                  ['10', '25', '50', '100', 'all']
-              ]
-          });
-    
-    
-      });
-    
-    </script>
-    
-    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-    <!--datatable-->
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            {% if messages %}
-                {% for message in messages %}
-                    toastr.options = {
-                        "closeButton": true,
-                        "positionClass": "toast-top-center", // Or another position like 'toast-top-right'
-                        "timeOut": "5000", // 3 seconds
-                    };
-                    toastr["{{ message.tags }}"]("{{ message }}");
-                {% endfor %}
-            {% endif %}
-        });
-    </script>
   </body>
 </html>
 

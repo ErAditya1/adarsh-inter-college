@@ -116,16 +116,12 @@ toggleButton.addEventListener('click', () => {
 
 
 
-themeToggler.addEventListener('click',()=>{
-     document.body.classList.toggle('dark-theme-variables')
-     themeToggler.querySelector('span:nth-child(1').classList.toggle('active')
-     themeToggler.querySelector('span:nth-child(2').classList.toggle('active')
-})
+
 
 
 window.addEventListener('DOMContentLoaded',()=>{
     console.log("DOM fully loaded and parsed")
-    active_link.style.color = "red"
+    // active_link.style.color = "red"
 })
 
 window.addEventListener('load',()=>{

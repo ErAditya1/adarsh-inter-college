@@ -20,13 +20,13 @@
 {% if students %}
 <div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
   
-  <table class="table table-bordered " id="example">
+  <table class="table table-bordered " id="example" class="display" style="width:100%">
     <thead>
       <tr class="table-dark text-center">
         <th>id</th>
         <th>Username</th>
         <th>Name</th>
-        <th>age</th>
+        <th>DOB</th>
         <th>Father Name</th>
         <th>Mother Name</th>
         <th>Gender</th>
@@ -37,6 +37,7 @@
         <th>Mobile</th>
         <th>Roll No.</th>
         <th>Avatar</th>
+        <th>Status</th>
         <th>Created At</th>
         <th>
           <a href="">
@@ -51,24 +52,26 @@
       <tr class="text-center">
         <td>{{ student.id }}</td>
         <td>{{student.user.username}}</td>
-        <td>{{ student.name }} {{student.last_name}}</td>
-        <td>{{ student.age }}</td>
+        <td>{{ student.user.first_name }} {{student.user.last_name}}</td>
+        <td>{{ student.date_of_birth }}</td>
         <td>{{ student.fname }}</td>
         <td>{{ student.mname }}</td>
         <td>{{ student.gender }}</td>
-        <td>{{ student.address }}</td>
+        <td>{{ student.address_line_1 }}</td>
         <td>{{ student.program }}</td>
         <td>{{ student.branch }}</td>
         <td>{{ student.year }}</td>
-        <td>{{ student.mobile }}</td>
+        <td>{{ student.user.mobile }}</td>
         <td>{{ student.rollno }}</td>
         <td>
           {% if student.avatar %}<img class ="h-7 w-7 rounded-full overflow-hidden" src="{{ student.avatar.url }}" alt="">{% else %}AV{% endif %}
         </td>
+        <td class="text-yellow-600"><div  style="background:yellow; padding:10px">{{ student.admission_status }}</div></td>
         <td>{{ student.created_at }}</td>
         <td>{{ student.user_id }}</td>
         <td>
-          <a href="{% url "edit_student" student.user.id %}"><i class="fa-solid fa-pen-to-square text-xl"></i></a> |
+          <a href="{% url "edit_student" student.user.id %}"><i class="fa-solid fa-pen-to-square text-xl"></i></a>|
+          <a href="{% url "edit_student" student.user.id %}"><i class="fa-solid fa-id-card-clip "></i></a>|
           <a href="{% url "delete_student" student.user.id %}"><i class="fa-solid fa-trash text-xl" style="color: #ab0303;"></i></a>
         </td>
       </tr>
@@ -79,3 +82,11 @@
 </div>
 {% endif %}
 {% endblock %}
+
+{% block js %}
+  <script>
+    
+
+    
+  </script>
+{% endblock%}

@@ -66,48 +66,13 @@
     
 
     {% include 'includes/scripts.html' %}
+    {% include "includes/select_program_script.html" %}
     
     {% block js %}
     
 
     {% endblock %}
 
-    <script>
-      toastr.options = {
-          "closeButton": true,
-          "debug": false,
-          "newestOnTop": true,
-          "progressBar": true,
-          "positionClass": "toast-top-right",
-          "preventDuplicates": true,
-          "onclick": null,
-          "showDuration": "300",
-          "hideDuration": "1000",
-          "timeOut": "5000",
-          "extendedTimeOut": "1000",
-          "showEasing": "swing",
-          "hideEasing": "linear",
-          "showMethod": "fadeIn",
-          "hideMethod": "fadeOut"
-      }
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-  <script>
-      $(document).ready(function() {
-          {% if messages %}
-              {% for message in messages %}
-                  toastr.options = {
-                      "closeButton": true,
-                      "positionClass": "toast-top-center", // Or another position like 'toast-top-right'
-                      "timeOut": "5000", // 3 seconds
-                  };
-                  toastr["{{ message.tags }}"]("{{ message }}");
-              {% endfor %}
-          {% endif %}
-      });
-  </script>
+  
   </body>
 </html>

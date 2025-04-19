@@ -1,12 +1,13 @@
 from django.shortcuts import render,HttpResponse,redirect
 # from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
-from .models import User, Admin, Teacher,Student,Feedback,Complaint, Branch, Year, Program,Enquiry,Notification
+from .models import User, Admin, Teacher,TeacherInterest,Student,Feedback,Complaint, Branch, Year, StudentFee, FeesType,Subject, Entrance, Program,Enquiry,Notification
 from .models import StudyMaterial,Assesment,Lecture
 from .decorators import user_type_required
-from django.urls import reverse
+
 from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.views.decorators.csrf import csrf_exempt
+from django.core.exceptions import ValidationError
+from django.db import models
 
 
 
@@ -78,7 +81,8 @@ def check_mobile_availability(request):
     except Exception as e:
         return HttpResponse(False)
 
-
+def get_logged_in_student(request):
+    return get_object_or_404(Student, user_id=request.user.id)
 
 def register(request):
     if request.method == 'POST':
@@ -87,11 +91,16 @@ def register(request):
         mobile = request.POST.get('mobile')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
-        user_type = request.POST.get('user_type')
+        
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
 
         # Basic validation
+        try:
+            validate_password(password1)
+        except ValidationError as e:
+            messages.error(request, e)
+            return render(request, 'registration/signup.html')
         if password1 != password2:
             messages.error(request, "Passwords do not match!")
             return render(request, 'registration/signup.html')
@@ -112,27 +121,18 @@ def register(request):
       
 
         
-        user = User(username=username, email=email, first_name = first_name , last_name = last_name , mobile = mobile, user_type=user_type, password= password_hashed)
+        user = User(username=username, email=email, first_name = first_name , last_name = last_name , mobile = mobile, password= password_hashed)
         print(user)
         user.save()
 
-        send_registration_success_email(email, username)
 
         # Add success message and redirect
         messages.success(request, 'Registration successful! Please check your email for confirmation.')
         
 
-        # Add success message and redirect
-        messages.success(request, 'Registration successful! Please check your email for confirmation.')
-
+       
 
         login(request, user)
-
-        collegeCode = "0375"
-        current_date = datetime.now()
-        current_year = current_date.year
-        current_month = current_date.month
-        current_day = current_date.day
 
        
 
@@ -142,29 +142,7 @@ def register(request):
         if user.user_type == 'guest':
             
             return redirect('guest_dashboard')
-        elif user.user_type == 'teacher':
-
-            messages.info(request, 'You are eequired to filled details')
-            employee_id = f"S{collegeCode}{current_year}{current_month}{current_day}{user.id}"
-
-            teacher = Teacher.objects.create(user=user,employee_id=employee_id)
-            return redirect('add_teacher_details')
-            
-        elif user.user_type == 'admin':
-            employee_id = f"A{collegeCode}{current_year}{current_month}{current_day}{user.id}"
-
-            admin = Admin.objects.create(user=user,employee_id=employee_id)
-            return redirect('admin_dashboard')
-        elif user.user_type == 'student':
-            messages.info(request, 'You are eequired to filled details')
-            name = user.first_name+' '+user.last_name
-            mobile = user.mobile
-            
-            
-            EnrollmentNo = f"S{collegeCode}{current_year}{current_month}{current_day}{user.id}"
-            student = Student.objects.create(user=user, name=name,mobile=mobile,rollno = EnrollmentNo )
-            return redirect('add_student_details')
-           
+        
 
     return render(request, 'registration/signup.html')
 
@@ -177,11 +155,6 @@ def login_user(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
        
-        
-       
-        
-
-        
         user=authenticate(request,username=username,password=password)
         
         print("User:",user)
@@ -191,30 +164,30 @@ def login_user(request):
             print("Authenticated")
             login(request,user)
 
-            messages.success(request,'Login Successfully')
+            
             
                 # Redirect to a success page
             
             if user.user_type =='guest':
                 return redirect('guest_dashboard')
             if user.user_type =='student':
-                if not user.is_detailed:
-                    return redirect('add_student_details')
-                else:
-                    return redirect('student_dashboard')
+
+                return redirect('student_dashboard')
             
-            if user.user_type == 'admin' or user.is_superuser:
-                if user.is_staff:
-                    return redirect('admin_dashboard')
-                else:
-                    return HttpResponse("You are not verified")
-                
+            if user.user_type == 'admin':
+                if not user.is_staff:
+                    logout(request)
+                    messages.error(request, 'You are not verified')
+                    return redirect('login')
+                return redirect('admin_dashboard')
             if user.user_type == 'teacher':
                 
-                if user.is_staff:
-                    return redirect('teacher_dashboard')
-                else:
-                    return HttpResponse("You are not verified")
+                if not user.is_staff:
+                    logout(request)
+                    messages.error(request, 'You are not verified')
+                    return redirect('login')
+                return redirect('teacher_dashboard')
+            messages.success(request,'Login Successfully')
                 
         else:
             messages.error(request, 'Invalid credentials')
@@ -236,14 +209,14 @@ def reset_password(request):
         email = request.POST.get('email')
         
         try:
-            user = User.objects.get(email=email)
+            user = get_object_or_404(User,email=email)
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             reset_url = request.build_absolute_uri(f'/reset/{uid}/{token}/')
             send_password_reset_email(user.email,user, reset_url)
-            email_subject = 'Password Reset Requested'
-            messages.success(request,"Reset passsword link has sent ! Please Check your Email")
+            
+            messages.success(request,"Reset password link has been sent ! Please Check your Email")
 
         except User.DoesNotExist:
             messages.error(request,'No user found with this email address.')
@@ -257,7 +230,7 @@ def reset_confirm(request, uidb64, token):
 
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        user = get_object_or_404(User,pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
@@ -266,6 +239,11 @@ def reset_confirm(request, uidb64, token):
         if request.method == 'POST':
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                messages.error(request, e)
+                return redirect("reset_confirm")
 
             if password == confirm_password:
                 user.set_password(password)
@@ -274,8 +252,8 @@ def reset_confirm(request, uidb64, token):
                 return redirect('login')
                 # return HttpResponse('Your password has been reset successfully.')
             else:
-                return messages.error(request,'Passwords do not match.')
-
+                messages.error(request, 'Passwords do not match.')
+                return redirect("reset_confirm")
         return render(request, 'registration/confirm_reset.html')
     else:
         return HttpResponse('The password reset link is invalid, possibly because it has already been used.')
@@ -285,8 +263,10 @@ def reset_confirm(request, uidb64, token):
 def load_branches(request):
     print("Loading branches...")
     program_id = request.GET.get('program_id')
+    
     print("Program ID:", program_id)
     branches = Branch.objects.filter(program_id=program_id).all()
+    print(branches)
     return JsonResponse(list(branches.values('id', 'name')), safe=False)
 
 def load_years(request):
@@ -294,18 +274,13 @@ def load_years(request):
     years = Year.objects.filter(branch_id=branch_id).all()
     return JsonResponse(list(years.values('id', 'name')), safe=False)
 
+def load_subjects(request):
+    year_id = request.GET.get('year_id')
+    subjects = Subject.objects.filter(year_id=year_id).all()
+    return JsonResponse(list(subjects.values('id', 'name')), safe=False)
 
-def load_branchese(request,id):
-    print("Loading branches...")
-    program_id = request.GET.get('program_id')
-    print("Program ID:", program_id)
-    branches = Branch.objects.filter(program_id=program_id).all()
-    return JsonResponse(list(branches.values('id', 'name')), safe=False)
 
-def load_yearse(request,id):
-    branch_id = request.GET.get('branch_id')
-    years = Year.objects.filter(branch_id=branch_id).all()
-    return JsonResponse(list(years.values('id', 'name')), safe=False)
+
 
 def save_enquiry(request):
     
@@ -325,6 +300,28 @@ def save_enquiry(request):
     messages.success(request, 'Enquiry submitted successfully')
     return redirect('contact')
 
+def generate_roll_number(pg, br, yr):
+    current_year = datetime.now().year
+
+    program = get_object_or_404(Program, pk=pg)
+    branch = get_object_or_404(Branch, pk=br)
+    year = get_object_or_404(Year, pk=yr)
+
+    # Filter existing students in the same Program + Branch + Year
+    existing_students = Student.objects.filter(
+        program=program,
+        branch=branch,
+        year=year
+    )
+
+    student_number = existing_students.count() + 1
+
+    # Make sure student_number is 3-digits (e.g., 001, 042, 105)
+    formatted_number = f"{student_number:03d}"
+
+    rollno = f"S{current_year}{branch.branch_code}{year.id}{formatted_number}"
+
+    return rollno
 
 
 # Student Dashboard ----------------------------------------------------------------
@@ -333,60 +330,7 @@ def save_enquiry(request):
 
 class StudentViews():
 
-        
-    def add_student_details(request):
-        
-        # user = User.objects.get(pk=id)
-        user = request.user
-        
-        name = user.first_name+' '+user.last_name
-        mobile = user.mobile
-
-        student = Student.objects.get(user=user)
-        programs = Program.objects.all()
-        if request.method == 'POST':
-            # rollno = request.POST.get('rollno')
-            age = request.POST.get('age')
-            avatar = request.FILES.get('avatar')
-            address = request.POST.get('address')
-            fname = request.POST.get('fname')
-            mname = request.POST.get('mname')
-            gender = request.POST.get('gender')
-            program = request.POST.get('program')
-            branch = request.POST.get('branch')
-            year = request.POST.get('year')
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
-            
-            
-            # student.rollno = rollno
-            student.age = age
-            student.address = address
-            student.fname = fname
-            student.mname = mname
-            student.gender = gender
-            student.program = program
-            student.branch = branch
-            student.year = year
-            print(student)    
-            # print(student)
-            if student:
-                student.save()
-                
-                us= User.objects.get(username=user.username)
-                us.is_detailed = True
-                us.avatar = avatar
-                us.save()
-                messages.success(request,"Student details added succesfully!")
-                return redirect('student_dashboard')
-             
-            
-            
-    
-        return render (request, 'registration/studendetails.html',{"user":user,'programs':programs, "student":student})
-
-
+  
     
 
     def dashboard(request):
@@ -417,7 +361,8 @@ class StudentViews():
     def update_profile(request):
         programs = Program.objects.all()
         user = request.user
-        student = Student.objects.get(user_id=request.user.id)
+        student = get_logged_in_student(request)
+
         if request.method == 'POST':
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
@@ -433,122 +378,38 @@ class StudentViews():
             branch = request.POST.get('branch')
             year = request.POST.get('year')
 
-            # program  = Program.objects.get(pk=program).name
-            # branch = Branch.objects.get(pk=branch).name
-            # year = Year.objects.get(pk=year).name
-
-            print(first_name, last_name, email, mobile, fname, mname)
-                
             user.first_name = first_name
-        
             user.last_name = last_name
-        
             user.email = email
-        
             user.mobile = mobile
-            user.avatar = avatar
-
+            if avatar:
+                user.avatar = avatar
             user.save()
 
-        
-        
-            
-        
-            student.name = first_name + ' ' + last_name
-        
-            student.mobile = mobile
-            student.mobile = mobile
-        
-            
+            student.name = f"{first_name} {last_name}"
             student.address = address
-        
             student.gender = gender
-        
-        
             student.age = age
-    
             student.fname = fname
-        
             student.mname = mname
-        
-            # student.program = program
-            # student.branch = branch
-            # student.year = year
+
+            if program:
+                student.program = get_object_or_404(Program, pk=program)
+            if branch:
+                student.branch = get_object_or_404(Branch, pk=branch)
+            if year:
+                student.year = get_object_or_404(Year, pk=year)
 
             student.save()
-            
-            
 
             messages.success(request, "Profile updated successfully")
             return redirect('student-profile')
-            # return redirect('student_dashboard')
-                
-            
 
-        return render(request, 'pages/student/update_profile.html', {'programs': programs, 'student': student, 'user':user})
-
-   
-        programs = Program.objects.all()
-        user = request.user
-        student = Student.objects.get(user_id=request.user.id)
-       
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        mobile = request.POST.get('mobile')
-        fname = request.POST.get('fname')
-        mname = request.POST.get('mname')
-        age = request.POST.get('age')
-        avatar = request.FILES.get('avatar')
-        address = request.POST.get('address')
-        gender = request.POST.get('gender')
-        program = request.POST.get('program')
-        branch = request.POST.get('branch')
-        year = request.POST.get('year')
-        if first_name:
-            user.first_name = first_name
-        if last_name:
-            user.last_name = last_name
-        if email:
-            user.email = email
-        if mobile:
-            user.mobile = mobile
-        user.save()
-
-        
-        if avatar :
-            student.avatar = avatar
-        if first_name or last_name:
-            student.name = first_name + ' ' + last_name
-        if mobile:
-            student.mobile = mobile
-        if address:
-            student.address = address
-        if gender:
-            student.gender = gender
-        if program:
-            student.program = program
-        if age :
-            student.age = age
-        if fname:
-            student.fname = fname
-        if mname:
-            student.mname = mname
-        if branch:
-            student.branch = branch
-        if year:
-            student.year = year
-        student.save()
-        print("Student saved")
-
-        messages.success(request, "Profile updated successfully")
-        # return redirect('student_profile')
-        return render(request, 'pages/student/update_profile.html', {'programs': programs, 'user':user})
-        # return redirect('student_dashboard')
-            
-            
-
-        # return render(request, 'pages/student/update_profile.html', {'programs': programs, 'student': student, 'user':user})
+        return render(request, 'pages/student/update_profile.html', {
+            'programs': programs,
+            'student': student,
+            'user': user
+        })
 
 
 
@@ -567,7 +428,6 @@ class StudentViews():
 
 
     def lectures(request):
-        lectures = Lecture.objects.all()
         student = get_object_or_404(Student, user_id=request.user.id)
         lectures = Lecture.objects.filter(program=student.program, branch=student.branch, year=student.year)
 
@@ -579,20 +439,19 @@ class StudentViews():
 
     def register_complaint(request):
         
-        student = get_object_or_404(Student,user_id=request.user.id)
-        complaints = Complaint.objects.filter(student_id=student.id)
-        if request.method == 'POST':
-            subject = request.POST.get('subject')
-            comp = request.POST.get('comp')
-            
-            complain = Complaint(student=student, subject=subject, comp=comp)
-            complain.save()
-            
-            messages.success(request, "Complaints submitted successfully")
-            return redirect('register_complaint')
+        
         try:
             student = get_object_or_404(Student,user_id=request.user.id)
             complains = Complaint.objects.filter(student_id=student.id)
+            if request.method == 'POST':
+                subject = request.POST.get('subject')
+                comp = request.POST.get('comp')
+                
+                complain = Complaint(student=student, subject=subject, comp=comp)
+                complain.save()
+                
+                messages.success(request, "Complaints submitted successfully")
+                return redirect('register_complaint')
             return render(request, 'pages/student/register_complaint.html',{'complains':complains})
 
         except :
@@ -601,19 +460,19 @@ class StudentViews():
     def feedbacks(request):
 
 
-        if request.method == 'POST':
-            subject = request.POST.get('subject')
-            feed = request.POST.get('feed')
-            student = get_object_or_404(Student,user_id=request.user.id)
-            feedback = Feedback(student=student, subject=subject, feed=feed)
-            feedback.save()
-            
-            messages.success(request, "Feedback submitted successfully")
-            return redirect('feedbacks')
+        
         try:
-            student = get_object_or_404(Student,user_id=request.user.id)
+            student = get_object_or_404(Student, user_id=request.user.id)
+
+            if request.method == 'POST':
+                subject = request.POST.get('subject')
+                feed = request.POST.get('feed')
+                Feedback.objects.create(student=student, subject=subject, feed=feed)
+                messages.success(request, "Feedback submitted successfully")
+                return redirect('feedbacks')
+
             feedbacks = Feedback.objects.filter(student_id=student.id)
-            return render(request, 'pages/student/feedbacks.html',{'feedbacks':feedbacks})
+            return render(request, 'pages/student/feedbacks.html', {'feedbacks': feedbacks})
 
         except :
             return render(request, 'pages/student/feedbacks.html', {})
@@ -623,9 +482,7 @@ class StudentViews():
         notifications = Notification.objects.all()
         return render(request, 'pages/student/notifications.html', {'notifications': notifications})
    
-      
-   
-
+    
 
 
 
@@ -634,10 +491,25 @@ class StudentViews():
 class GuestViews():
 
     def dashboard(request):
-        print("username:",request.user.username)
-        
-        return render(request, 'pages/guest/home.html')
+        user = request.user
+        try:
+            # Attempt to get the student based on the logged-in user
+            student = get_logged_in_student(request)
+            
+            # Fetch the subjects associated with the student's year
+            subjects = Subject.objects.filter(year=student.year)
+            
+            entrace_exam = Entrance.objects.filter(year=student.year)
 
+            
+
+            # Render the dashboard template with student and subjects
+            return render(request, 'pages/guest/home.html', {'student': student, 'subjects': subjects,"entrace_exam":entrace_exam})
+
+        except Student.DoesNotExist:
+            programs = Program.objects.all()
+            # If no student is found, redirect to a different template or page
+            return render(request, 'pages/guest/home.html',{'programs': programs})
 
 
 
@@ -648,9 +520,155 @@ class GuestViews():
         
         return render(request, 'pages/guest/profile.html', {'user': user})
        
+    def admission_apply(request):
+        user = request.user
+        programs = Program.objects.all()
+        try:
+            student = get_logged_in_student(request)
+            if student:
+                messages.info(request, 'You are already applied for admission')
+                return redirect('guest_dashboard')
+        except Student.DoesNotExist:
+        
+            if request.method == 'POST':
+                date_of_birth = request.POST.get('date_of_birth')
+                fname = request.POST.get('fname')
+                mname = request.POST.get('mname')
+                gender = request.POST.get('gender')
+                aadhar_number = request.POST.get('aadhar_number')
+                
+                address_line_1 = request.POST.get('address_line_1')
+                address_line_2 = request.POST.get('address_line_2')
+                city = request.POST.get('city')
+                state = request.POST.get('state')
+                country = request.POST.get('country')
+                postal_code = request.POST.get('postal_code')
+                
+                pg = request.POST.get('program')
+                br = request.POST.get('branch')
+                yr = request.POST.get('year')
+
+                previous_school = request.POST.get('previous_school')
+                last_qualification = request.POST.get('last_qualification')
+                year_of_passing = request.POST.get('year_of_passing')
+                grade = request.POST.get('grade')
 
 
+
+                image = request.FILES.get('image')
+                aadhar_image = request.FILES.get('aadhar_image')
+
+
+                branch = get_object_or_404(Branch, pk=br)
+                year = get_object_or_404(Year, pk=yr)
+                program = get_object_or_404(Program, pk=pg)
+
+               
+              
+                rollnumber = generate_roll_number(pg, br, yr)
+
+
+
+                admission = Student(user=user,rollno = rollnumber,date_of_birth=date_of_birth,fname=fname,mname=mname,gender=gender,   program=program, branch=branch, year=year,aadhar_number=aadhar_number, previous_school=previous_school, last_qualification=last_qualification, year_of_passing=year_of_passing, grade=grade, city=city, state=state, country=country, postal_code=postal_code,address_line_1=address_line_1, address_line_2=address_line_2,  image=image, aadhar_imag=aadhar_image)
+                admission.save()
+                messages.success(request, "Admission application submitted successfully")
+                return redirect('admission_apply')
+        
+            return render(request, 'pages/guest/admission_apply.html',{"programs":programs})
+    
+    def drop_admission(request):
+        user = request.user
+        student = get_object_or_404(Student, user=user)
+        
+        student.delete()
+           
+        messages.success(request, "Admission dropped successfully")
+        return redirect('guest_dashboard')
+        
+    def teaching_apply(request):
+
+        if request.method == 'POST':
+            user = request.user
+            dob = request.POST.get('dob')
+            gender = request.POST.get('gender')
+            aadhar_number = request.POST.get('aadhar_number')
+            
+            address1 = request.POST.get('address1')
+            address2 = request.POST.get('address2')
+            city = request.POST.get('city')
+            postal_code = request.POST.get('postal_code')
+            state = request.POST.get('state')
+            country = request.POST.get('country')
+            qualification = request.POST.get('qualification')
+            specialization = request.POST.get('specialization')
+            experience = request.POST.get('experience')
+            designation = request.POST.get('designation')
+
+            image = request.FILES.get('image')
+            aadhar_doc = request.FILES.get('aadhar_doc')
+            qualification_doc = request.FILES.get('qualification_doc')
+
+            # Check if teacher already registered
+            if Teacher.objects.filter(user=user).exists():
+                messages.warning(request, "Teacher profile already exists.")
+                return redirect('guest_dashboard')  # or render same page with context
+
+            # Save teacher record
+            teacher = Teacher.objects.create(
+                user=user,
+                date_of_birth=dob,
+                gender=gender,
+                aadhar_number=aadhar_number,
+                
+                address_line_1=address1,
+                address_line_2=address2,
+                city=city,
+                postal_code=postal_code,
+                state=state,
+                country=country,
+                qualification=qualification,
+                specialization=specialization,
+                experience_years=experience,
+                designation=designation,
+                image=image,
+                aadhar_imag=aadhar_doc,
+                qualification_doc=qualification_doc
+            )
+
+            messages.success(request, "Teacher profile registered successfully.")
+            return redirect('guest_dashboard')  # change to wherever you want after success
+
+        return render(request, 'pages/guest/teaching_apply.html')
     def update_profile(request):
+        user = request.user
+        if request.method =='POST':
+            username = request.POST.get('username')
+            first_name = request.POST.get("first_name")
+            last_name = request.POST.get("last_name")
+            email =request.POST.get("email")
+            mobile = request.POST.get("mobile")
+            avatar = request.FILES.get("avatar")
+
+            
+            user.first_name = first_name
+        
+            user.last_name = last_name
+        
+            user.email = email
+        
+            user.mobile = mobile
+            print(avatar)
+            if avatar:
+                user.avatar = avatar
+            
+            user.save()
+
+
+            
+
+            print(first_name, last_name, email, mobile, avatar)
+            return redirect('guest_profile')
+
 
         return render(request, 'pages/guest/update_profile.html')
 
@@ -691,26 +709,45 @@ class GuestViews():
 
 # @user_type_required('teacher')
 class TeacherViews():
-    def add_teacher_details(request):
+    
+    def add_intrested_subjects(request):
         user = request.user
-        teacher = Teacher.objects.get(user=user)
-        print(teacher)
+        teacher = get_object_or_404(Teacher,user=user)
         if request.method == 'POST':
-            
-            specialization = request.POST.get('specialization')
+            pg = request.POST.get('program')
+            br = request.POST.get('branch')
+            yr = request.POST.get('year')
+            sub = request.POST.get('subject')
 
             
-            print(specialization)
-            print(teacher)
-            teacher.specialization = specialization
-            teacher.save()
-            if teacher :
-                user.is_detailed = True
-                user.save()
-                messages.success(request, "Teacher details added successfully")
-                return redirect('teacher_dashboard')
-        return render (request, 'registration/teacher.html',{"employee_id":teacher.employee_id})
+
+            subject = get_object_or_404(Subject,pk=sub)
+            year = get_object_or_404(Year, pk=yr)
+            branch = get_object_or_404(Branch, pk=br)
+            program = get_object_or_404(Program, pk=pg)
+
+            TeacherInterest.objects.create(
+                teacher=teacher,
+                subject=subject,
+                year=year,
+                branch=branch,
+                program=program
+            )
+            messages.success(request, "Teacher subject added successfully")
+            return redirect('add_intrested_subjects')
+        programs = Program.objects.all()
         
+        subjects = teacher.interests.all()
+        
+        return render(request, 'pages/teacher/add_intrested_subjects.html',{'programs':programs,"subjects":subjects})
+      
+    def delete_intrested_subjects(request, subject_id):
+        
+        subject = get_object_or_404(TeacherInterest,pk=subject_id)
+        subject.delete()
+        messages.success(request, "Subject deleted successfully")
+        return redirect('add_intrested_subjects')
+    
     def dashboard(request):
 
     
@@ -737,9 +774,12 @@ class TeacherViews():
             if is_protected == 'False':
                 is_protected = False
             print(file)
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            if program:
+                program = get_object_or_404(Program, pk=program)
+            if branch:
+                branch = get_object_or_404(Branch, pk=branch)
+            if year:
+                year = get_object_or_404(Year, pk=year)
 
             study_material = StudyMaterial(user=request.user,program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file,is_protected=is_protected)
             print(study_material)
@@ -752,7 +792,7 @@ class TeacherViews():
 
     def delete_study_material(request,id):
         
-        study_material = StudyMaterial.objects.get(pk=id)
+        study_material = get_object_or_404(StudyMaterial,pk=id)
         study_material.delete()
         return redirect('upload_studymaterial')
 
@@ -770,9 +810,12 @@ class TeacherViews():
                 is_protected =True
             else:
                 is_protected =False
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            if program:
+                program = get_object_or_404(Program, pk=program)
+            if branch:
+                branch = get_object_or_404(Branch, pk=branch)
+            if year:
+                year = get_object_or_404(Year, pk=year)
 
             lecture = Lecture(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, link=link, is_protected=is_protected)
             print(lecture)
@@ -783,7 +826,7 @@ class TeacherViews():
 
     def delete_lecture(request,id):
         
-        lecture = Lecture.objects.get(pk=id)
+        lecture = get_object_or_404(Lecture,pk=id)
         lecture.delete()
         return redirect('upload_lectures')
 
@@ -802,9 +845,12 @@ class TeacherViews():
             else:
                 is_protected =False
 
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            if program:
+                program = get_object_or_404(Program, pk=program)
+            if branch:
+                branch = get_object_or_404(Branch, pk=branch)
+            if year:
+                year = get_object_or_404(Year, pk=year)
 
             assessment = Assesment(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file, is_protected=is_protected)
             print(assessment)
@@ -816,7 +862,7 @@ class TeacherViews():
 
     def delete_assessment(request,id):
         
-        assessment = Assesment.objects.get(pk=id)
+        assessment = get_object_or_404(Assesment,pk=id)
         assessment.delete()
         return redirect('upload_assesments')
 
@@ -837,7 +883,6 @@ class TeacherViews():
     def update_profile(request):
         programs = Program.objects.all()
         user = request.user
-        student = Student.objects.get(user_id=request.user.id)
         if request.method == 'POST':
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
@@ -845,11 +890,8 @@ class TeacherViews():
             mobile = request.POST.get('mobile')
            
 
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            
 
-            print(first_name, last_name, email, mobile, fname, mname)
                 
             user.first_name = first_name
         
@@ -879,7 +921,7 @@ class TeacherViews():
     def save_profile(request):
         programs = Program.objects.all()
         user = request.user
-        student = Student.objects.get(user_id=request.user.id)
+        student = get_logged_in_student(request)
     
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
@@ -998,6 +1040,7 @@ class AdminViews():
     def verify_teacher(request,id):
         
         teacher = get_object_or_404(User,pk=id)
+        teacher.user_type="teacher" 
         if teacher.is_staff:
             teacher.is_staff = False
         else:
@@ -1039,13 +1082,59 @@ class AdminViews():
     
     
     def manage_student(request):
-        st = Student.objects.all()
+        st = Student.objects.filter(is_verified=True)
         return render(request, 'pages/admin/manage_student.html',{'students': st})
+
+    def add_admission_eligibility(request):
+        students = Student.objects.filter(is_verified=False, admission_status="pending" )
+           
+        return render(request, 'pages/admin/add_admission_eligibility.html', {'students': students})
+    
+    def add_admission_eligibility_save(request,student_id):
+        student = get_object_or_404(Student,pk=student_id)
+        print(not student.is_eligible_for_admission)
+        
+        student.is_eligible_for_admission = not student.is_eligible_for_admission
+        student.save()
+        messages.success(request, "Admission eligibility updated successfully")
+        return redirect('add_admission_eligibility')
+    def add_entrance_exam_score(request,student_id):
+        student = get_object_or_404(Student,pk=student_id)
+        if request.method == 'POST':
+            entrance_exam_score = request.POST.get('entrance_exam_score')
+            student.entrance_exam_score = entrance_exam_score
+            
+            student.save()
+            messages.success(request, "Admission eligibility updated successfully")
+            return redirect('add_admission_eligibility')
+        
+    def students_admission_verification(request):
+        students = Student.objects.all()
+        
+        return render(request, 'pages/admin/students_admission_verification.html', {'students': students})
+
+    def verify_admission(request,student_id):
+        student = get_object_or_404(Student,pk=student_id)
+
+        if request.method == 'POST':
+            student.admission_status = request.POST.get('admission_status')
+            if student.admission_status == 'rejected' or student.admission_status == 'pending':
+                student.is_verified = False
+                student.user.role = 'guest'
+            else:
+                student.user.role = 'student'
+                student.is_verified = True
+            student.save()
+            
+            messages.success(request, "Admission status updated successfully")
+            return redirect('students_admission_verification')
+        
+        
 
     def edit_student(request,id):
         programs = Program.objects.all()
         user = get_object_or_404(User, pk=id)
-        student = Student.objects.get(user_id=id)
+        student = get_object_or_404(Student,user_id=id)
         if request.method == 'POST':
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
@@ -1061,9 +1150,12 @@ class AdminViews():
             branch = request.POST.get('branch')
             year = request.POST.get('year')
 
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            if program:
+                student.program = get_object_or_404(Program, pk=program)
+            if branch:
+                student.branch = get_object_or_404(Branch, pk=branch)
+            if year:
+                student.year = get_object_or_404(Year, pk=year)
 
             print(first_name, last_name, email, mobile, fname, mname)
                 
@@ -1171,9 +1263,12 @@ class AdminViews():
             if is_protected == 'False':
                 is_protected = False
             print(file)
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            
+            program = get_object_or_404(Program, pk=program)
+        
+            branch = get_object_or_404(Branch, pk=branch)
+        
+            year = get_object_or_404(Year, pk=year)
 
             study_material = StudyMaterial(user=request.user,program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file,is_protected=is_protected)
             print(study_material)
@@ -1186,7 +1281,7 @@ class AdminViews():
 
     def delete_study_material(request,id):
         
-        study_material = StudyMaterial.objects.get(pk=id)
+        study_material = get_object_or_404(StudyMaterial,pk=id)
         study_material.delete()
         return redirect('upload_studymaterial')
 
@@ -1204,9 +1299,11 @@ class AdminViews():
                 is_protected =True
             else:
                 is_protected =False
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            program = get_object_or_404(Program, pk=program)
+        
+            branch = get_object_or_404(Branch, pk=branch)
+        
+            year = get_object_or_404(Year, pk=year)
 
             lecture = Lecture(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, link=link, is_protected=is_protected)
             print(lecture)
@@ -1217,7 +1314,7 @@ class AdminViews():
 
     def delete_lecture(request,id):
         
-        lecture = Lecture.objects.get(pk=id)
+        lecture = get_object_or_404(Lecture,pk=id)
         lecture.delete()
         return redirect('upload_lectures')
 
@@ -1236,9 +1333,11 @@ class AdminViews():
             else:
                 is_protected =False
 
-            program  = Program.objects.get(pk=program).name
-            branch = Branch.objects.get(pk=branch).name
-            year = Year.objects.get(pk=year).name
+            program = get_object_or_404(Program, pk=program)
+        
+            branch = get_object_or_404(Branch, pk=branch)
+        
+            year = get_object_or_404(Year, pk=year)
 
             assessment = Assesment(user=request.user, program=program, branch=branch, year=year, subject=subject, file_name=file_name, file=file, is_protected=is_protected)
             print(assessment)
@@ -1250,7 +1349,7 @@ class AdminViews():
 
     def delete_assessment(request,id):
         
-        assessment = Assesment.objects.get(pk=id)
+        assessment = get_object_or_404(Assesment,pk=id)
         assessment.delete()
         return redirect('upload_assesments')
 
@@ -1287,43 +1386,151 @@ class AdminViews():
 
     def delete_notification(request,id):
        
-        notification = Notification.objects.get(id=id)
+        notification = get_object_or_404(Notification,id=id)
         notification.delete()
         return redirect('add_notification')
 
-    def show_programs(request):
+    def add_programs(request):
         programs = Program.objects.all()
-        return render(request, 'pages/admin/show_programs.html', {'programs': programs})
+        if request.method == 'POST':
+            program_name = request.POST.get('program_name')
+            print(program_name)
+            if program_name:
+                Program.objects.create(name=program_name)
+                messages.success(request, "Program added successfully")
+            return redirect('add_programs')
+        return render(request, 'pages/admin/add_programs.html', {'programs': programs})
+    
+    def delete_program(request,program_id):
+        program = get_object_or_404(Program,id=program_id)
+        program.delete()
+        messages.success(request, "Program deleted successfully")
+        return redirect('add_programs')
+    
+    
+    def add_branches(request,program_id):
+        branches = Branch.objects.filter(program_id=program_id).all()
+        program = get_object_or_404(Program,id=program_id)
+        if request.method == 'POST':
+            branch_name = request.POST.get('branch_name')
+            branch_code = request.POST.get('branch_code')
+            if program_id and branch_name and branch_code:
+                program = get_object_or_404(Program,id=program_id)
+                Branch.objects.create(program=program, name=branch_name, branch_code=branch_code)
+                messages.success(request, "Branch added successfully")
+            return redirect('add_branches', program_id=program_id)
+        return render(request, 'pages/admin/add_branches.html', {'branches': branches, 'program': program})
+    
+    def delete_branch(request,branch_id):
+        print(branch_id)
+        branch = get_object_or_404(Branch,id=branch_id)
+        branch.delete()
+        messages.success(request, "Branch deleted successfully")
+        return redirect('add_branches',program_id=branch.program.id)
+    
+
+    def add_years(request,program_id, branch_id):
+
+        
+        years = Year.objects.filter(branch_id=branch_id).all()
+        branch = get_object_or_404(Branch,id=branch_id)
+        program = get_object_or_404(Program,id=program_id)
+        if request.method == 'POST':
+            year_name = request.POST.get('year_name')
+            # fees = request.POST.get('fees')
+
+            if branch_id and year_name :
+                branch = get_object_or_404(Branch,id=branch_id)
+                Year.objects.create(branch=branch, name=year_name)
+                messages.success(request, "Year added successfully")
+            return redirect('add_years', program_id=program_id, branch_id=branch_id)
+        return render(request, 'pages/admin/add_years.html', {'years': years, 'branch': branch, 'program': program})
+    def delete_year(request,year_id):
+        year = get_object_or_404(Year,id=year_id)
+        year.delete()
+        messages.success(request, "Year deleted successfully")
+        return redirect('add_years', program_id=year.branch.program.id, branch_id=year.branch.id)
+    
+    def add_fees(request, program_id, branch_id, year_id):
+        fees = FeesType.objects.filter(year_id=year_id).all()
+        year = get_object_or_404(Year,id=year_id)
+        branch = get_object_or_404(Branch,id=branch_id)
+        program = get_object_or_404(Program,id=program_id)
+        if request.method == 'POST':
+            fee_name = request.POST.get('fee_name')
+            amount = request.POST.get('amount')
+            if year_id and fee_name and amount:
+                FeesType.objects.create(year=year, name=fee_name, amount=amount, program=program, branch=branch)
+                messages.success(request, "Fees type added successfully")
+            return redirect('add_fees', program_id=program_id, branch_id=branch_id, year_id=year_id)
+        return render(request, 'pages/admin/add_fees.html', {'fees': fees, 'year': year, 'branch': branch, 'program': program})
+    def delete_fees(request, fee_id):
+        fee = get_object_or_404(FeesType,id=fee_id)
+        fee.delete()
+        messages.success(request, "Fees type deleted successfully")
+        return redirect('add_fees', program_id=fee.year.branch.program.id, branch_id=fee.year.branch.id, year_id=fee.year.id)
+    
+    def add_entrance(request, program_id, branch_id, year_id):
+        entrances = Entrance.objects.filter(year_id=year_id).all()
+        
+        year = get_object_or_404(Year,id=year_id)
+        branch = get_object_or_404(Branch,id=branch_id)
+        program = get_object_or_404(Program,id=program_id)
+        if request.method == 'POST':
+            entrance_name = request.POST.get('exam_name')
+            date = request.POST.get('date')
+            time = request.POST.get('time')
+            duration = request.POST.get('duration')
+            if year_id and entrance_name and date and time and duration:
+               
+                Entrance.objects.create(year=year, name=entrance_name, date=date, time=time, duration=duration,program=program, branch=branch)
+                messages.success(request, "Entrance exam added successfully")
+            return redirect('add_entrance', program_id=program_id, branch_id=branch_id, year_id=year_id)
+        return render(request, 'pages/admin/add_entrance.html', {'entrances': entrances, 'year': year, 'branch': branch, 'program': program})
+    def delete_entrance(request, entrance_id):
+        entrance = get_object_or_404(Entrance,id=entrance_id)
+        entrance.delete()
+        messages.success(request, "Entrance exam deleted successfully")
+        return redirect('add_Entrance', program_id=entrance.year.branch.program.id, branch_id=entrance.year.branch.id, year_id=entrance.year.id)
+    
+    def add_subjects(request, program_id, branch_id, year_id):
+        subjects = Subject.objects.filter(year_id=year_id).all()
+        year = get_object_or_404(Year,id=year_id)
+        branch = get_object_or_404(Branch,id=branch_id)
+        program = get_object_or_404(Program,id=program_id)
+        if request.method == 'POST':
+            subject_name = request.POST.get('subject_name')
+            subject_code = request.POST.get('subject_code')
+            if year_id and subject_name and subject_code:
+               
+                Subject.objects.create(year=year, name=subject_name, subject_code=subject_code,program=program, branch=branch)
+                messages.success(request, "Subject added successfully")
+            return redirect('add_subjects', program_id=program_id, branch_id=branch_id, year_id=year_id)
+        return render(request, 'pages/admin/add_subjects.html', {'subjects': subjects, 'year': year, 'branch': branch, 'program': program})
+    def delete_subject(request,subject_id):
+        subject = get_object_or_404(Subject,id=subject_id)
+        subject.delete()
+        messages.success(request, "Subject deleted successfully")
+        return redirect('add_subjects', program_id=subject.year.branch.program.id, branch_id=subject.year.branch.id, year_id=subject.year.id)
+        
+
 
     
 
-    def add_program(request):
-        print('Adding programm')
-        program_name = request.POST.get('program_name')
-        print(program_name)
-        if program_name:
-            Program.objects.create(name=program_name)
-            return True  # Redirect after POST
-      
+    # get total fees
+    def get_total_due(student):
+        expected_total = FeesType.objects.filter(year=student.year).aggregate(total=models.Sum('amount'))['total'] or 0
+        paid_total = StudentFee.objects.filter(student=student).aggregate(total=models.Sum('amount_paid'))['total'] or 0
+        return expected_total - paid_total
+    def record_fee_payment(student, fee_type_id, amount, method, transaction_id=None):
+        fee_type = get_object_or_404(FeesType,id=fee_type_id)
+        StudentFee.objects.create(
+            student=student,
+            fee_type=fee_type,
+            amount_paid=amount,
+            payment_method=method,
+            transaction_id=transaction_id
+        )
+    
 
 
-    def add_branch(request):
-       
-        program_id = request.POST.get('program')
-        branch_name = request.POST.get('branch_name')
-        if program_id and branch_name:
-            program = Program.objects.get(id=program_id)
-            Branch.objects.create(program=program, name=branch_name)
-            return redirect('show_programs')  # Redirect after POST
-        
-
-
-    def add_year(request):
-        
-        branch_id = request.POST.get('branch')
-        year_name = request.POST.get('year_name')
-        if branch_id and year_name:
-            branch = Branch.objects.get(id=branch_id)
-            Year.objects.create(branch=branch, name=year_name)
-            return redirect('show_programs') 
-       

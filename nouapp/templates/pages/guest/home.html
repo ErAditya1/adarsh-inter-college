@@ -30,12 +30,14 @@
               </h5>
               <p class="mb-4">Happy Learnig !!</p>
 
-              <a
-                href="javascript:;"
-                class=""
-                >  <button type="button" class="text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded  px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">View Badge</button>
-                </a
-              >
+              {% if  student %}
+               <button type="button" class="text-white bg-sky-800 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded  px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">{{student.admission_status}}</button>
+              {% endif %}
+              {% if  student and not student.is_verified %}
+                <a href="{% url 'drop_admission' %}" class="w-full">
+                  <button type="button" class="text-white  bg-sky-400 hover:bg-sky-600 text-xl focus:outline-none focus:ring-4 focus:ring-blue-800 shadow font-medium rounded  px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Drop Admission</button>
+                </a>
+              {% endif %}
             </div>
           </div>
           <div class="col-sm-5 text-center text-sm-left">
@@ -96,21 +98,35 @@
         </div>
       </div>
     </div>
-    <!-- Total Revenue -->
+    <!-- Subject Details -->
+    {% if  student %}
     <div class="col-12 col-lg-8 order-2 order-md-3 order-lg-2 mb-4">
       <div class="card text-blue-950 dark:bg-sky-950  dark:text-blue-50">
-        <div class="row row-bordered g-0">
-          <div class="col-md-8">
-            <h5 class="card-header m-0 me-2 pb-3">Subjects</h5>
-          </div>
-          <div class="col-md-4">
-            <div class="card-body">
-              <div class="text-center"></div>
-            </div>
-          </div>
-        </div>
+        <table class="table table-bordered" id="example">
+          <thead>
+            <tr class="table-dark text-center">
+              <th>Subject Name</th>
+              <th>Subject Code</th>
+            </tr>
+          <tbody class="bg-blue-100">
+            
+            {% for i in subjects  %}
+            <tr class="text-center">
+              <td>{{i.name}}</td>
+              <td>{{i.subject_code}}</td>
+            </tr>
+            {% endfor %}
+           
+          </tbody>
+          </thead>
+        </table>
       </div>
     </div>
+    {% else %}
+    
+   {% endif %}
+
+    
     <!--/ Total Revenue -->
     <div class="col-12 col-md-8 col-lg-4 order-3 order-md-2">
       <div class="row">
@@ -159,6 +175,7 @@
         </div>
         <!-- </div>
       <div class="row"> -->
+      
         <div class="col-12 mb-4">
           <div class="card text-blue-950 dark:bg-sky-950  dark:text-blue-50">
             <div class="card-body">

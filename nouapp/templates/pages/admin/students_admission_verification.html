@@ -1,0 +1,93 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}admin_dashboard{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<h1 class="text-center text-3xl font-semibold">Entrance Score & Eligibility Status </h1>
+{% if students %}
+<div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
+  
+  <table class="table table-bordered " id="example" class="display" style="width:100%">
+    <thead>
+      <tr class="table-dark text-center">
+        <th>Roll No.</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Father Name</th>
+        <th>Progran</th>
+        <th>Branch</th>
+        <th>Year</th>
+        
+        <th>
+          Status
+        </th>
+        <th>Admission Status</th>
+        
+
+      </tr>
+    <tbody class="">
+      {% for student in students %}
+      <tr class="text-center">
+        <td>{{ student.rollno }}</td>
+        <td>{{student.user.username}}</td>
+        <td>{{ student.user.first_name }} {{student.user.last_name}}</td>
+        
+        <td>{{ student.fname }}</td>
+        <td>{{ student.program }}</td>
+        <td>{{ student.branch }}</td>
+        <td>{{ student.year }}</td>
+
+        <td >
+          
+            {% if student.is_verified %}        <p><div   class="bg-green-600 p-1 rounded-sm">Verified</div></p>
+            {% else %}
+            <p ><div class="bg-red-600 rounded-sm p-1">Not Verified</div></p>
+
+            {% endif %}
+          
+        </td>
+        <td >
+          <form action={% url "verify_admission" student.id %} method="POST">
+            {% csrf_token %}
+            <select id="admission_status" name="admission_status" autocomplete="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <option value="">--Select Program--</option>
+             
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              
+            </select>
+            <button type="button" class="bg-yellow-500 text-white px-2 py-1 rounded-md">{{student.admission_status}}</button>
+
+            <button type="submit" class="bg-blue-500 text-white px-2 py-1 rounded-md">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </thead>
+  </table>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+  <script>
+    
+
+    
+  </script>
+{% endblock%}

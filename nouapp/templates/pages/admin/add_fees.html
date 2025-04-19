@@ -1,0 +1,82 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}Upload study material{% endblock %}
+
+
+{% block css %}
+
+<style>
+
+</style>
+
+{% endblock %}
+
+{% block admin %}
+
+
+    <div class="container">
+        <div class="border p-4 bg-blue-100 dark:bg-sky-950 rounded md:m-4 border-gray-900/10 pb-12">
+          <h1 class="text-center text-3xl font-semibold">Add Fees and types in >> {{program.name}} >> {{branch.name}} >> {{year.name}}</h1>
+            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                
+                
+      
+                
+                <div class="sm:col-span-3">
+                   
+                    <ol class="list-group">
+                        <li class="list-group-item list-group-item-action active">Available fees types in {{year.name}}</li>
+                        {% for fee in fees %}
+                            <li class="list-group-item list-group-item-action">
+                                <div class="flex justify-between items flex-row">
+                                    <span>{{ fee.name }}</span>
+                                    <span> ₹ {{ fee.amount }}</span>
+                                    <div>
+                                        <span class="bg-blue-500 font-semibold rounded cursor-pointer px-1 border-spacing-2"><a href='/superadmin/nouapp/feestype/{{fee.id}}/change/'> Edit</a></span>
+
+                                        {% comment %} <span class="bg-red-500 font-semibold rounded cursor-pointer px-1 border-spacing-2"><a href="{% url "delete_fees" fee.id %}"> Delete</a></span> {% endcomment %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                        
+                    </ol>
+             
+                    
+                </div>
+                <div class="sm:col-span-3">
+                    <form action="{% url 'add_fees' program.id branch.id year.id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    <ol class="list-group">
+                        <li class="list-group-item list-group-item-action active">Add Fees & Type:</li>
+                        
+                        <li class="list-group-item">
+                            
+                                <label for="fee_name" class="block text-sm font-medium leading-6 text-gray-900 ">Enter Fees Type:</label>
+                                <input type="text" required name="fee_name" id="fee_name"  class="border block w-full rounded-md  py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <label for="amount" class="block text-sm font-medium leading-6 text-gray-900 ">Enter Amount:</label>
+                                <input type="number" required name="amount" id="amount"  class="border block w-full rounded-md  py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <button type="submit" id="add_years" class=" mt-4 flex text-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+                            
+                        </li>
+                    </ol>
+                </form>
+                    
+                </div>
+      
+             
+
+              
+            </div>
+          </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

@@ -156,7 +156,7 @@
                         <div class="w-full">
                             <h3 class="dark:text-gray-300 mb-2">Gender:</h3>
                             <div class="mt-2">
-                              <select id="gender" name="gender" required autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <select id="gender" name="gender" required  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option >--Select Gender--</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -179,7 +179,7 @@
                       <div class="w-full  mb-4 lg:mt-6">
                           <label for="" class=" dark:text-gray-300">Program</label>
                           <div class="mt-2">
-                              <select id="program" required name="program" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <select id="program" required name="program"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">--Select Program--</option>
                                 {% for program in programs %}
                                   <option title="{{program.id}}" value="{{ program.id }}">{{ program.name }}</option>
@@ -192,7 +192,7 @@
                       <div class="w-full  mb-4 mt-6">
                           <label for="" class="mb-2 dark:text-gray-300">Branch</label>
                           <div class="mt-2">
-                              <select id="branch" required name="branch" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <select id="branch" required name="branch"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">--Select Branch--</option>
                                 
                               </select>                
@@ -201,7 +201,7 @@
                       <div class="w-full  mb-4 lg:mt-6">
                           <label for="" class=" dark:text-gray-300">Year</label>
                           <div class="mt-2">
-                              <select id="year" required name="year" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <select id="year" required name="year"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">--Select Year --</option>
                                 
                               </select>

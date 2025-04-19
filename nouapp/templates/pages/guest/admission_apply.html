@@ -1,0 +1,248 @@
+{% extends "layouts/glayout.html" %}
+{% load static %}
+{% block title %}Student Details Form{% endblock %}
+
+{% block css %}
+<style>
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .input-style {
+    width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc; background-color: #f9fafb; color: #111827;
+    transition: border-color 0.2s ease-in-out;
+  }
+  .btn-nav {
+    background-color: #4f46e5; color: white; padding: 0.5rem 1.25rem; border-radius: 0.375rem;
+  }
+  .btn-submit {
+    background-color: #10b981; color: white; padding: 0.75rem; border-radius: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block guest %}
+<form action="" method="POST" enctype="multipart/form-data" id="studentForm">
+  {% csrf_token %}
+  <div class="container">
+    <div class="border p-4 rounded md:m-4 bg-blue-100 dark:bg-sky-950 border-gray-900/10 pb-12">
+      
+
+      
+      <div class="step active" id="step1">
+        <h1 class="text-center text-3xl font-semibold">Add Student Details</h1>
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">First Name:</label>
+            <input type="text" name="first_name" disabled id="first_name" class="input-style"  value={{user.first_name}} />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Last Name:</label>
+            <input type="text" name="last_name" disabled id="last_name" class="input-style"  value={{user.last_name}} />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Username:</label>
+            <input type="text" name="username" disabled id="username" class="input-style"  value={{user.username}} />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Date of Birth</label>
+            <input type="date" name="date_of_birth" id="date_of_birth" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Father's Name</label>
+            <input type="text" name="fname" id="fname" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Mother's Name</label>
+            <input type="text" name="mname" id="mname" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Gender</label>
+            <select name="gender" id="gender" class="input-style">
+              <option value="">--Select Gender--</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <label for="aadhar_number" class="block text-sm font-medium">Aadhar Card:</label>
+            <input type="text" name="aadhar_number" id="aadhar_number" class="input-style" />
+          </div>
+        </div>
+      </div>
+
+
+      
+      <div class="step" id="step2">
+        <h1 class="text-center text-3xl font-semibold">Add Student Address</h1>
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label for="address_line_1" class="block text-sm font-medium">Address Line 1:</label>
+            <input type="text" name="address_line_1" id="address_line_1" required class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="address_line_2" class="block text-sm font-medium">Address Line 2:</label>
+            <input type="text" name="address_line_2" id="address_line_2" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="city" class="block text-sm font-medium">City:</label>
+            <input type="text" name="city" id="city" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="state" class="block text-sm font-medium">State:</label>
+            <input type="text" name="state" id="state" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="postal_code" class="block text-sm font-medium">Postal Code:</label>
+            <input type="text" name="postal_code" id="postal_code" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="country" class="block text-sm font-medium">Country:</label>
+            <input type="text" name="country" id="country" class="input-style" />
+          </div>
+        </div>
+      </div>
+
+      <div class="step" id="step3">
+        <h1 class="text-center text-3xl font-semibold">Add Educatiuon Details</h1>
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Program</label>
+            <select name="program" id="program" class="input-style">
+              <option value="">--Select Program--</option>
+              {% for program in programs %}
+                <option value="{{ program.id }}">{{ program.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Branch</label>
+            <select name="branch" id="branch" class="input-style">
+              <option value="">--Select Branch--</option>
+            </select>
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Year</label>
+            <select name="year" id="year" class="input-style">
+              <option value="">--Select Year--</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="step" id="step4">
+        <h1 class="text-center text-3xl font-semibold">Qualification Details</h1>
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <label for="previous_school" class="block text-sm font-medium">Previous School:</label>
+            <input type="text" name="previous_school" id="previous_school" required class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="last_qualification" class="block text-sm font-medium">Last Qualification:</label>
+            <input type="text" name="last_qualification" id="last_qualification" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="year_of_passing" class="block text-sm font-medium">Passing Year:</label>
+            <input type="text" name="year_of_passing" id="year_of_passing" class="input-style" />
+          </div>
+          <div class="sm:col-span-3">
+            <label for="grade" class="block text-sm font-medium">Grade:</label>
+            <input type="text" name="grade" id="grade" class="input-style" />
+          </div>
+         
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step" id="step5">
+        <h1 class="text-center text-3xl font-semibold">Upload Documemts:</h1>
+        <div class="sm:col-span-3">
+          <label class="block text-sm font-medium">Upload Image</label>
+          <input type="file" name="image" id="image" accept="image/*" required class="input-style" />
+        </div>
+        <div class="sm:col-span-3">
+          <label class="block text-sm font-medium">Upload Aadhar Image:</label>
+          <input type="file" name="aadhar_image" id="aadhar_image" required accept="application/pdf" class="input-style" />
+        </div>
+
+        <div class="col-span-full mt-6">
+          <button type="submit" class="btn-submit w-full">Submit</button>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="mt-6 flex justify-between">
+        <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn-nav">Previous</button>
+        <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn-nav">Next</button>
+      </div>
+
+    </div>
+  </div>
+</form>
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<!-- JavaScript for Wizard -->
+<script>
+  let currentStep = 0;
+  const steps = document.querySelectorAll('.step');
+  const form = document.getElementById("studentForm");
+
+  function showStep(n) {
+    steps.forEach((step, idx) => step.classList.toggle('active', idx === n));
+    document.getElementById("prevBtn").style.display = n === 0 ? "none" : "inline-block";
+    document.getElementById("nextBtn").style.display = n === (steps.length - 1) ? "none" : "inline-block";
+  }
+
+  function validateStep(n) {
+    const inputs = steps[n].querySelectorAll("input, select");
+    for (let input of inputs) {
+      if (input.type !== "file" && input.hasAttribute("name") && input.value.trim() === "") {
+        alert("Please fill all required fields.");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function saveDraft() {
+    const data = new FormData(form);
+    for (let [key, value] of data.entries()) {
+      if (key !== 'csrfmiddlewaretoken') {
+        sessionStorage.setItem(key, value);
+      }
+    }
+  }
+
+  function loadDraft() {
+    const fields = form.querySelectorAll("input, select");
+    fields.forEach(input => {
+      if (sessionStorage.getItem(input.name)) {
+        input.value = sessionStorage.getItem(input.name);
+      }
+    });
+  }
+
+  function nextPrev(n) {
+    if (n === 1 && !validateStep(currentStep)) return;
+    saveDraft();
+    currentStep += n;
+    if (currentStep >= steps.length) {
+      form.submit();
+      return;
+    }
+    showStep(currentStep);
+  }
+
+  // Load session draft on load
+  window.onload = function () {
+    loadDraft();
+    showStep(currentStep);
+  }
+</script>
+{% endblock %}

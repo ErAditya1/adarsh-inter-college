@@ -1,11 +1,29 @@
 <script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+</script>
+<script>
     $(document).ready(function() {
         $('#program').change(function() {
             var programId = $(this).val();
-            console.log(programId);
             if (programId) {
                 $.ajax({
-                    url: 'load_branches/',
+                    url: '/ajax/load_branches/',
                     data: {
                         'program_id': programId
                     },
@@ -18,7 +36,7 @@
                     }
                 });
             } else {
-                
+                console.log("gygtgr")
                 $('#branch').html('<option value="">--Select Branch--</option>');
                 $('#year').html('<option value="">--Select Year--</option>');
             }
@@ -27,13 +45,12 @@
         $('#branch').change(function() {
             var branchId = $(this).val();
             if (branchId) {
-                console.log(branchId)
                 $.ajax({
-                    url: 'load_years/',
-                    data: {'branch_id': branchId},
+                    url: '/ajax/load_years/',
+                    data: {
+                        'branch_id': branchId
+                    },
                     success: function(data) {
-                        console.log('data received', data)
-
                         $('#year').html('<option value="">--Select Year--</option>');
                         $.each(data, function(key, value) {
                             $('#year').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
@@ -41,9 +58,72 @@
                     }
                 });
             } else {
-                console.log('Please select a branch')
                 $('#year').html('<option value="">--Select Year--</option>');
             }
         });
+        $('#year').change(function() {
+          var year_id = $(this).val();
+          if (year_id) {
+              $.ajax({
+                  url: '/ajax/load_subjects/',
+                  data: {
+                      'year_id': year_id
+                  },
+                  success: function(data) {
+                      $('#subject').html('<option value="">--Select Subject--</option>');
+                      $.each(data, function(key, value) {
+                          $('#subject').append('<option key="'+value.id +'" value="' + value.id + '">' + value.name + '</option>');
+                      });
+                  }
+              });
+          } else {
+              $('#year').html('<option value="">--Select Year--</option>');
+          }
+      });
     });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            {% if messages %}
+                {% for message in messages %}
+                    toastr.options = {
+                        "closeButton": true,
+                        "positionClass": "toast-top-center", // Or another position like 'toast-top-right'
+                        "timeOut": "5000", // 3 seconds
+                    };
+                    toastr["{{ message.tags }}"]("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+    <!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+<!-- Buttons for export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        
+        $(document).ready(function () {
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print', 'pageLength'
+                ],
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    ['10', '25', '50', '100', 'all']
+                ]
+            });
+        });
+        
+    </script>

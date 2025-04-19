@@ -12,7 +12,7 @@ urlpatterns = [
     path('', home, name="home"),
     path("about/", about, name="about"),
     path("contact/", contact, name="contact"),
-    path("check_username_availability", check_username_availability,
+    path("check_username_availability/", check_username_availability,
          name="check_username_availability"),
     path("check_email_availability", check_email_availability,
          name="check_email_availability"),
@@ -27,18 +27,19 @@ urlpatterns = [
 
     
 
-    path('load_branches/', load_branches, name='load_branches'),
-    path('load_years/', load_years, name='load_years'),
-    path('save_enquiry/', save_enquiry, name="save_enquiry"),
+    path('ajax/load_branches/', load_branches, name='load_branches'),
+     path('ajax/load_years/', load_years, name='load_years'),
+     path('ajax/load_subjects/', load_subjects, name='load_subjects'),
+
+     path('save_enquiry/', save_enquiry, name="save_enquiry"),
 
     
     
 
 
 # student urls---------------------------------------------
-    path('student/add_student_details/', StudentViews.add_student_details, name="add_student_details"),
-    path('student/add_student_details/load_branches/', load_branches, name='load_branches'),
-    path('student/add_student_details/load_years/', load_years, name='load_years'),
+ 
+
     path("student/dashboard/", StudentViews.dashboard, name="student_dashboard"),
     path("student/profile/", StudentViews.profile, name="student-profile"),
     path("student/study_material/", StudentViews.study_material, name="study_material"),
@@ -49,13 +50,15 @@ urlpatterns = [
     path("student/lectures/", StudentViews.lectures, name="lectures"),
     path("student/update_profile", StudentViews.update_profile, name="update_profile"),
     path("student/notifications/", StudentViews.read_notifications, name="notifications"),
-    path('student/load_branches/', load_branches, name='load_branches'),
-    path('student/load_years/', load_years, name='load_years'),
- 
+  
 
     # guest urls ----------------------------------------------------------------
 
     path("guest/dashboard/", GuestViews.dashboard, name="guest_dashboard"),
+    path("guest/admission_apply/", GuestViews.admission_apply, name="admission_apply"),
+    path("guest/drop_admission/", GuestViews.drop_admission, name="drop_admission"),
+    path("guest/teaching_apply/", GuestViews.teaching_apply, name="teaching_apply"),
+
     path("guest/profile/", GuestViews.profile, name="guest_profile"),
     path("guest/study_material/", GuestViews.study_material, name="guest_study_material"),
     path("guest/feedbacks/", GuestViews.feedbacks, name="guest_feedbacks"),
@@ -67,14 +70,13 @@ urlpatterns = [
 
 
     # teacher urls --------------------------------
-    path('teacher/add_teacher_details/', TeacherViews.add_teacher_details, name="add_teacher_details"),
     path("teacher/dashboard/", TeacherViews.dashboard, name="teacher_dashboard"),
     path("teacher/delete_profile/<int:id>/", AdminViews.delete_user, name="delete_profile"),
     path("teacher/upload_studymaterial",TeacherViews.upload_studymaterial, name="upload_studymaterial_teacher"),
     path("teacher/upload_lectures",TeacherViews.upload_lectures, name="upload_lectures_teacher"),
     path("teacher/upload_assesments",TeacherViews.upload_assesments, name="upload_assesments_teacher"),
-    path('teacher/load_branches/', load_branches, name='load_branches'),
-    path('teacher/load_years/', load_years, name='load_years'),
+    path('teacher/add_intrested_subjects/', TeacherViews.add_intrested_subjects, name='add_intrested_subjects'),
+    path('teacher/delete_intrested_subjects/<int:subject_id>/', TeacherViews.delete_intrested_subjects, name='delete_intrested_subjects'),
     path('teacher/profile/', TeacherViews.profile, name='teacher_profile'),
     path('teacher/update_profile/', TeacherViews.update_profile, name='update_profile_teacher'),
 
@@ -94,12 +96,10 @@ urlpatterns = [
     path("admin/delete_study_material/<int:id>/",AdminViews.delete_study_material, name="delete_study_material"),
     path("admin/delete_assessment/<int:id>/",AdminViews.delete_assessment, name="delete_assessment"),
     path("admin/delete_lecture/<int:id>/",AdminViews.delete_lecture, name="delete_lecture"),
-    path("admin/view_feedback",AdminViews.view_feedback, name="view_feedback"),
     path("admin/view_complaint",AdminViews.view_complaint, name="view_complaint"),
     path("admin/view_enquries",AdminViews.view_enquries, name="view_enquries"),
     path("admin/view_feedback",AdminViews.view_feedback, name="view_feedback"),
     path("admin/add_notification",AdminViews.add_notification, name="add_notification"),
-    path("admin/show_programs", AdminViews.show_programs, name="show_programs"),
     path("admin/delete_user/<int:id>/",AdminViews.delete_user, name="delete_user"),
     path("admin/delete_student/<int:id>/",AdminViews.delete_student, name="delete_student"),
     path("admin/delete_teacher/<int:id>/",AdminViews.delete_teacher, name="delete_teacher"),
@@ -114,13 +114,23 @@ urlpatterns = [
 
 
 
-    path('admin/add_program/', AdminViews.add_program, name='add_program'),
-    path('admin/add_branch/', AdminViews.add_branch, name='add_branch'),
-    path('admin/add_year/', AdminViews.add_year, name='add_year'),
-    path('admin/load_branches/', load_branches, name='load_branches'),
-    path('admin/load_years/', load_years, name='load_years'),
-    path('admin/edit_student/<int:id>/load_branches/', load_branchese, name='load_branches'),
-    path('admin/edit_student/<int:id>/load_years/', load_yearse, name='load_years'),
+    path('admin/add_programs/', AdminViews.add_programs, name='add_programs'),
+    path('admin/delete_program/<int:program_id>/', AdminViews.delete_program, name='delete_program'),
+    path('admin/add_branches/<int:program_id>/', AdminViews.add_branches, name='add_branches'),
+    path('admin/delete_branch/<int:branch_id>/', AdminViews.delete_branch, name='delete_branch'),
+    path('admin/add_years/<int:program_id>/<int:branch_id>/', AdminViews.add_years, name='add_years'),
+    path('admin/delete_year/<int:year_id>/', AdminViews.delete_year, name='delete_year'),
+    path('admin/add_fees/<int:program_id>/<int:branch_id>/<int:year_id>/', AdminViews.add_fees, name='add_fees'),
+    path('admin/delete_fees/<int:fee_id>/', AdminViews.delete_fees, name='delete_fees'),
+    path('admin/add_entrance/<int:program_id>/<int:branch_id>/<int:year_id>/', AdminViews.add_entrance, name='add_entrance'),
+    path('admin/delete_entrance/<int:subject_id>/', AdminViews.delete_subject, name='delete_entrance'),
+    path('admin/add_subjects/<int:program_id>/<int:branch_id>/<int:year_id>/', AdminViews.add_subjects, name='add_subjects'),
+    path('admin/delete_subject/<int:subject_id>/', AdminViews.delete_subject, name='delete_subject'),
+    path('admin/add_admission_eligibility/', AdminViews.add_admission_eligibility, name='add_admission_eligibility'),
+    path('admin/add_admission_eligibility_save/<int:student_id>/', AdminViews.add_admission_eligibility_save, name='add_admission_eligibility_save'),
+    path('admin/add_entrance_exam_score/<int:student_id>/', AdminViews.add_entrance_exam_score, name='add_entrance_exam_score'),
+    path('admin/students_admission_verification/', AdminViews.students_admission_verification, name='students_admission_verification'),
+    path('admin/verify_admission/<int:student_id>/', AdminViews.verify_admission, name='verify_admission'),
 
 
 ]
