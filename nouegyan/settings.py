@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 import dotenv  # Import the dotenv module
 from django.contrib.messages import constants as messages
-from urllib.parse import urlparse
 
 
 # Load environment variables from .env file
@@ -108,15 +107,13 @@ WSGI_APPLICATION = 'nouegyan.wsgi.application'
 #     }
 # }
 
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-    # 'default': dj_database_url.config(
-    #     default='sqlite:///db.sqlite3'  # Fallback to SQLite if DATABASE_URL is not set
-    # )
+   
 
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
@@ -127,6 +124,16 @@ DATABASES = {
     #     'PORT': '3307'
     # }
 }
+'''
+
+import dj_database_url
+tmpPostgres = os.getenv("DATABASE_URL")
+
+DATABASES = {
+    'default': dj_database_url.parse("postgresql://cms_production_database_user:cwJ6ybN274inzNYYJmGxQ6xQUSxGnp1A@dpg-d01hp9adbo4c738pavgg-a.oregon-postgres.render.com/cms_production_database")
+}
+
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
