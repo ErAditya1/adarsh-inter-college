@@ -4,8 +4,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
-from .models import User, Admin, Teacher,TeacherInterest,Student,Feedback,Complaint, Branch, Year, StudentFee, FeesType,Subject, Entrance, Program,Enquiry,Notification
-from .models import StudyMaterial,Assesment,Lecture
+from .models import *
 from .decorators import user_type_required
 
 from datetime import datetime
@@ -285,6 +284,7 @@ def load_subjects(request):
 def save_enquiry(request):
     
     name = request.POST.get('name')
+    # name = request.POST['name']
     gender = request.POST.get('gender')
     address = request.POST.get('address')
     email = request.POST.get('email')
@@ -323,6 +323,13 @@ def generate_roll_number(pg, br, yr):
 
     return rollno
 
+
+
+
+def gallery(request):
+    # Fetch all the images from the database
+    images = Gallery.objects.all()
+    return render(request, 'pages/gallery.html',{'images': images})
 
 # Student Dashboard ----------------------------------------------------------------
 
@@ -1532,5 +1539,16 @@ class AdminViews():
             transaction_id=transaction_id
         )
     
+    def add_gallery(request):
+        user = request.user
+        if request.method == 'POST':
+            title = request.POST.get('title')
+            image = request.FILES.get('image')
+            gallery = Gallery(title=title, image=image, user=user)
+            gallery.save()
+            messages.success(request, "Gallery image added successfully")
+            return redirect('add_gallery')
+        images = Gallery.objects.all()
+        return render(request, 'pages/admin/add_gallery.html', {'images': images})
 
 

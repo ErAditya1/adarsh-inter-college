@@ -12,6 +12,7 @@ urlpatterns = [
     path('', home, name="home"),
     path("about/", about, name="about"),
     path("contact/", contact, name="contact"),
+    path("gallery/", gallery, name="gallery"),
     path("check_username_availability/", check_username_availability,
          name="check_username_availability"),
     path("check_email_availability", check_email_availability,
@@ -131,6 +132,7 @@ urlpatterns = [
     path('admin/add_entrance_exam_score/<int:student_id>/', AdminViews.add_entrance_exam_score, name='add_entrance_exam_score'),
     path('admin/students_admission_verification/', AdminViews.students_admission_verification, name='students_admission_verification'),
     path('admin/verify_admission/<int:student_id>/', AdminViews.verify_admission, name='verify_admission'),
+    path('admin/add_gallery', AdminViews.add_gallery, name='add_gallery'),
 
 
 ]

@@ -1,0 +1,31 @@
+{% extends 'layouts/layout.html' %} {% load static %} {% block title %} Gallery
+{%endblock %} {% block css %}
+<style></style>
+
+{% endblock %} {% block main %}
+<div>
+  <section
+    class="h-full mx-auto w-full max-w-full md:max-w-screen-xl px-4 md:px-12 lg:px-20 pt-10"
+  >
+    <div class="backdrop-blur-md p-1" style="opacity: 1; transform: none">
+      <div
+        class="columns-2 gap-5 sm:columns-2 sm:gap-8 md:columns-3 lg:columns-4 [&amp;>img:not(:first-child)]:mt-8"
+      >
+      {% for image in images %}
+      <div class="mb-4">
+          <img
+          src="{{ image.image.url }}"
+          alt={{ image.title }}
+          class="w-full h-auto rounded-lg shadow-lg transition-transform duration-300 transform hover:scale-105"
+          />
+         
+      </div>
+      {% endfor %}
+      </div>
+    </div>
+  </section>
+</div>
+
+{% endblock %} {% block extrajs %}
+<script></script>
+{% endblock %}

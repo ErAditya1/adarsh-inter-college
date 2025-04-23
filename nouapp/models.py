@@ -333,5 +333,13 @@ class Notification(models.Model):
     def __str__(self):
         return self.subject
 
+class Gallery(models.Model):
+    id = models.IntegerField(primary_key=True, auto_created=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gallery')
+    image = models.ImageField(upload_to='gallery_images')
+    title = models.CharField(max_length=200)
+    created_at = models.DateTimeField(default=timezone.now)
 
+    def __str__(self):
+        return f"Gallery Image {self.id}"
 

@@ -98,3 +98,8 @@ class EnquiryAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'mobile', 'created_at')
     search_fields = ('name', 'email', 'mobile')
     list_filter = ('created_at',)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'image', 'created_at')
+    search_fields = ('title',)
+    list_filter = ('created_at',)
+
