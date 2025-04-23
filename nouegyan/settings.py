@@ -130,7 +130,7 @@ import dj_database_url
 tmpPostgres = os.getenv("DATABASE_URL")
 
 DATABASES = {
-    to   'default': dj_database_url.parse("postgresql://cms_production_database_user:cwJ6ybN274inzNYYJmGxQ6xQUSxGnp1A@dpg-d01hp9adbo4c738pavgg-a.oregon-postgres.render.com/cms_production_database")
+     'default': dj_database_url.parse(tmpPostgres)
 }
 
 
