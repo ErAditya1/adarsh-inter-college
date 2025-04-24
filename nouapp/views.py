@@ -501,17 +501,12 @@ class GuestViews():
         user = request.user
         try:
             # Attempt to get the student based on the logged-in user
-            student = get_logged_in_student(request)
             
-            # Fetch the subjects associated with the student's year
-            subjects = Subject.objects.filter(year=student.year)
-            
-            entrace_exam = Entrance.objects.filter(year=student.year)
 
             
 
             # Render the dashboard template with student and subjects
-            return render(request, 'pages/guest/home.html', {'student': student, 'subjects': subjects,"entrace_exam":entrace_exam})
+            return render(request, 'pages/guest/home.html')
 
         except Student.DoesNotExist:
             programs = Program.objects.all()
