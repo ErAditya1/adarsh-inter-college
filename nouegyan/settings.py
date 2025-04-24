@@ -107,6 +107,7 @@ WSGI_APPLICATION = 'nouegyan.wsgi.application'
 #     }
 # }
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -124,14 +125,13 @@ DATABASES = {
     # }
 }
 
+'''
+import dj_database_url
+tmpPostgres = os.getenv("DATABASE_URL")
 
-
-# import dj_database_url
-# tmpPostgres = os.getenv("DATABASE_URL")
-
-# DATABASES = {
-#     'default': dj_database_url.parse(tmpPostgres)
-# }
+DATABASES = {
+     'default': dj_database_url.parse(tmpPostgres)
+}
 
 
 
