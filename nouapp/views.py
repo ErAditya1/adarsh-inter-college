@@ -81,12 +81,15 @@ def check_mobile_availability(request):
         return HttpResponse(False)
 
 def get_logged_in_student(request):
+
     sudent = Student.objects.filter(user_id=request.user.id).exists()
     if not sudent:
         # messages.error(request, "You are not a student")
         return None
         # return redirect('login')
     return get_object_or_404(Student, user_id=request.user.id)
+
+
 
 def register(request):
     if request.method == 'POST':
