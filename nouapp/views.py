@@ -81,6 +81,11 @@ def check_mobile_availability(request):
         return HttpResponse(False)
 
 def get_logged_in_student(request):
+    sudent = Student.objects.filter(user_id=request.user.id).exists()
+    if not sudent:
+        # messages.error(request, "You are not a student")
+        return None
+        # return redirect('login')
     return get_object_or_404(Student, user_id=request.user.id)
 
 def register(request):
@@ -530,53 +535,57 @@ class GuestViews():
             if student:
                 messages.info(request, 'You are already applied for admission')
                 return redirect('guest_dashboard')
+            else:
+                if request.method == 'POST':
+                    date_of_birth = request.POST.get('date_of_birth')
+                    fname = request.POST.get('fname')
+                    mname = request.POST.get('mname')
+                    gender = request.POST.get('gender')
+                    aadhar_number = request.POST.get('aadhar_number')
+                    
+                    address_line_1 = request.POST.get('address_line_1')
+                    address_line_2 = request.POST.get('address_line_2')
+                    city = request.POST.get('city')
+                    state = request.POST.get('state')
+                    country = request.POST.get('country')
+                    postal_code = request.POST.get('postal_code')
+                    
+                    pg = request.POST.get('program')
+                    br = request.POST.get('branch')
+                    yr = request.POST.get('year')
+
+                    previous_school = request.POST.get('previous_school')
+                    last_qualification = request.POST.get('last_qualification')
+                    year_of_passing = request.POST.get('year_of_passing')
+                    grade = request.POST.get('grade')
+
+
+
+                    image = request.FILES.get('image')
+                    aadhar_image = request.FILES.get('aadhar_image')
+
+
+                    branch = get_object_or_404(Branch, pk=br)
+                    year = get_object_or_404(Year, pk=yr)
+                    program = get_object_or_404(Program, pk=pg)
+
+                
+                
+                    rollnumber = generate_roll_number(pg, br, yr)
+
+
+
+                    admission = Student(user=user,rollno = rollnumber,date_of_birth=date_of_birth,fname=fname,mname=mname,gender=gender,   program=program, branch=branch, year=year,aadhar_number=aadhar_number, previous_school=previous_school, last_qualification=last_qualification, year_of_passing=year_of_passing, grade=grade, city=city, state=state, country=country, postal_code=postal_code,address_line_1=address_line_1, address_line_2=address_line_2,  image=image, aadhar_imag=aadhar_image)
+                    admission.save()
+                    messages.success(request, "Admission application submitted successfully")
+                    return redirect('admission_apply')
+                return render(request, 'pages/guest/admission_apply.html',{"programs":programs})
+        
         except Student.DoesNotExist:
+            print ("Student does not exist")
         
-            if request.method == 'POST':
-                date_of_birth = request.POST.get('date_of_birth')
-                fname = request.POST.get('fname')
-                mname = request.POST.get('mname')
-                gender = request.POST.get('gender')
-                aadhar_number = request.POST.get('aadhar_number')
-                
-                address_line_1 = request.POST.get('address_line_1')
-                address_line_2 = request.POST.get('address_line_2')
-                city = request.POST.get('city')
-                state = request.POST.get('state')
-                country = request.POST.get('country')
-                postal_code = request.POST.get('postal_code')
-                
-                pg = request.POST.get('program')
-                br = request.POST.get('branch')
-                yr = request.POST.get('year')
-
-                previous_school = request.POST.get('previous_school')
-                last_qualification = request.POST.get('last_qualification')
-                year_of_passing = request.POST.get('year_of_passing')
-                grade = request.POST.get('grade')
-
-
-
-                image = request.FILES.get('image')
-                aadhar_image = request.FILES.get('aadhar_image')
-
-
-                branch = get_object_or_404(Branch, pk=br)
-                year = get_object_or_404(Year, pk=yr)
-                program = get_object_or_404(Program, pk=pg)
-
-               
-              
-                rollnumber = generate_roll_number(pg, br, yr)
-
-
-
-                admission = Student(user=user,rollno = rollnumber,date_of_birth=date_of_birth,fname=fname,mname=mname,gender=gender,   program=program, branch=branch, year=year,aadhar_number=aadhar_number, previous_school=previous_school, last_qualification=last_qualification, year_of_passing=year_of_passing, grade=grade, city=city, state=state, country=country, postal_code=postal_code,address_line_1=address_line_1, address_line_2=address_line_2,  image=image, aadhar_imag=aadhar_image)
-                admission.save()
-                messages.success(request, "Admission application submitted successfully")
-                return redirect('admission_apply')
-        
-            return render(request, 'pages/guest/admission_apply.html',{"programs":programs})
+            
+            
     
     def drop_admission(request):
         user = request.user
