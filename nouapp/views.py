@@ -81,7 +81,10 @@ def check_mobile_availability(request):
         return HttpResponse(False)
 
 def get_logged_in_student(request):
-    return get_object_or_404(Student, user_id=request.user.id)
+    try:
+        return Student.objects.filter(user_id=request.user.id).first()
+    except:
+        return None
 
 def register(request):
     if request.method == 'POST':
