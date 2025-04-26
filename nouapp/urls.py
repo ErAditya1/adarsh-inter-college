@@ -11,6 +11,7 @@ urlpatterns = [
 
     path('', home, name="home"),
     path("about/", about, name="about"),
+    path("services/", services, name="services"),
     path("contact/", contact, name="contact"),
     path("gallery/", gallery, name="gallery"),
     path("check_username_availability/", check_username_availability,

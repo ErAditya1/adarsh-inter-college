@@ -50190,3 +50190,5 @@ Traceback (most recent call last):
 django.db.utils.OperationalError: could not translate host name "dpg-d01hp9adbo4c738pavgg-a.oregon-postgres.render.com" to address: No such host is known. 
 
 "GET /__reload__/events/ HTTP/1.1" 500 27134
+You're accessing the development server over HTTPS, but it only supports HTTP.
+You're accessing the development server over HTTPS, but it only supports HTTP.
