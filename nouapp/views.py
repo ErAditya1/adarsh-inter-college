@@ -18,6 +18,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.functions import TruncDate
 
 
 
@@ -1028,7 +1029,98 @@ class TeacherViews():
         return render(request, 'pages/student/notifications.html', {'notifications': notifications})
 
 
+    def attendance_report(request):
+        # Get all students
+        programs = Program.objects.all()
+        students = Student.objects.select_related('user').filter(admission_status='approved')
+        is_filtered = False
+        if request.method == 'GET':
+            program = request.GET.get('program')
+            branch = request.GET.get('branch')
+            year = request.GET.get('year')
+            subject = request.GET.get('subject')
+            
+            if program:
+                students = students.filter(program=program)
+            if branch:
+                students = students.filter(branch=branch)
+            if year:
+                is_filtered = True
+                students = students.filter(year=year)
+            if subject:
+                students = students.filter(subject=subject)
 
+        if request.method == 'POST':
+        # getting values from form
+            student_ids = request.POST.getlist('student_ids')   # list of student IDs
+            program_id = request.GET.get('program')
+            branch_id = request.GET.get('branch')
+            year_id = request.GET.get('year')
+
+            if not student_ids or not program_id or not branch_id or not year_id:
+                messages.error(request, "Please select students and class details")
+                return redirect('attendance')
+            
+            program = get_object_or_404(Program, pk=program_id)
+            branch = get_object_or_404(Branch, pk=branch_id)
+            year = get_object_or_404(Year, pk=year_id)
+            
+
+            for student_id in student_ids:
+
+                status = request.POST.get(f'status_{student_id}') == 'present'  # status_present / status_absent
+                is_attendance_exists = Attendance.objects.filter(student_id=student_id, program=program, branch=branch, year=year).exists()
+                if is_attendance_exists:
+                    attendance = Attendance.objects.get(student_id=student_id, program=program, branch=branch, year=year, date__date=datetime.now().date())
+                    attendance.status = status
+                    attendance.submitted_by = request.user
+                    attendance.save()
+                else:
+                    Attendance.objects.create(
+                        student_id=student_id,
+                        program=program,
+                        branch=branch,
+                        year=year,
+                        status=status,
+                        submitted_by=request.user,
+                        
+                    )
+            
+            messages.success(request, "Attendance submitted successfully")
+        
+            return redirect('attendance_report') 
+            
+
+        # Get unique attendance dates
+        dates = Attendance.objects.annotate(date_only=TruncDate('date')) \
+                                .values_list('date_only', flat=True) \
+                                .distinct() \
+                                .order_by('date_only')
+
+        # Build a dictionary: { (student_id, date): status }
+        attendance_data = {}
+        attendances = Attendance.objects.annotate(date_only=TruncDate('date')).all()
+
+        for attendance in attendances:
+            
+            key = (attendance.student_id, attendance.date_only)
+            
+            attendance_data[key] = attendance.status  # True or False
+           
+          
+        
+        
+
+        return render(request, 'pages/teacher/attendance_report.html', {
+            'students': students,
+            'dates': dates,
+            'attendance_data': attendance_data,
+            'programs': programs,
+            'is_filtered': is_filtered,
+        })
+
+
+   
 
 
 

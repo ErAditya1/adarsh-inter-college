@@ -1,0 +1,188 @@
+{% extends "layouts/tlayout.html" %} {% load custom_filters %} {% load static %}
+{% block title %}Attendance{% endblock %} {% block css %}
+
+<style></style>
+
+{% endblock %} {% block teacher %}
+
+<form action="" method="GET" enctype="multipart/form-data">
+  {% comment %} {% csrf_token %} {% endcomment %}
+  <div class="container">
+    <div
+      class="border p-4 rounded md:m-4 bg-blue-100 dark:bg-sky-950 border-gray-900/10 pb-12"
+    >
+      <h1 class="text-center text-3xl font-semibold">Attendance</h1>
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-3">
+          <label
+            for="program"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+            >Select Program</label
+          >
+          <div class="mt-2">
+            <select
+              id="program"
+              name="program"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="">--Select Program--</option>
+              {% for program in programs %}
+              <option value="{{ program.id }}">{{ program.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <label
+            for="branch"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+            >Select Branch</label
+          >
+          <div class="mt-2">
+            <select
+              id="branch"
+              name="branch"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="">--Select Branch--</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <label
+            for="year"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+            >Select Year</label
+          >
+          <div class="mt-2">
+            <select
+              id="year"
+              name="year"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="">--Select Year --</option>
+            </select>
+          </div>
+        </div>
+        {% comment %}
+        <div class="sm:col-span-3">
+          <label
+            for="subject"
+            class="block text-sm font-medium leading-6 text-gray-900 dark:text-white"
+            >Select Subject</label
+          >
+          <div class="mt-2">
+            <select
+              id="subject"
+              name="subject"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            >
+              <option value="">--Select Subject --</option>
+            </select>
+          </div>
+        </div>
+        {% endcomment %}
+
+        <div class="col-span-full">
+          <button
+            type="submit"
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Filter Attendance
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form action="" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
+<table  class=" table-bordered" id="example">
+  <thead class="bg-blue-200 dark:bg-sky-950">
+    <tr>
+      <th class="p-2">Roll Number</th>
+      <th class="p-2">Name</th>
+      {% for date in dates %}
+      <th class="p-2">{{ date|date:"d M Y" }}</th>
+      {% endfor %}
+      {% if is_filtered  and students %}
+      <th>Attendance</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in students %}
+    <tr class="w-full">
+      <td class="p-2">{{ student.user.username }}</td>
+      <td class="p-2">{{ student.user.first_name }} {{ student.user.last_name }}</td>
+     
+      <input type="hidden" name="student_ids" value="{{ student.id }}">
+      {% for date in dates %}
+      <td >
+        
+
+        
+        {% with student.id|stringformat:"s" as student_id %}
+          {% with date|stringformat:"s" as date_str %}
+            {% with student_id|add:"|"|add:date_str as attendance_key %}
+              
+              {% with attendance_data|get_attendance_status:attendance_key  as status %}
+              
+                {% if status %} 
+                <span class="flex items-center bg-green-600 text-white rounded-full px-2 py-1 mx-auto gap-2 w-fit">
+                  Persent  
+                </span> {% elif status is not none %} 
+                <span class="flex items-center bg-red-600 text-white rounded-full px-2 py-1 mx-auto gap-2 w-fit">
+                  Absent  
+                </span>  {% else %} - 
+                
+                {%endif %}
+              
+              {% endwith %} 
+            {% endwith %}
+          {% endwith %}
+        {% endwith %}
+
+        {% endfor %}
+      </td>
+      {% if  is_filtered  and students %}
+
+      <td>
+        <div class="flex items-center justify-evenly w-full ">
+          <span class="flex items-center bg-green-600 text-white rounded-full px-2 py-1 gap-2">
+            <label for="present_{{student.id}}">Persent:</label>
+             <input type="radio" name="status_{{ student.id }}" id="present_{{student.id}}" value="present" checked>
+            
+          </span>
+          <span class="flex items-center bg-red-600 text-white rounded-full px-2 py-1 gap-2">
+            <label for="absent_{{student.id}}">Absent:</label>
+             <input type="radio" name="status_{{ student.id }}" id="absent_{{student.id}}" value="absent">
+            
+          </span>
+        </div>
+      </td>
+      {% endif %}
+    </tr>
+    {% endfor %}
+  
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      {% if is_filtered and students %}
+      <td colspan="4" class="p-2">
+        <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit Attendance</button>
+      </td>
+      {% endif %}
+    </tr>
+  </tbody>
+</table>
+</div>
+</form>
+
+{% endblock %} {% block js %}{% endblock %}

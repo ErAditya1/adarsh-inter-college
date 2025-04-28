@@ -343,3 +343,15 @@ class Gallery(models.Model):
     def __str__(self):
         return f"Gallery Image {self.id}"
 
+class Attendance(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='attendance')
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False)  # True for present, False for absent
+    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='attendance')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='attendance')
+    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='attendance')
+    submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='attendance', null=True)  # Teacher or Admin who submitted the attendance
+    
+
+    def __str__(self):
+        return f"{self.student.user.username} - {self.date} - {'Present' if self.status else 'Absent'}"

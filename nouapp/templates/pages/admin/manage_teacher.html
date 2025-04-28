@@ -19,8 +19,8 @@
 <h1 class="text-center text-3xl font-semibold"> Manage Teacher</h1>
 <div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
   
-    <table class="table table-bordered " id="example">
-      <thead>
+    <table class=" table-bordered " id="example">
+      <thead class="bg-blue-200 dark:bg-sky-950">
         <tr class="table-dark text-center">
           <th>id</th>
           <th>Username</th>
@@ -28,7 +28,7 @@
           
           <th>Mobile</th>
           <th>Email</th>
-          <th>Roll No.</th>
+          <th>Employe Id.</th>
           <th>Avatar</th>
           <th>Specialization</th>
           <th>Staff Status</th>
@@ -41,7 +41,9 @@
           
   
         </tr>
-      <tbody class="">
+      
+      </thead>
+      <tbody >
         {% for i in teachers %}
         <tr class="text-center">
           <td>{{ i.user.username }}</td>
@@ -51,7 +53,13 @@
           <td>{{ i.user.mobile }}</td>
           <td>{{ i.user.email }}</td>
           <td>{{ i.employee_id }}</td>
-          <td>AV</td>
+          <td>
+            {% if i.user.avatar %}
+            <img src="{{ i.user.avatar.url }}" alt="Avatar" class="w-10 h-10 rounded-full">
+            {% else %}
+            <img src="{% static 'image/default-avatar.avif' %}" alt="Default Avatar" class="w-10 h-10 rounded-full">
+            {% endif %}
+          </td>
           <td>{{i.specialization}}</td>
           <td id="verify_staff">
            <a href="{% url "verify_teacher" i.user.id %}">
@@ -73,7 +81,6 @@
         </tr>
         {% endfor %}
       </tbody>
-      </thead>
     </table>
   </div>
 {% endblock %}

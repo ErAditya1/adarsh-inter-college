@@ -41,13 +41,27 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'nouapp',
     'tailwind',
     'theme',
     'django_browser_reload',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Default
+    'allauth.account.auth_backends.AuthenticationBackend',  # Needed for allauth
+)
+
+SITE_ID = 1
+
 
 AUTH_USER_MODEL = 'nouapp.User'
 
@@ -67,6 +81,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     'nouapp.middleware.UserTypeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -93,8 +109,42 @@ WSGI_APPLICATION = 'nouegyan.wsgi.application'
 
 
 
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+   
+
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.mysql',
+#     #     'NAME': 'django',
+#     #     'USER': os.environ.get('DB_USER'),
+#     #     'PASSWORD': os.environ.get('DB_PASS'),
+#     #     'HOST': '127.0.0.1',
+#     #     'PORT': '3307'
+#     # }
+# }
+
+
+import dj_database_url
+
+tmpPostgres = os.getenv("DATABASE_URI")
+print(tmpPostgres)
+
+
+DATABASES = {
+     'default': dj_database_url.parse(tmpPostgres)
+}
+
+
+# postgresql database from neon db
+
 # Replace the DATABASES section of your settings.py with this
-# tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
+# tmpPostgres = dj_database_url.parse(os.getenv("DATABASE_URL"))
 
 # DATABASES = {
 #     'default': {
@@ -106,32 +156,6 @@ WSGI_APPLICATION = 'nouegyan.wsgi.application'
 #         'PORT': 5432,
 #     }
 # }
-
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-   
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'django',
-    #     'USER': os.environ.get('DB_USER'),
-    #     'PASSWORD': os.environ.get('DB_PASS'),
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '3307'
-    # }
-}
-
-'''
-import dj_database_url
-tmpPostgres = os.getenv("DATABASE_URL")
-
-DATABASES = {
-     'default': dj_database_url.parse(tmpPostgres)
-}
 
 
 

@@ -1,6 +1,13 @@
 from django.contrib import admin
 from .models import *
 
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff')
+    search_fields = ('username', 'first_name', 'last_name', 'email')
+    list_filter = ('is_active', 'is_staff')
+    # ordering = ('username',)
+
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('user', 'rollno', 'program', 'branch', 'year', 'admission_status', 'is_verified')
@@ -98,8 +105,14 @@ class EnquiryAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'mobile', 'created_at')
     search_fields = ('name', 'email', 'mobile')
     list_filter = ('created_at',)
+@admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ('title', 'image', 'created_at')
     search_fields = ('title',)
     list_filter = ('created_at',)
-
+@admin.register(Attendance)
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ('student', 'date', 'status')
+    search_fields = ('student__rollno', 'subject__name')
+    list_filter = ('date', 'status',  'branch', 'year')
+    list_editable = ('status',)

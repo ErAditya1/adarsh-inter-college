@@ -78,6 +78,7 @@ urlpatterns = [
     path("teacher/upload_lectures",TeacherViews.upload_lectures, name="upload_lectures_teacher"),
     path("teacher/upload_assesments",TeacherViews.upload_assesments, name="upload_assesments_teacher"),
     path('teacher/add_intrested_subjects/', TeacherViews.add_intrested_subjects, name='add_intrested_subjects'),
+    path('teacher/attendance_report/', TeacherViews.attendance_report, name='attendance_report'),
     path('teacher/delete_intrested_subjects/<int:subject_id>/', TeacherViews.delete_intrested_subjects, name='delete_intrested_subjects'),
     path('teacher/profile/', TeacherViews.profile, name='teacher_profile'),
     path('teacher/update_profile/', TeacherViews.update_profile, name='update_profile_teacher'),
