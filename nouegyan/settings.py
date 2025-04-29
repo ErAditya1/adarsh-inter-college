@@ -48,19 +48,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
 ]
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',  # Default
-    'allauth.account.auth_backends.AuthenticationBackend',  # Needed for allauth
-)
-
-SITE_ID = 1
 
 
 AUTH_USER_MODEL = 'nouapp.User'
@@ -81,7 +69,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_browser_reload.middleware.BrowserReloadMiddleware",
     'nouapp.middleware.UserTypeMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 
 ]
 
