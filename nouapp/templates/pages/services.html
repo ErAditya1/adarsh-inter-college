@@ -35,14 +35,14 @@
 </style>
 {% endblock %} {% block main %}  <!-- Hero Section -->
 <section id="hero" class="py-20">
-  <div class="container mx-auto px-4 flex flex-col-reverse lg:flex-row items-center">
-    <div class="lg:w-1/2 mt-10 lg:mt-0" data-aos="fade-right">
+  <div class="container mx-auto px-4 flex flex-col-reverse lg:flex-row items-center gap-2">
+    <div class="lg:w-1/2 mt-10 lg:mt-0 " data-aos="fade-right">
       <h1 class="text-4xl font-bold mb-4">Our Services</h1>
       <p class="mb-6">We are committed to providing exceptional services to support our students' academic and personal growth.</p>
       <a href="#academic-services" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg">Explore Services</a>
     </div>
     <div class="lg:w-1/2" data-aos="fade-left">
-      <img src="https://via.placeholder.com/600x400" alt="College Campus" class="w-full rounded-lg shadow-lg">
+      <img src="{% static 'image/aic/banner5.jpg' %}" alt="College Campus" class="w-full rounded-lg shadow-lg">
     </div>
   </div>
 </section>
@@ -51,23 +51,23 @@
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">Academic Services</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://via.placeholder.com/400x250" alt="Tutoring Programs" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <img src="{% static 'image/aic/services/img2.avif' %}" alt="Tutoring Programs" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Tutoring Programs</h3>
         <p>Personalized tutoring sessions to help students excel in their studies and achieve academic success.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://via.placeholder.com/400x250" alt="Library Resources" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <img src="{% static 'image/aic/services/img4.jpg' %}" alt="Library Resources" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Library Resources</h3>
         <p>Access to a vast collection of books, journals, and online databases to support your research and learning.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
-        <img src="https://via.placeholder.com/400x250" alt="Online Learning" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <img src="{% static 'image/aic/services/online_learning.avif' %}" alt="Online Learning" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Online Learning</h3>
         <p>Flexible online courses and resources that allow you to study at your own pace from anywhere in the world.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
-        <img src="https://via.placeholder.com/400x250" alt="Research Support" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
+        <img src="{% static 'image/aic/services/research_boys.jpg' %}" alt="Research Support" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Research Support</h3>
         <p>Expert guidance and facilities to assist students in their research projects and academic publications.</p>
       </div>
@@ -79,23 +79,23 @@
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">Extracurricular Activities</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://via.placeholder.com/400x250" alt="Sports Clubs" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <img src="{% static 'image/aic/services/sport.jpg' %}" alt="Sports Clubs" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Sports Clubs</h3>
         <p>Join our various sports clubs including basketball, soccer, and tennis to stay active and healthy.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://via.placeholder.com/400x250" alt="Art & Culture" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <img src="{% static 'image/aic/services/art&culture.jpg' %}" alt="Art & Culture" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Art & Culture</h3>
         <p>Express your creativity by participating in art, music, dance, and theater programs available on campus.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
-        <img src="https://via.placeholder.com/400x250" alt="Student Organizations" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <img src="{% static 'image/aic/services/organization.jpg' %}" alt="Student Organizations" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Student Organizations</h3>
         <p>Engage with like-minded peers through various clubs and student organizations to develop leadership skills.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
-        <img src="https://via.placeholder.com/400x250" alt="Community Service" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
+        <img src="{% static 'image/aic/services/community.jpg' %}" alt="Community Service" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Community Service</h3>
         <p>Participate in community outreach and volunteer programs to make a positive impact outside the campus.</p>
       </div>
@@ -103,95 +103,132 @@
   </div>
 </section>
 
-<section id="career-counseling" class="py-16">
-  <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">Career Counseling</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://via.placeholder.com/400x250" alt="Resume Workshops" class="h-40 w-full object-cover rounded-t-lg mb-4">
-        <h3 class="text-xl font-semibold mb-2">Resume Workshops</h3>
-        <p>Attend workshops that help you craft a professional resume and cover letter to stand out to employers.</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://via.placeholder.com/400x250" alt="Interview Preparation" class="h-40 w-full object-cover rounded-t-lg mb-4">
-        <h3 class="text-xl font-semibold mb-2">Interview Preparation</h3>
-        <p>Get one-on-one coaching and mock interviews to build confidence and improve your interviewing skills.</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
-        <img src="https://via.placeholder.com/400x250" alt="Career Fairs" class="h-40 w-full object-cover rounded-t-lg mb-4">
-        <h3 class="text-xl font-semibold mb-2">Career Fairs</h3>
-        <p>Connect with top employers and alumni at our annual career fairs and networking events on campus.</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
-        <img src="https://via.placeholder.com/400x250" alt="Internship Placement" class="h-40 w-full object-cover rounded-t-lg mb-4">
-        <h3 class="text-xl font-semibold mb-2">Internship Placement</h3>
-        <p>Receive guidance and support in finding and applying for internships that align with your career goals.</p>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <section id="facilities" class="py-16">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">Facilities</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
-        <img src="https://via.placeholder.com/400x250" alt="Campus Library" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <img src="{% static 'image/aic/services/library3.jpg' %}" alt="Campus Library" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Campus Library</h3>
         <p>Study in our modern library equipped with individual study spaces and the latest academic resources.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
-        <img src="https://via.placeholder.com/400x250" alt="Science Laboratories" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <img src="{% static 'image/aic/services/laboratory.avif' %}" alt="Science Laboratories" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Science Laboratories</h3>
         <p>Access state-of-the-art laboratories for hands-on experiments in physics, chemistry, and biology.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
-        <img src="https://via.placeholder.com/400x250" alt="Sports Complex" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <img src="{% static 'image/aic/services/sport_complex.jpg' %}" alt="Sports Complex" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Sports Complex</h3>
         <p>Stay fit with access to our gym, indoor courts, and outdoor fields available to all students.</p>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
-        <img src="https://via.placeholder.com/400x250" alt="Student Lounge" class="h-40 w-full object-cover rounded-t-lg mb-4">
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="400">
+        <img src="{% static 'image/aic/services/student_lounge.avif' %}" alt="Student Lounge" class="h-40 w-full object-cover rounded-t-lg mb-4">
         <h3 class="text-xl font-semibold mb-2">Student Lounge</h3>
         <p>Relax and socialize in our comfortable student lounge equipped with games, seating areas, and a café.</p>
       </div>
     </div>
   </div>
 </section>
-
-<section id="contact" class="py-16">
+<section id="faculties" class="py-16">
   <div class="container mx-auto px-4">
-    <h2 class="text-3xl font-bold mb-8" data-aos="fade-up">Contact Us</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div data-aos="fade-up" data-aos-delay="100">
-        <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
-        <p class="mb-2">Phone: (123) 456-7890</p>
-        <p class="mb-2">Email: info@college.edu</p>
-        <p class="mb-6">Address: 123 College Ave, Townsville, State, 12345</p>
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <form>
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-1" for="name">Name</label>
-              <input class="w-full border border-gray-300 rounded-lg px-3 py-2" type="text" id="name" placeholder="Your Name">
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-1" for="email">Email</label>
-              <input class="w-full border border-gray-300 rounded-lg px-3 py-2" type="email" id="email" placeholder="Your Email">
-            </div>
-            <div class="mb-4">
-              <label class="block text-sm font-medium mb-1" for="message">Message</label>
-              <textarea class="w-full border border-gray-300 rounded-lg px-3 py-2" id="message" rows="4" placeholder="Your Message"></textarea>
-            </div>
-            <button class="bg-blue-600 text-white px-5 py-2 rounded-lg" type="submit">Send Message</button>
-          </form>
-        </div>
+    <h2 class="text-3xl font-bold mb-8 " data-aos="fade-up">Our Esteemed Faculty</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <!-- Faculty Card 1 -->
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg text-center" data-aos="fade-up" data-aos-delay="100">
+        <img src="{% static 'image/default-avatar.avif' %}" alt="Principal" class="h-40 w-40 mx-auto object-cover rounded-full mb-4">
+        <h3 class="text-xl font-semibold mb-1">Dr. Sushil Verma</h3>
+        <p class="text-sm mb-2">Principal</p>
+        <p>Leading academic excellence with 20+ years of teaching experience and educational leadership.</p>
       </div>
-      <div data-aos="fade-up" data-aos-delay="200">
-        <img src="https://via.placeholder.com/500x350" alt="Contact Image" class="w-full rounded-lg shadow-lg">
+
+      <!-- Faculty Card 2 -->
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg text-center" data-aos="fade-up" data-aos-delay="200">
+        <img src="{% static 'image/default-avatar.avif' %}" alt="English Faculty" class="h-40 w-40 mx-auto object-cover rounded-full mb-4">
+        <h3 class="text-xl font-semibold mb-1">Ms. Anjali Srivastava</h3>
+        <p class="text-sm mb-2">English Department</p>
+        <p>Dedicated to nurturing language and communication skills through creative learning approaches.</p>
+      </div>
+
+      <!-- Faculty Card 3 -->
+      <div class="bg-blue-50/10 p-6 rounded-lg shadow-lg text-center" data-aos="fade-up" data-aos-delay="300">
+        <img src="{% static 'image/default-avatar.avif' %}" alt="Science Faculty" class="h-40 w-40 mx-auto object-cover rounded-full mb-4">
+        <h3 class="text-xl font-semibold mb-1">Mr. Rakesh Mishra</h3>
+        <p class="text-sm mb-2">Science Department</p>
+        <p>Passionate about inspiring scientific curiosity through experiments and practical learning.</p>
+      </div>
+
+      <!-- Add more faculty cards as needed -->
+
+    </div>
+  </div>
+</section>
+<section id="events" class="py-16 ">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-8  " data-aos="fade-up">Upcoming Events</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Event Card 1 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <h3 class="text-xl font-semibold mb-2 ">Annual Sports Meet 2025</h3>
+        <p class="text-gray-600 dark:text-gray-300">📅 15 May 2025</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-400">Join us for inter-house competitions, athletics, and prize distribution at the college ground.</p>
+      </div>
+
+      <!-- Event Card 2 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <h3 class="text-xl font-semibold mb-2 ">Parent-Teacher Meeting</h3>
+        <p class="text-gray-600 dark:text-gray-300">📅 25 May 2025</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-400">All parents are invited to discuss their ward’s progress with class teachers.</p>
+      </div>
+
+      <!-- Event Card 3 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <h3 class="text-xl font-semibold mb-2 ">Science Exhibition</h3>
+        <p class="text-gray-600 dark:text-gray-300">📅 1 June 2025</p>
+        <p class="mt-2 text-gray-700 dark:text-gray-400">Explore innovative projects created by our students from different science streams.</p>
       </div>
     </div>
   </div>
 </section>
+<section id="blog" class="py-16 ">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-10 dark:text-white" data-aos="fade-up">Latest Blog Posts</h2>
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Blog Post 1 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="100">
+        <img src="{% static 'image/aic/blog/aic14.jpg' %}" alt="Blog 1" class="rounded-lg mb-4 h-48 w-full object-cover">
+        <h3 class="text-xl font-semibold dark:text-white">Tips for Effective Exam Preparation</h3>
+        <p class="text-gray-600 dark:text-gray-300 mt-2 text-sm">April 15, 2025 • By Academic Team</p>
+        <p class="mt-3 text-gray-700 dark:text-gray-400">Discover practical strategies to manage your time, reduce stress, and excel in your exams.</p>
+        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read more</a>
+      </div>
+
+      <!-- Blog Post 2 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <img src="{% static 'image/aic/blog/aic33.jpg' %}" alt="Blog 2" class="rounded-lg mb-4 h-48 w-full object-cover">
+        <h3 class="text-xl font-semibold dark:text-white">Celebrating Teachers' Day at AIC</h3>
+        <p class="text-gray-600 dark:text-gray-300 mt-2 text-sm">September 5, 2024 • By Event Team</p>
+        <p class="mt-3 text-gray-700 dark:text-gray-400">A heartfelt celebration honoring our educators with performances, speeches, and gratitude.</p>
+        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read more</a>
+      </div>
+
+      <!-- Blog Post 3 -->
+      <div class="bg-blue-50/10 dark:bg-gray-800 p-6 rounded-lg shadow-lg" data-aos="fade-up" data-aos-delay="300">
+        <img src="{% static 'image/aic/blog/aic30.jpg' %}" alt="Blog 3" class="rounded-lg mb-4 h-48 w-full object-cover">
+        <h3 class="text-xl font-semibold dark:text-white">Career Guidance Workshop Highlights</h3>
+        <p class="text-gray-600 dark:text-gray-300 mt-2 text-sm">March 20, 2025 • By Career Cell</p>
+        <p class="mt-3 text-gray-700 dark:text-gray-400">Insights from industry professionals and alumni to help students plan their futures wisely.</p>
+        <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read more</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 
 
 {% endblock %} {% block extrajs %}

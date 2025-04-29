@@ -5,7 +5,7 @@ from django.conf import settings
 
 def send_registration_success_email(user_email, user_name):
     # Subject and sender details
-    subject = 'Welcome to NOU e-Gyan Learning Portal! Your Registration is Successful'
+    subject = 'Welcome to Adarsh Inter College! Your Registration is Successful'
     from_email = settings.EMAIL_HOST_USER
     to = user_email
 
@@ -41,7 +41,7 @@ def send_password_reset_email(user_email, user, reset_url):
     
 def send_notification_email(emails, subject, message):
     # Subject and sender details
-    subject = 'NOU e-Gyan Learning Portal! {{subject}}'
+    subject = 'Adarsh Inter College! {{subject}}'
     from_email = settings.EMAIL_HOST_USER
     print(emails)
     to = list(emails)
