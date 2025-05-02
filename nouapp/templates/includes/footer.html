@@ -52,23 +52,22 @@
         <span class="animate-border border-black mb-4"></span>
         <ul>
           <li>
-            <a href="">Home</a>
+            <a href="{% url 'home' %}">Home</a>
           </li>
           <li>
-            <a href="about.php">About Portal</a>
+            <a href="{% url 'about' %}">About Portal</a>
           </li>
           <li>
-            <a href="services.php">Services</a>
+            <a href="{%url 'services' %}">Services</a>
           </li>
           <li>
-            <a href="contact.php">Contact us</a>
+            <a href="{%url 'gallery'%}">Gallery</a>
           </li>
           <li>
-            <a href="courses.php">Courses</a>
+            <a href="{% url 'contact' %}">Contact us</a>
           </li>
-          <li>
-            <a href="study.php">Study Centre</a>
-          </li>
+          
+          
         </ul>
       </div>
       <div class="col-lg-3 col-sm-6 con-info p-4 font-semibold">

@@ -27,9 +27,8 @@
         <th>Username</th>
         <th>Name</th>
         <th>Father Name</th>
-        <th>Progran</th>
-        <th>Branch</th>
-        <th>Year</th>
+        <th>Class</th>
+        <th>Section</th>
         
         <th>
           Score
@@ -46,9 +45,8 @@
         <td>{{ student.user.first_name }} {{student.user.last_name}}</td>
         
         <td>{{ student.fname }}</td>
-        <td>{{ student.program }}</td>
-        <td>{{ student.branch }}</td>
-        <td>{{ student.year }}</td>
+        <td>{{ student.school_class }}</td>
+        <td>{{ student.section }}</td>
 
         <td>
           <form action={% url "add_entrance_exam_score" student.id %} method="POST">

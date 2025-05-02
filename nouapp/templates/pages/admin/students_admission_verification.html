@@ -27,9 +27,8 @@
         <th>Username</th>
         <th>Name</th>
         <th>Father Name</th>
-        <th>Progran</th>
-        <th>Branch</th>
-        <th>Year</th>
+        <th>Class</th>
+        <th>Section</th>
         
         <th>
           Status
@@ -46,9 +45,8 @@
         <td>{{ student.user.first_name }} {{student.user.last_name}}</td>
         
         <td>{{ student.fname }}</td>
-        <td>{{ student.program }}</td>
-        <td>{{ student.branch }}</td>
-        <td>{{ student.year }}</td>
+        <td>{{ student.school_class }}</td>
+        <td>{{ student.section }}</td>
 
         <td >
           
@@ -63,7 +61,7 @@
           <form action={% url "verify_admission" student.id %} method="POST">
             {% csrf_token %}
             <select id="admission_status" name="admission_status" autocomplete="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <option value="">--Select Program--</option>
+              <option value="">--Select Status--</option>
              
                 <option value="pending">Pending</option>
                 <option value="approved">Approved</option>

@@ -54,25 +54,19 @@
             <label class="block text-sm font-medium">Address</label>
             <input type="text" name="address" id="address" class="input-style" />
           </div>
-          <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Program</label>
-            <select name="program" id="program" class="input-style">
-              <option value="">--Select Program--</option>
-              {% for program in programs %}
-                <option value="{{ program.id }}">{{ program.name }}</option>
+           <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Class:</label>
+            <select name="school_class" id="school_class" class="input-style">
+              <option value="">--Select Class--</option>
+              {% for class in classes %}
+                <option value="{{ class.id }}">{{ class.name }}</option>
               {% endfor %}
             </select>
           </div>
           <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Branch</label>
-            <select name="branch" id="branch" class="input-style">
-              <option value="">--Select Branch--</option>
-            </select>
-          </div>
-          <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Year</label>
-            <select name="year" id="year" class="input-style">
-              <option value="">--Select Year--</option>
+            <label class="block text-sm font-medium">Section:</label>
+            <select name="section" id="section" class="input-style">
+              <option value="">--Select Section--</option>
             </select>
           </div>
         </div>

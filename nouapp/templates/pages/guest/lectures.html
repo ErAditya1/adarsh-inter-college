@@ -19,36 +19,54 @@
 <h1 class="text-center text-3xl font-semibold">Guest Lecture Page</h1>
 <div class=" my-2 container-fluid">
   
-    <table class="table-bordered">
-      <thead class="bg-blue-200 dark:bg-sky-950">
-        <tr class="table-dark text-center">
-          <th>id</th>
-          <th>Program</th>
-          <th>Branch</th>
-          <th>Year</th>
-          <th>Subject</th>
-          <th>File Name</th>
-          <th>Download</th>
-        </tr>
-      <tbody class="bg-blue-100">
-        
-        {% for i in lectures  %}
-        <tr class="text-center">
-          <td>{{i.id}}</td>
-          <td>{{i.program}}</td>
-          <td>{{i.branch}}</td>
-          <td>{{i.year}}</td>
-          <td>{{i.subject}}</td>
-          <td>{{i.file_name}}</td>
-          <td>
-            <a href="{{i.file}}">Read More</a>
-          </td>
+  <table class="table table-bordered">
+    <thead class="bg-blue-200 dark:bg-sky-950">
+      <tr class="table-dark text-center">
+        <th>id</th>
+        <th>Class</th>
+        <th>Section</th>
+        <th>Subject</th>
+        <th>File Name</th>
+        <th>Download</th>
+        <th>Protect Status</th>
+        <th>Action</th>
+      </tr>
+    <tbody class="bg-blue-100">
+      
+      {% for i in lectures  %}
+      <tr class="text-center">
+        <td>{{i.id}}</td>
+        <td>{{i.school_class}}</td>
+        <td>{{i.section}}</td>
+        <td>{{i.subject}}</td>
+        <td>{{i.file_name}}</td>
+        <td>
+          {% if i.link %}<a href="{{i.link}}">Read More</a>{% endif %}
           
-        </tr>
-        {% endfor %}
-       
-      </tbody>
-      </thead>
-    </table>
+        </td>
+        <td>
+          {% if  i.is_protected %}
+          <div
+          class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-green-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
+          <span class="">Protected</span>
+        </div>
+          {% else %}<div
+          class="relative grid select-none items-center whitespace-nowrap rounded-lg bg-red-500 py-1.5 px-3 font-sans text-xs font-bold uppercase text-white">
+          <span class="">Un Protect</span>
+        </div>
+        {% endif %}
+        </td> 
+        
+        <td>
+          {% comment %} <a href="{% url "edit_user" user.id %}"><i class="fa-solid fa-pen-to-square text-xl mx-2"></i></a> | {% endcomment %}
+          <a href="{% url "delete_lecture" i.id %}"><i class="fa-solid fa-trash text-xl mx-2" style="color: #ab0303;"></i></a>
+        </td>
+        
+      </tr>
+      {% endfor %}
+     
+    </tbody>
+    </thead>
+  </table>
 </div>
 {% endblock %}

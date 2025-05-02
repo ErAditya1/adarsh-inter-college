@@ -107,25 +107,19 @@
         <h1 class="text-center text-3xl font-semibold">Add Educatiuon Details</h1>
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           
-          <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Program</label>
-            <select name="program" id="program" class="input-style">
-              <option value="">--Select Program--</option>
-              {% for program in programs %}
-                <option value="{{ program.id }}">{{ program.name }}</option>
+           <div class="sm:col-span-3">
+            <label class="block text-sm font-medium">Class:</label>
+            <select name="school_class" id="school_class" class="input-style">
+              <option value="">--Select Class--</option>
+              {% for school_class in classes %}
+                <option value="{{ school_class.id }}">{{ school_class.name }}</option>
               {% endfor %}
             </select>
           </div>
           <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Branch</label>
-            <select name="branch" id="branch" class="input-style">
-              <option value="">--Select Branch--</option>
-            </select>
-          </div>
-          <div class="sm:col-span-3">
-            <label class="block text-sm font-medium">Year</label>
-            <select name="year" id="year" class="input-style">
-              <option value="">--Select Year--</option>
+            <label class="block text-sm font-medium">Section:</label>
+            <select name="section" id="section" class="input-style">
+              <option value="">--Select Section--</option>
             </select>
           </div>
         </div>
@@ -144,7 +138,7 @@
           </div>
           <div class="sm:col-span-3">
             <label for="year_of_passing" class="block text-sm font-medium">Passing Year:</label>
-            <input type="text" name="year_of_passing" id="year_of_passing" class="input-style" />
+            <input type="number" name="year_of_passing" id="year_of_passing" class="input-style" />
           </div>
           <div class="sm:col-span-3">
             <label for="grade" class="block text-sm font-medium">Grade:</label>

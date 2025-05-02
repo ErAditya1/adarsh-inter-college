@@ -176,37 +176,32 @@
                           <input type="text" required name="address" id="address" value="{{student.address}}" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset bg-white ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
   
                       </div>
-                      <div class="w-full  mb-4 lg:mt-6">
-                          <label for="" class=" dark:text-gray-300">Program</label>
-                          <div class="mt-2">
-                              <select id="program" required name="program"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                <option value="">--Select Program--</option>
-                                {% for program in programs %}
-                                  <option title="{{program.id}}" value="{{ program.id }}">{{ program.name }}</option>
-                                {% endfor %}
-                              </select>
-                            </div>
-                      </div>
+                      
                   </div>
                   <div class="flex lg:flex-row md:flex-col sm:flex-col xs:flex-col gap-2 justify-center w-full">
-                      <div class="w-full  mb-4 mt-6">
-                          <label for="" class="mb-2 dark:text-gray-300">Branch</label>
-                          <div class="mt-2">
-                              <select id="branch" required name="branch"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                <option value="">--Select Branch--</option>
-                                
-                              </select>                
-                            </div>
+                      
+                    <div class="sm:col-span-3">
+                        <label for="school_class" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Class</label>
+                        <div class="mt-2">
+                          <select id="school_class" name="school_class"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">--Select Class--</option>
+                            {% for class in classes %}
+                              <option value="{{ class.id }}">{{ class.name }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
                       </div>
-                      <div class="w-full  mb-4 lg:mt-6">
-                          <label for="" class=" dark:text-gray-300">Year</label>
-                          <div class="mt-2">
-                              <select id="year" required name="year"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                <option value="">--Select Year --</option>
-                                
-                              </select>
-                            </div>
-                          
+          
+                      
+          
+                      <div class="sm:col-span-3">
+                        <label for="section" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Section</label>
+                        <div class="mt-2">
+                          <select id="section" name="section"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">--Select Section --</option>
+                            
+                          </select>
+                        </div>
                       </div>
                   </div>
                     <div class="my-4">

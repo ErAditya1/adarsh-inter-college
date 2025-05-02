@@ -14,10 +14,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Email settings from .env
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True  # Ensure TLS is enabled
+# EMAIL_HOST_USER = 'aic.ds1062@gmail.com'
+# EMAIL_HOST_PASSWORD = 'smwm vuey xkof cmwe'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'django_browser_reload',
+    'django_extensions',
 ]
 
 
@@ -99,49 +102,32 @@ WSGI_APPLICATION = 'nouegyan.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
    
 
-#     # 'default': {
-#     #     'ENGINE': 'django.db.backends.mysql',
-#     #     'NAME': 'django',
-#     #     'USER': os.environ.get('DB_USER'),
-#     #     'PASSWORD': os.environ.get('DB_PASS'),
-#     #     'HOST': '127.0.0.1',
-#     #     'PORT': '3307'
-#     # }
-# }
-
-
-import dj_database_url
-
-tmpPostgres = os.getenv("DATABASE_URI")
-print(tmpPostgres)
-
-
-DATABASES = {
-     'default': dj_database_url.parse(tmpPostgres)
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'django',
+    #     'USER': os.environ.get('DB_USER'),
+    #     'PASSWORD': os.environ.get('DB_PASS'),
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3307'
+    # }
 }
 
 
-# postgresql database from neon db
+# import dj_database_url
 
-# Replace the DATABASES section of your settings.py with this
-# tmpPostgres = dj_database_url.parse(os.getenv("DATABASE_URL"))
+# tmpPostgres = os.getenv("DATABASE_URI")
+# print(tmpPostgres)
+
 
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': tmpPostgres.path.replace('/', ''),
-#         'USER': tmpPostgres.username,
-#         'PASSWORD': tmpPostgres.password,
-#         'HOST': tmpPostgres.hostname,
-#         'PORT': 5432,
-#     }
+#      'default': dj_database_url.parse(tmpPostgres)
 # }
 
 

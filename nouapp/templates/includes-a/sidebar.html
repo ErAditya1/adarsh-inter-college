@@ -72,12 +72,20 @@
           </button>
         <ul id="dropdown-admission" class="hidden py-2 space-y-2">
           <li>
+            <a href="{% url "register_student" %}"
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Resister Student</a>
+          </li>
+          <li>
+            <a href="{% url "register_teacher" %}"
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Resister Teacher</a>
+          </li>
+          <li>
             <a href="{% url "students_admission_verification" %}"
-              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Manage User</a>
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Student Verification</a>
           </li>
           <li>
             <a href="{% url "add_admission_eligibility" %}"
-              class="flex items-center w-full p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Manage Student</a>
+              class="flex items-center w-full p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Entrance & Eligibility</a>
           </li>
         
         </ul>
@@ -184,7 +192,7 @@
         
       </li>
       <li>
-        <a href="{% url "add_programs" %}"
+        <a href="{% url "add_classes" %}"
           class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
           <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

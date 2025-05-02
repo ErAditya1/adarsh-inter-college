@@ -23,38 +23,31 @@
         <div class="border p-4 bg-blue-100 dark:bg-sky-950 rounded md:m-4 border-gray-900/10 pb-12">
           <h1 class="text-center text-3xl font-semibold">Upload Study Material</h1>
             <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                    <label for="program" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Program</label>
-                    <div class="mt-2">
-                      <select id="program" name="program"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        <option value="">--Select Program--</option>
-                        {% for program in programs %}
-                          <option key="program.id" title="{{program.id}}" value="{{ program.id }}">{{ program.name }}</option>
-                        {% endfor %}
-                      </select>
-                      
-                    </div>
-                  </div>
+               
       
-                  <div class="sm:col-span-3">
-                    <label for="branch" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Branch</label>
-                    <div class="mt-2">
-                      <select id="branch" name="branch"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        <option value="">--Select Branch--</option>
-                        
-                      </select>
-                    </div>
-                  </div>
-      
-                  <div class="sm:col-span-3">
-                    <label for="year" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Year</label>
-                    <div class="mt-2">
-                      <select id="year" name="year"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                        <option value="">--Select Year --</option>
-                        
-                      </select>
-                    </div>
-                  </div>
+              <div class="sm:col-span-3">
+                <label for="school_class" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Class</label>
+                <div class="mt-2">
+                  <select id="school_class" name="school_class"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <option value="">--Select Class--</option>
+                    {% for class in classes %}
+                      <option value="{{ class.id }}">{{ class.name }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+  
+              
+  
+              <div class="sm:col-span-3">
+                <label for="section" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Section</label>
+                <div class="mt-2">
+                  <select id="section" name="section"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <option value="">--Select Section --</option>
+                    
+                  </select>
+                </div>
+              </div>
       
               <div class="sm:col-span-3">
                 <label for="subject" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Enter Your Subject</label>
@@ -98,13 +91,12 @@
 </form>
 <div class=" my-2 container-fluid">
   
-  <table class=" table-bordered">
+  <table class=" table table-bordered">
     <thead class="bg-blue-200 dark:bg-sky-950">
       <tr class="table-dark text-center">
         <th>id</th>
-        <th>Program</th>
-        <th>Branch</th>
-        <th>Year</th>
+        <th>Class</th>
+        <th>Section</th>
         <th>Subject</th>
         <th>File Name</th>
         <th>Download</th>
@@ -116,9 +108,8 @@
       {% for i in studymaterials  %}
       <tr class="text-center">
         <td>{{i.id}}</td>
-        <td>{{i.program}}</td>
-        <td>{{i.branch}}</td>
-        <td>{{i.year}}</td>
+        <td>{{i.school_class}}</td>
+        <td>{{i.section}}</td>
         <td>{{i.subject}}</td>
         <td>{{i.file_name}}</td>
         <td>

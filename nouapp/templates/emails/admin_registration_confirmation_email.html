@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Registration Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+    <h2>New Registration Confirmation</h2>
+    <p>Dear Admin,</p>
+    <p>We are pleased to inform you that a new student has successfully registered at Adarsh Inter College. Below are the student details:</p>
+
+    <table style="width: 100%; border: 1px solid #ddd; border-collapse: collapse;">
+        <tr>
+            <th style="text-align: left; padding: 8px; background-color: #f4f4f4;">Student Name</th>
+            <td style="padding: 8px;">{{ user_name }}</td>
+        </tr>
+        <tr>
+            <th style="text-align: left; padding: 8px; background-color: #f4f4f4;">Username</th>
+            <td style="padding: 8px;">{{ username }}</td>
+        </tr>
+        <tr>
+            <th style="text-align: left; padding: 8px; background-color: #f4f4f4;">Password</th>
+            <td style="padding: 8px;">{{ password }}</td>
+        </tr>
+    </table>
+
+    <p>Thank you for your attention to this new registration.</p>
+
+    <p>Best regards,</p>
+    <p>Adarsh Inter College</p>
+</body>
+</html>

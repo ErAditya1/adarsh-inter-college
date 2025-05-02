@@ -16,7 +16,7 @@ class User(AbstractUser):
 
 
     user_type = models.CharField(max_length=10, choices=USER_TYPES, default='guest')
-    email = models.EmailField(max_length=254)
+    email = models.EmailField(max_length=254,unique=True)
     avatar = models.ImageField(upload_to=avatar_upload_path, null=True)
     mobile = models.CharField(max_length=15, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
@@ -42,36 +42,37 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-
-
-class Program(models.Model):
-    name = models.CharField(max_length=100)
+class SchoolClass(models.Model):
+    name = models.CharField(max_length=100, unique=True)  # e.g., "Class 10", "Class 12"
 
     def __str__(self):
         return self.name
 
-class Branch(models.Model):
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='branches')
-    name = models.CharField(max_length=100)
-    branch_code = models.CharField(max_length=50, null=True, unique=True)
+class Section(models.Model):
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name='sections')
+    name = models.CharField(max_length=50)  # e.g., "A", "B", "C"
+
+    class Meta:
+        unique_together = ('school_class', 'name')
 
     def __str__(self):
-        return self.name
+        return f"{self.school_class.name} - {self.name}"
 
-class Year(models.Model):
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='years')
-    name = models.CharField(max_length=50)
-    # fees = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    def __str__(self):
-        return self.name
+
     
 class FeesType(models.Model):
     
     name = models.CharField(max_length=100)  # eg: Tuition Fee, Exam Fee
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='fees_types')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='fees_types',null=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='fees_types',null=True)
+
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name='fees_types')
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='fees_types', null=True)
+
+
+
+
+
     def __str__(self):
         return f"{self.name} - {self.year.name}"
 
@@ -82,19 +83,23 @@ class Entrance(models.Model):
     date = models.DateField()
     time = models.TimeField()
     duration = models.IntegerField()
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='entrance_exams')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='entrance_exams',null=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='entrance_exams',null=True)
+
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
     
 class Subject(models.Model):
     name = models.CharField(max_length=100)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='subjects')
+
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
     subject_code = models.CharField(max_length=50, null=True, unique=True)
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='subjects',null=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='subjects',null=True)
     def __str__(self):
         return self.name
 class Student(models.Model):
@@ -125,9 +130,6 @@ class Student(models.Model):
     fname = models.CharField(max_length=50)
     mname = models.CharField(max_length=50)
     gender = models.CharField(max_length=6, choices= GENDER)
-    program = models.ForeignKey(Program, on_delete=models.SET_NULL, null=True, related_name='students')
-    branch = models.ForeignKey(Branch, on_delete=models.SET_NULL, null=True, related_name='students')
-    year = models.ForeignKey(Year, on_delete=models.SET_NULL, null=True, related_name='students')
     aadhar_number = models.CharField(max_length=12, unique=True, null=True, blank=True)
     image = models.ImageField(upload_to='student_images', null=True, blank=True)
     aadhar_imag = models.FileField(upload_to='aadhar_images', null=True, blank=True)
@@ -167,6 +169,14 @@ class Student(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     is_verified = models.BooleanField(default=False)
 
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.SET_NULL, null=True, related_name='students')
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, related_name='students')
+
+
+
+
+
     def __str__(self):
         return self.user.username
 
@@ -195,7 +205,7 @@ class Teacher(models.Model):
     qualification_doc = models.FileField(upload_to='qualification_docs', null=True, blank=True)
     # Academic Info
     qualification = models.CharField(max_length=100)
-    specialization = models.CharField(max_length=100, blank=True)
+    specialization = models.CharField(max_length=100, blank=True,null=True)
     experience_years = models.PositiveIntegerField(null=True, blank=True)
     designation = models.CharField(max_length=100, null=True, blank=True)
 
@@ -218,17 +228,19 @@ class Teacher(models.Model):
 class TeacherInterest(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name="interests")
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="interested_teachers")
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
 
     created_at = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        unique_together = ('teacher', 'subject', 'year', 'branch', 'program')
 
     def __str__(self):
         return f"{self.teacher.user.username} - {self.subject.name} ({self.year.name}/{self.branch.name}/{self.program.name})"
+
 
 
 class Admin(models.Model):
@@ -242,11 +254,15 @@ class Admin(models.Model):
         return self.user.username
  
 class StudyMaterial(models.Model):               # upload study material
-    id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='study_materials')
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
+
+
     subject = models.CharField( max_length=500)
     file_name = models.CharField( max_length=200)
     file = models.FileField(upload_to='myimage')
@@ -256,12 +272,14 @@ class StudyMaterial(models.Model):               # upload study material
         return self.subject
 
 class Assesment(models.Model):  #Upload Asignment
-    id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, null = True, on_delete=models.CASCADE, related_name='assesments')
 
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
+
+
     subject = models.CharField( max_length=500)
     file_name = models.CharField( max_length=200)
     file = models.FileField(upload_to='myimage')
@@ -272,22 +290,22 @@ class Assesment(models.Model):  #Upload Asignment
 
 
 class Lecture(models.Model):  # Upload Lectures
-    id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, null = True, on_delete=models.CASCADE, related_name='lectures')
 
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    year = models.ForeignKey(Year, on_delete=models.CASCADE)
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
+
     subject = models.CharField( max_length=50)
     file_name = models.CharField( max_length=200)
-    link = models.CharField( max_length=500)
+    link = models.URLField( max_length=500)
     is_protected = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
     def __str__(self): 
         return self.subject
 
 class Complaint(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True)
     student = models.ForeignKey(Student,null = True, on_delete=models.CASCADE, related_name='complaints')
     # teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_complaints')
     # admin = models.ForeignKey(Admin, on_delete=models.CASCADE, related_name='admin_complaints')
@@ -298,7 +316,6 @@ class Complaint(models.Model):
         return self.subject
 
 class Feedback(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True)
     student = models.ForeignKey(Student,null = True, on_delete=models.CASCADE, related_name='feedbacks')
     # teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='teacher_feedback')
     # admin = models.ForeignKey(Admin, on_delete=models.CASCADE, related_name='admin_feedback')
@@ -310,7 +327,6 @@ class Feedback(models.Model):
         return self.subject
 
 class Enquiry(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ENQUIRY',null=True)
     name = models.CharField( max_length=50)
     gender = models.CharField( max_length=50)
@@ -326,15 +342,14 @@ class Enquiry(models.Model):
 class Notification(models.Model):
     admin = models.ForeignKey(Admin, on_delete=models.CASCADE, related_name='notifications', null=True)
     text = models.CharField(max_length=500)
-    link = models.CharField( max_length=350)
+    link = models.URLField ( max_length=350)
     
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.subject
+        return self.text
 
 class Gallery(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gallery')
     image = models.ImageField(upload_to='gallery_images')
     title = models.CharField(max_length=200)
@@ -347,9 +362,11 @@ class Attendance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='attendance')
     date = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)  # True for present, False for absent
-    program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='attendance')
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, related_name='attendance')
-    year = models.ForeignKey(Year, on_delete=models.CASCADE, related_name='attendance')
+
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+
+
     submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='attendance', null=True)  # Teacher or Admin who submitted the attendance
     
 
