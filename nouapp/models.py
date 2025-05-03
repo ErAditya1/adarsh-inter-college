@@ -70,9 +70,6 @@ class FeesType(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='fees_types', null=True)
 
 
-
-
-
     def __str__(self):
         return f"{self.name} - {self.year.name}"
 
@@ -372,3 +369,6 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.user.username} - {self.date} - {'Present' if self.status else 'Absent'}"
+    
+# here code will be have for apply leave teacher
+ 
