@@ -1,4 +1,4 @@
-{% extends "layouts/layout.html" %}
+{% extends "layouts/slayout.html" %}
 {% load static %}
 {% block title %}Student Details Form{% endblock %}
 
@@ -9,7 +9,7 @@
 </style>
 {% endblock %}
 
-{% block main %}
+{% block student %}
 <form action="" method="POST" enctype="multipart/form-data" id="studentForm">
   {% csrf_token %}
   <div class="container">

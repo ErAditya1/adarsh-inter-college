@@ -182,7 +182,6 @@
 
 {% block extrajs %}
 <script>
-  console.log("liuhbs vkdjnvkdf kdj");
 
   const timestamp = document.getElementById("date");
  setInterval(()=>{
@@ -201,7 +200,7 @@
 
   {% comment %} console.log(`Current Date: ${dayOfWeek}, ${month} ${date}, ${year}`);
   console.log(`Current Time: ${hours}:${minutes}:${seconds}`); {% endcomment %}
-  console.log(date);
+  
   timestamp.innerText = `${dayOfWeek}, ${month} ${date}, ${year},${hours}:${minutes}:${seconds}`;
  },1000)
 </script>
