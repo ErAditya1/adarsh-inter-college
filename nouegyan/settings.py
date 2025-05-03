@@ -27,7 +27,7 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ALLOWED_HOSTS to include your production domain
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'clg-ms-django.onrender.com','yourdomain.com,www.yourdomain.com').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'clg-ms-django.onrender.com,yourdomain.com,www.yourdomain.com').split(',')
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'debug',
