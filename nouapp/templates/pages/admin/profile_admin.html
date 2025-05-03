@@ -1,0 +1,74 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}Admin Profile{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+
+
+
+{% block admin %}
+
+<section class="w-full overflow-hidden sm:p-4">
+    <div class="flex flex-col items-center">
+        <div class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto mt-6">
+          <div class="max-w-5xl mx-auto shadow-xl rounded-xl p-6 border bg-gray-100 dark:bg-sky-950">
+      
+            <!-- Header -->
+            <h1 class="text-4xl font-bold text-center text-gray-700 dark:text-gray-200 mb-6">
+              🛡️ Admin Profile
+            </h1>
+      
+            <!-- Avatar & Basic Info -->
+            <div class="flex flex-col md:flex-row items-center gap-6 mb-10">
+              {% if admin_user.avatar %}
+                <img src="{{ admin_user.avatar.url }}" alt="Avatar" class="w-36 h-36 rounded-full shadow-lg border-4 border-gray-400">
+              {% else %}
+                <div class="w-36 h-36 rounded-full bg-gray-300 flex items-center justify-center text-4xl text-gray-800 font-bold shadow">
+                  {{ admin_user.username|slice:":1" }}
+                </div>
+              {% endif %}
+              <div class="text-center md:text-left">
+                <h2 class="text-3xl font-semibold text-gray-800 dark:text-white">{{ admin_user.first_name }} {{ admin_user.last_name }}</h2>
+                <p class="text-gray-500">Username: {{ admin_user.username }}</p>
+                <p class="text-sm text-gray-400">Last Login: {{ admin_user.last_login }}</p>
+              </div>
+            </div>
+      
+            <!-- Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+              <div class="bg-blue-50/10 p-5 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-semibold mb-4 text-gray-600 dark:text-gray-300">Contact Information</h3>
+                <p><strong>Email:</strong> {{ admin_user.email }}</p>
+                <p><strong>Mobile:</strong> {{ admin_user.mobile|default:"N/A" }}</p>
+              </div>
+      
+              <div class="bg-blue-50/10  p-5 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-semibold mb-4 text-gray-600 dark:text-gray-300">Account Details</h3>
+                <p><strong>User Type:</strong> {{ admin_user.get_user_type_display }}</p>
+                <p><strong>Verified:</strong> {{ admin_user.is_verified|yesno:"Yes,No" }}</p>
+                <p><strong>Profile Completed:</strong> {{ admin_user.is_detailed|yesno:"Yes,No" }}</p>
+                <p><strong>Is Superuser:</strong> {{ admin_user.is_superuser|yesno:"Yes,No" }}</p>
+                <p><strong>Is Staff:</strong> {{ admin_user.is_staff|yesno:"Yes,No" }}</p>
+              </div>
+      
+            </div>
+          </div>
+        </div>
+      </div>
+      
+</section>
+
+{% endblock %}

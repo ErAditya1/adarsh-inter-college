@@ -18,80 +18,106 @@
 {% block teacher %}
 
 <section class="w-full overflow-hidden sm:p-4">
-    <div class="flex flex-col bg-blue-100 dark:bg-sky-950">
-        <!-- Cover Image -->
-        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw5fHxjb3ZlcnxlbnwwfDB8fHwxNzEwNzQxNzY0fDA&ixlib=rb-4.0.3&q=80&w=1080" alt="User Cover"
-                class="w-full xl:h-[20rem] lg:h-[18rem] md:h-[16rem] sm:h-[14rem] xs:h-[11rem]" />
-  
-        <!-- Profile Image -->
-        <div class="sm:w-[80%] xs:w-[90%] mx-auto flex">
-            {% comment %} {% if student.avatar %}
-            <img src="{{student.avatar.url}}"
-            class="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
-            {% else %}
-            <img src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw3fHxwZW9wbGV8ZW58MHwwfHx8MTcxMTExMTM4N3ww&ixlib=rb-4.0.3&q=80&w=1080" alt="User Profile"
-            class="rounded-md lg:w-[12rem] lg:h-[12rem] md:w-[10rem] md:h-[10rem] sm:w-[8rem] sm:h-[8rem] xs:w-[7rem] xs:h-[7rem] outline outline-2 outline-offset-2 outline-blue-500 relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]" />
-            {% endif %} {% endcomment %}
-  
-            <!-- FullName -->
-            <h1
-                class="w-full text-left my-4 sm:mx-4 xs:pl-4 text-gray-800 dark:text-blue-50 lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl font-serif">
-                {{student.name}}</h1>
-  
-        </div>
-  
+    <div class="flex flex-col ">
+        
         <div
-            class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
+            class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative  ">
             <!-- Description -->
            
   
   
             <!-- Detail -->
-            <div class="w-full my-auto py-6 flex flex-col justify-center gap-2">
-             
-                <div class="w-full flex sm:flex-row xs:flex-col gap-2 justify-center">
-                  
-                    <div class="w-full">
-                      
-                        <dl class="text-gray-900 divide-y w-full divide-gray-200 dark:text-blue-50 dark:divide-gray-700">
-                            <div class="flex flex-col pb-3">
-                                <dt class="mb-1 text-gray-500 md:text-lg ">First Name</dt>
-                                <dd class="text-lg ">{{user.first_name}} </dd>
-                            </div>
-                            
-                            
-                            <div class="flex flex-col pb-3">
-                                <dt class="mb-1 text-gray-500 md:text-lg ">Mobile</dt>
-                                <dd class="text-lg ">{{user.mobile}}</dd>
-                            </div>
-                            
-                          
-                        
-                        </dl>
+            <div class="max-w-6xl mx-auto  shadow-xl rounded-xl  p-2  border bg-blue-100 dark:bg-sky-950 ">
+
+                <h1 class="text-4xl font-bold text-center text-blue-700 dark:text-blue-200 mb-0">👩‍🏫 Teacher Profile</h1>
+            
+                <!-- Profile header -->
+                <div class="flex flex-col md:flex-row gap-6 items-center mb-10 p-2">
+                  {% if teacher.user.avatar %}
+                    <img src="{{ teacher.user.avatar.url }}" alt="Avatar" class="w-36 h-36 rounded-full shadow-lg border-4 border-blue-400">
+                  {% else %}
+                    <div class="w-36 h-36 rounded-full p-2 bg-blue-200  flex items-center justify-center text-4xl text-gray-800 font-bold shadow">
+                      {{ teacher.user.username|slice:":1" }}
                     </div>
-                    <div class="w-full">
-                        <dl class="text-gray-900 divide-y divide-gray-200 dark:text-blue-50 dark:divide-gray-700">
-                            <div class="flex flex-col pb-3">
-                                <dt class="mb-1 text-gray-500 md:text-lg ">Last Name</dt>
-                                <dd class="text-lg ">{{user.last_name}}</dd>
-                            </div>
-  
-  
-                            
-                            <div class="flex flex-col pt-3">
-                                <dt class="mb-1 text-gray-500 md:text-lg ">Email</dt>
-                                <dd class="text-lg ">{{user.email}}</dd>
-                            </div>
-  
-                           
-                            
-                            
-                        </dl>
-                    </div>
+                  {% endif %}
+                  <div>
+                    <h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-200">{{ teacher.user.first_name }} {{ teacher.user.last_name }}</h2>
+                    <p class="text-gray-500 text-center">{{ teacher.designation|default:"-" }}</p>
+                    <p class="text-sm text-gray-400">Joined on {{ teacher.join_date }}</p>
+                  </div>
                 </div>
-                
-               
-            </div>
+            
+                <!-- Info Sections -->
+                <div class="grid grid-cols-1 md:grid-cols-2 sm:gap-4 gap-2">
+            
+                  <!-- Personal Info -->
+                  <div class="bg-blue-50/10 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Personal Information</h3>
+                    <p><strong>Username:</strong> {{ teacher.user.username }}</p>
+                    <p><strong>Email:</strong> {{ teacher.user.email }}</p>
+                    <p><strong>Phone:</strong> {{ teacher.user.mobile }}</p>
+                    <p><strong>Gender:</strong> {{ teacher.get_gender_display }}</p>
+                    <p><strong>Date of Birth:</strong> {{ teacher.date_of_birth }}</p>
+                    <p><strong>Aadhar Number:</strong> {{ teacher.aadhar_number }}</p>
+                  </div>
+            
+                  <!-- Contact Info -->
+                  <div class="bg-blue-50/10 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Contact Information</h3>
+                    <p><strong>Address Line 1:</strong> {{ teacher.address_line_1 }}</p>
+                    <p><strong>Address Line 2:</strong> {{ teacher.address_line_2 }}</p>
+                    <p><strong>City:</strong> {{ teacher.city }}</p>
+                    <p><strong>State:</strong> {{ teacher.state }}</p>
+                    <p><strong>Postal Code:</strong> {{ teacher.postal_code }}</p>
+                    <p><strong>Country:</strong> {{ teacher.country }}</p>
+                  </div>
+            
+                  <!-- Academic Info -->
+                  <div class="bg-blue-50/10 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">Academic Information</h3>
+                    <p><strong>Qualification:</strong> {{ teacher.qualification }}</p>
+                    <p><strong>Specialization:</strong> {{ teacher.specialization }}</p>
+                    <p><strong>Experience:</strong> {{ teacher.experience_years }} years</p>
+                    <p><strong>Designation:</strong> {{ teacher.designation }}</p>
+                  </div>
+            
+                  <!-- System Info -->
+                  <div class="bg-blue-50/10 p-6 rounded-lg shadow">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-4">System Information</h3>
+                    <p><strong>Account Verified:</strong> {{ teacher.user.is_verified|yesno:"Yes,No" }}</p>
+                    <p><strong>Profile Completed:</strong> {{ teacher.user.is_detailed|yesno:"Yes,No" }}</p>
+                    <p><strong>Is Active:</strong> {{ teacher.is_active|yesno:"Yes,No" }}</p>
+                    <p><strong>Created At:</strong> {{ teacher.created_at }}</p>
+                  </div>
+            
+                </div>
+            
+                <!-- Documents Section -->
+                <div class="mt-10">
+                  <h3 class="text-2xl font-semibold text-blue-700 mb-4">Documents</h3>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% if teacher.aadhar_imag %}
+                      <div class="p-4 border rounded-lg  shadow">
+                        <h4 class="font-medium mb-2">Aadhar Image</h4>
+                        <a href="{{ teacher.aadhar_imag.url }}" target="_blank" class="text-blue-500 underline">View File</a>
+                      </div>
+                    {% endif %}
+                    {% if teacher.qualification_doc %}
+                      <div class="p-4 border rounded-lg  shadow">
+                        <h4 class="font-medium mb-2">Qualification Document</h4>
+                        <a href="{{ teacher.qualification_doc.url }}" target="_blank" class="text-blue-500 underline">View File</a>
+                      </div>
+                    {% endif %}
+                    {% if teacher.image %}
+                      <div class="p-4 border rounded-lg  shadow">
+                        <h4 class="font-medium mb-2">Profile Image</h4>
+                        <img src="{{ teacher.image.url }}" class="rounded-lg shadow w-full h-40 object-cover" alt="Teacher Image"/>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+            
+              </div>
   
   
         </div>

@@ -2,6 +2,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 # Create your models here.
 
 def avatar_upload_path(instance, filename):
@@ -64,17 +65,11 @@ class FeesType(models.Model):
     
     name = models.CharField(max_length=100)  # eg: Tuition Fee, Exam Fee
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-
     school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE, related_name='fees_types')
     section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='fees_types', null=True)
 
-
-
-
-
     def __str__(self):
-        return f"{self.name} - {self.year.name}"
+        return f" {self.name}"
 
 
 
@@ -181,15 +176,32 @@ class Student(models.Model):
         return self.user.username
 
 class StudentFee(models.Model):
+    PAYMENT_METHODS = (
+        ('cash', 'Cash'),
+        ('UPI', 'UPI'),
+        ('card', 'Card'),
+        ('bank_transfer', 'Bank Transfer'),
+    )
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='student_fees')
     fee_type = models.ForeignKey(FeesType, on_delete=models.CASCADE, related_name='student_fees')
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateField(auto_now_add=True)
-    payment_method = models.CharField(max_length=50)  # e.g., UPI, Card, Bank Transfer
+    payment_method = models.CharField(max_length=50,choices=PAYMENT_METHODS,null=True)  # e.g., UPI, Card, Bank Transfer
     transaction_id = models.CharField(max_length=100, null=True, blank=True)
+    receipt_id = models.CharField(max_length=100, unique=True, null=True)
+    paid_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='student_fee_paid_by')
 
     def __str__(self):
         return f"{self.student.rollno} - {self.fee_type.name} - ₹{self.amount_paid}"
+    def save(self, *args, **kwargs):
+        if not self.receipt_id:
+            self.receipt_id = self.generate_receipt_id()
+        super().save(*args, **kwargs)
+
+    def generate_receipt_id(self):
+        prefix = 'RCPT'
+        unique_code = get_random_string(length=6).upper()
+        return f"{prefix}-{self.student.rollno}-{unique_code}"
 
 
 class Teacher(models.Model):

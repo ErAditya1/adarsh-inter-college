@@ -20,7 +20,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import TruncDate
-
+from .forms import StudentFeeForm
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -903,9 +904,20 @@ class TeacherViews():
         
         user = request.user  
         print(user)
+        teacher = None
+        try:    
+
+            teacher = get_object_or_404(Teacher,user_id=user.id)
+            # student = get_object_or_404(Student,user_id=user.id)
+            return render(request, 'pages/teacher/profile.html', {'user': user, 'teacher': teacher})
         
-        # student = get_object_or_404(Student,user_id=user.id)
-        return render(request, 'pages/teacher/profile.html', {'user': user})
+        except Teacher.DoesNotExist:
+            if user.user_type != 'teacher':
+                messages.error(request, "You are not a teacher")
+                return redirect('login')
+            # If no student is found, redirect to a different template or page
+            return render(request, 'pages/teacher/profile.html', {'user': user})
+        
     
 
 
@@ -1041,7 +1053,6 @@ class TeacherViews():
         classes = SchoolClass.objects.all()
         students = Student.objects.select_related('user').filter(admission_status='approved')
         is_filtered = False
-        
         if request.method == 'GET':
             
             school_class = request.GET.get('school_class')
@@ -1134,37 +1145,9 @@ class TeacherViews():
 # @user_type_required('admin')
 class AdminViews():
 
-    def verify_user(request,id):
-        user = get_object_or_404(User,pk=id)
-        if user.is_verified:
-            user.is_verified = False
-        else:
-            user.is_verified = True
-        user.save()
-        return redirect('manage_user')
-
-    def verify_admin(request,id):
-        staff = get_object_or_404(User,pk=id)
-        if staff.is_staff:
-            staff.is_staff = False
-        else:
-            staff.is_staff = True
-        staff.save()
-        return redirect('manage_admin')
     
-    def verify_teacher(request,id):
-        
-        teacher = get_object_or_404(User,pk=id)
-         
-        if teacher.is_staff:
-            teacher.user_type="guest"
-            teacher.is_staff = False
-        else:
-            teacher.user_type="teacher"
-            teacher.is_staff = True
-        teacher.save()
-        return redirect('manage_teacher')
-
+    
+    
     def dashboard(request):
        
         allStudent = Student.objects.count() 
@@ -1179,6 +1162,14 @@ class AdminViews():
 
         return render(request, 'pages/admin/home.html',{'admin':request.user, 'allStudent':allStudent, 'allTeacher': allTeacher, 'allAssesment':allAssesment, 'allLecture': allLecture, 'allStudyMaterial': allStudyMaterial, 'allUser': allUser, 'allNotification': allNotification, "allFeedback":allFeedback})
 
+    def verify_user(request,id):
+        user = get_object_or_404(User,pk=id)
+        if user.is_verified:
+            user.is_verified = False
+        else:
+            user.is_verified = True
+        user.save()
+        return redirect('manage_user')
 
     def manage_user(request):
         users = User.objects.all()
@@ -1197,11 +1188,11 @@ class AdminViews():
         return render(request, 'pages/admin/edit_user.html', {'user': u})
 
     
+    def delete_user(request,id):
+        u = get_object_or_404(User,pk=id)
+        u.delete()
+        return redirect('manage_user')
     
-    def manage_student(request):
-        st = Student.objects.filter(is_verified=True)
-        return render(request, 'pages/admin/manage_student.html',{'students': st})
-
     def add_admission_eligibility(request):
         students = Student.objects.filter(is_verified=False, admission_status="pending" )
            
@@ -1365,7 +1356,7 @@ class AdminViews():
 
 
             # Personal Info
-            dob = request.POST.get('dob')
+            dob = request.POST.get('date_of_birth')
             gender = request.POST.get('gender')
             aadhar_number = request.POST.get('aadhar_number')
             address1 = request.POST.get('address1')
@@ -1431,7 +1422,55 @@ class AdminViews():
 
 
         return render(request, "pages/admin/register_teacher.html")
+    
+    def profile(request):
+        user = request.user
+        
+        return render(request, 'pages/admin/profile.html', {'admin_user': user})
+    
+    def user_profile(request, username):
+        print(username)
+        if not username:
+            messages.error(request, "Username not provided")
+            return redirect('admin_profile')
+        admin_user = request.user
+        user = get_object_or_404(User, username=username)
 
+        if user.user_type == 'student':
+            student = get_object_or_404(Student, user=user)
+            return render(request, 'pages/admin/profile_student.html', {'admin_user': admin_user, 'student': student})
+        elif user.user_type == 'teacher':
+            teacher = get_object_or_404(Teacher, user=user)
+            return render(request, 'pages/admin/profile_teacher.html', {'admin_user': admin_user, 'teacher': teacher})
+        elif user.user_type == 'admin':
+            admin = get_object_or_404(User, username=username)
+            return render(request, 'pages/admin/profile_admin.html', {'admin_user': admin_user, 'admin': admin})
+        elif user.user_type == 'guest':
+            guest = get_object_or_404(User, user=user)
+            try:
+                student = Student.objects.filter(user_id=user.id).first()
+                teacher = Teacher.objects.filter(user_id = user.id).first()
+                if student :
+                    return render(request, 'pages/admin/profile_student.html', {'admin_user': admin_user, 'student': student})
+                elif teacher:
+                    return render(request, 'pages/admin/profile_teacher.html', {'admin_user': admin_user, 'teacher': teacher})
+                else:
+                    return render(request, 'pages/admin/profile_guest.html', {'admin_user': admin_user, 'guest': guest})
+
+            except :
+
+                return render(request, 'pages/admin/profile_guest.html', {'admin_user': admin_user, 'guest': guest})
+        
+
+        messages.error(request, "User not found")
+        
+        return render(request, 'pages/admin/profile.html', {'admin_user': user})
+
+    def manage_student(request):
+        st = Student.objects.filter(is_verified=True)
+        return render(request, 'pages/admin/manage_student.html',{'students': st})
+
+    
     def edit_student(request,id):
         classes = SchoolClass.objects.all()
         user = get_object_or_404(User, pk=id)
@@ -1499,7 +1538,12 @@ class AdminViews():
                 
             
 
-        return render(request, 'pages/student/update_profile.html', {'classes': classes, 'student': student, 'user':user})
+        return render(request, 'pages/admin/edit_student.html', {'classes': classes, 'student': student, 'user':user})
+
+    def delete_student(request,id):
+        st = get_object_or_404(User,pk=id)
+        st.delete()
+        return redirect('manage_student')
 
 
     def manage_teacher(request):
@@ -1507,35 +1551,80 @@ class AdminViews():
         return render(request, 'pages/admin/manage_teacher.html', {'teachers': te})
 
     def edit_teacher(request,id):
-        te = get_object_or_404(Teacher,pk=id)
-        if request.method == 'POST':
-            te.first_name = request.POST.get('first_name')
-            te.last_name = request.POST.get('last_name')
-            te.email = request.POST.get('email')
-            te.mobile = request.POST.get('mobile')
-            te.save()
+        user = get_object_or_404(User, pk=id)
+        if user.user_type != 'teacher':
+            messages.error(request, "User is not a teacher")
             return redirect('manage_teacher')
-        return render(request, 'pages/admin/edit_teacher.html', {'teacher': te})
+        teacher = get_object_or_404(Teacher,user=user)
+        if request.method == 'POST':
+            # User info
+            user.first_name = request.POST.get('first_name')
+            user.last_name = request.POST.get('last_name')
+            user.email = request.POST.get('email')
+            user.username = request.POST.get('username')
+            user.mobile = request.POST.get('mobile')
+            user.save()
 
-    def manage_admin(request):
-        ad = Admin.objects.all()
-        return render(request, 'pages/admin/manage_admin.html', {'admins': ad})
+            # Teacher profile info
+            teacher.date_of_birth = request.POST.get('date_of_birth')
+            teacher.gender = request.POST.get('gender')
+            teacher.aadhar_number = request.POST.get('aadhar_number')
+            teacher.address_line_1 = request.POST.get('address1')
+            teacher.address_line_2 = request.POST.get('address2')
+            teacher.city = request.POST.get('city')
+            teacher.postal_code = request.POST.get('postal_code')
+            teacher.state = request.POST.get('state')
+            teacher.country = request.POST.get('country')
+            teacher.qualification = request.POST.get('qualification')
+            teacher.specialization = request.POST.get('specialization')
+            teacher.experience_years = request.POST.get('experience')
+            teacher.designation = request.POST.get('designation')
 
-    def delete_user(request,id):
-        u = get_object_or_404(User,pk=id)
-        u.delete()
-        return redirect('manage_user')
+            # Optional file updates
+            if request.FILES.get('image'):
+                teacher.image = request.FILES.get('image')
+            if request.FILES.get('aadhar_doc'):
+                teacher.aadhar_imag = request.FILES.get('aadhar_doc')
+            if request.FILES.get('qualification_doc'):
+                teacher.qualification_doc = request.FILES.get('qualification_doc')
 
-    def delete_student(request,id):
-        st = get_object_or_404(User,pk=id)
-        st.delete()
-        return redirect('manage_student')
+            teacher.save()
+            messages.success(request, "Teacher profile updated successfully.")
+         # Replace with the actual redirect
+
+            return redirect('manage_teacher')
+        return render(request, 'pages/admin/edit_teacher.html', {'teacher': teacher})
+    def verify_teacher(request,id):
+        
+        teacher = get_object_or_404(User,pk=id)
+         
+        if teacher.is_staff:
+            teacher.user_type="guest"
+            teacher.is_staff = False
+        else:
+            teacher.user_type="teacher"
+            teacher.is_staff = True
+        teacher.save()
+        return redirect('manage_teacher')
 
     def delete_teacher(request  ,id):
         te = get_object_or_404(User,pk=id)
         te.delete()
         return redirect('manage_teacher')
 
+    def manage_admin(request):
+        # ad = Admin.objects.all()
+        ad= User.objects.filter(user_type = 'admin')
+        return render(request, 'pages/admin/manage_admin.html', {'admins': ad})
+    def verify_admin(request,id):
+        staff = get_object_or_404(User,pk=id)
+        if staff.is_staff:
+            staff.is_staff = False
+        else:
+            staff.is_staff = True
+        staff.save()
+        return redirect('manage_admin')
+    
     def delete_admin(request,id):
         ad = get_object_or_404(User,pk=id)
         ad.delete()
@@ -1846,3 +1935,68 @@ class AdminViews():
             return redirect('add_gallery')
         images = Gallery.objects.all()
         return render(request, 'pages/admin/add_gallery.html', {'images': images})
+    
+   
+    def submit_student_fee(request, student_id):
+        student = get_object_or_404(Student, id=student_id)
+        form = StudentFeeForm(student=student)
+
+        if request.method == 'POST':
+            form = StudentFeeForm(request.POST)
+            if form.is_valid():
+                fee = form.save(commit=False)
+                fee.student = student
+                fee.paid_by = request.user
+                fee.save()
+                return render(request, 'pages/admin/fee_receipt.html', {'fee': fee, 'student': student})
+        context = {
+            'form': form,
+            'student': student,
+            'fee_summary': student_fee_summary(student),
+        }
+
+        return render(request, 'pages/admin/fee_submit.html', context)
+    
+
+
+
+
+def view_fee_receipt(request, receipt_id):
+    fee = get_object_or_404(StudentFee, receipt_id=receipt_id)
+    return render(request, 'pages/admin/fee_receipt.html', {'fee': fee})
+    
+
+
+def student_fee_summary(student):
+    summary = []
+    fee_types = FeesType.objects.filter(
+        school_class=student.school_class,
+        section=student.section
+    )
+
+    for fee_type in fee_types:
+        # Total paid for this fee type
+        paid = StudentFee.objects.filter(student=student, fee_type=fee_type).aggregate(
+            total_paid=Sum('amount_paid')
+        )['total_paid'] or 0
+
+        due = fee_type.amount - paid
+
+        # All transactions for this fee type and student
+        transactions = StudentFee.objects.filter(
+            student=student,
+            fee_type=fee_type
+        ).order_by('-payment_date')
+
+        
+
+        summary.append({
+            'fee_type': fee_type,
+            'total_amount': fee_type.amount,
+            'paid': paid,
+            'due': due,
+            'transactions': transactions,  # List of StudentFee instances
+        })
+        
+
+    return summary

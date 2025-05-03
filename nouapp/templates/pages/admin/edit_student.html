@@ -1,0 +1,172 @@
+{% extends "layouts/alayout.html" %}
+{% load static %}
+{% block title %}Edit Student{% endblock %}
+
+{% block css %}
+<style>
+  .step { display: none; }
+  .step.active { display: block; }
+  .input-style {
+    width: 100%; padding: 0.5rem; border-radius: 0.375rem; border: 1px solid #ccc; background-color: #f9fafb; color: #111827;
+    transition: border-color 0.2s ease-in-out;
+  }
+  .btn-nav {
+    background-color: #4f46e5; color: white; padding: 0.5rem 1.25rem; border-radius: 0.375rem;
+  }
+  .btn-submit {
+    background-color: #10b981; color: white; padding: 0.75rem; border-radius: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block admin %}
+<form action="" method="POST" enctype="multipart/form-data" id="studentForm">
+    {% csrf_token %}
+    <div class="container mx-auto">
+      <div class="p-6 bg-blue-100 dark:bg-sky-950 rounded-lg shadow">
+  
+        <!-- Step 1: Personal Info -->
+        <div class="step active" id="step1">
+          <h2 class="text-2xl font-bold text-center mb-6">Edit Student Details</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label>First Name</label><input type="text" name="first_name" class="input-style" value="{{ student.user.first_name }}"></div>
+            <div><label>Last Name</label><input type="text" name="last_name" class="input-style" value="{{ student.user.last_name }}"></div>
+            <div><label>Username</label><input type="text" name="username" class="input-style" value="{{ student.user.username }}"></div>
+            <div><label>Email</label><input type="email" name="email" class="input-style" value="{{ student.user.email }}"></div>
+            <div><label>Phone Number</label><input type="text" name="mobile" class="input-style" value="{{ student.user.mobile }}"></div>
+            <div><label>Date of Birth</label><input type="date" name="date_of_birth" class="input-style" value="{{ student.date_of_birth|date:'Y-m-d' }}"></div>
+            <div><label>Father's Name</label><input type="text" name="fname" class="input-style" value="{{ student.fname }}"></div>
+            <div><label>Mother's Name</label><input type="text" name="mname" class="input-style" value="{{ student.mname }}"></div>
+            <div>
+              <label>Gender</label>
+              <select name="gender" class="input-style">
+                <option value="">--Select--</option>
+                <option value="male" {% if student.gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if student.gender == 'female' %}selected{% endif %}>Female</option>
+                <option value="other" {% if student.gender == 'other' %}selected{% endif %}>Other</option>
+              </select>
+            </div>
+            <div><label>Aadhar Number</label><input type="text" name="aadhar_number" class="input-style" value="{{ student.aadhar_number }}"></div>
+          </div>
+        </div>
+  
+        <!-- Step 2: Address -->
+        <div class="step" id="step2">
+          <h2 class="text-2xl font-bold text-center mb-6">Edit Address</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label>Address Line 1</label><input type="text" name="address_line_1" class="input-style" value="{{ student.address_line_1 }}"></div>
+            <div><label>Address Line 2</label><input type="text" name="address_line_2" class="input-style" value="{{ student.address_line_2 }}"></div>
+            <div><label>City</label><input type="text" name="city" class="input-style" value="{{ student.city }}"></div>
+            <div><label>State</label><input type="text" name="state" class="input-style" value="{{ student.state }}"></div>
+            <div><label>Postal Code</label><input type="text" name="postal_code" class="input-style" value="{{ student.postal_code }}"></div>
+            <div><label>Country</label><input type="text" name="country" class="input-style" value="{{ student.country }}"></div>
+          </div>
+        </div>
+  
+        <!-- Step 3: Education -->
+        <div class="step" id="step3">
+          <h2 class="text-2xl font-bold text-center mb-6">Edit Education</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label>Class</label>
+              <select name="school_class" id="school_class"  class="input-style">
+                <option value="">--Select Class--</option>
+                {% for cls in classes %}
+                  <option value="{{ cls.id }}" {% if student.school_class.id == cls.id %}selected{% endif %}>{{ cls.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>Section</label>
+              <select name="section" class="input-style" id="section">
+                <option value="">--Select Section--</option>
+                <option value="{{ student.section.id }}" selected>{{ student.section.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Step 4: Qualifications -->
+        <div class="step" id="step4">
+          <h2 class="text-2xl font-bold text-center mb-6">Edit Qualifications</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div><label>Previous School</label><input type="text" name="previous_school" class="input-style" value="{{ student.previous_school }}"></div>
+            <div><label>Last Qualification</label><input type="text" name="last_qualification" class="input-style" value="{{ student.last_qualification }}"></div>
+            <div><label>Year of Passing</label><input type="number" name="year_of_passing" class="input-style" value="{{ student.year_of_passing }}"></div>
+            <div><label>Grade</label><input type="text" name="grade" class="input-style" value="{{ student.grade }}"></div>
+          </div>
+        </div>
+  
+        <!-- Step 5: Documents -->
+        <div class="step" id="step5">
+          <h2 class="text-2xl font-bold text-center mb-6">Upload Documents</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label>Profile Image</label>
+              {% if student.image %}
+                <p>Current: <a href="{{ student.image.url }}" target="_blank">View</a></p>
+              {% endif %}
+              <input type="file" name="image" class="input-style">
+            </div>
+            <div>
+              <label>Aadhar PDF</label>
+              {% if student.aadhar_image %}
+                <p>Current: <a href="{{ student.aadhar_image.url }}" target="_blank">View</a></p>
+              {% endif %}
+              <input type="file" name="aadhar_image" class="input-style">
+            </div>
+          </div>
+          <div class="mt-6">
+            <button type="submit" class="btn-submit w-full">Update Student</button>
+          </div>
+        </div>
+  
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+          <button type="button" id="prevBtn" onclick="nextPrev(-1)" class="btn-nav">Previous</button>
+          <button type="button" id="nextBtn" onclick="nextPrev(1)" class="btn-nav">Next</button>
+        </div>
+  
+      </div>
+    </div>
+  </form>
+{% endblock %}
+
+{% block js %}
+<script>
+  let currentStep = 0;
+  const steps = document.querySelectorAll('.step');
+  const form = document.getElementById("studentForm");
+
+  function showStep(n) {
+    steps.forEach((step, idx) => step.classList.toggle('active', idx === n));
+    document.getElementById("prevBtn").style.display = n === 0 ? "none" : "inline-block";
+    document.getElementById("nextBtn").style.display = n === (steps.length - 1) ? "none" : "inline-block";
+  }
+
+  function validateStep(n) {
+    const inputs = steps[n].querySelectorAll("input, select");
+    for (let input of inputs) {
+      if (input.type !== "file" && input.name && input.value.trim() === "") {
+        alert("Please fill all required fields.");
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function nextPrev(n) {
+    if (n === 1 && !validateStep(currentStep)) return;
+    currentStep += n;
+    if (currentStep >= steps.length) {
+      form.submit();
+      return;
+    }
+    showStep(currentStep);
+  }
+
+  window.onload = function () {
+    showStep(currentStep);
+  };
+</script>
+{% endblock %}

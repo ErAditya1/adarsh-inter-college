@@ -1,0 +1,65 @@
+<!-- templates/pages/fees/fee_receipt.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fee Receipt</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; }
+    .receipt-container { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; }
+    .receipt-header { text-align: center; margin-bottom: 20px; }
+    .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .receipt-table th, .receipt-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    .download-btn { display: inline-block; background: #1d4ed8; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="receipt-container">
+  <div class="receipt-header">
+    <h2>🎓 College Fee Receipt</h2>
+    <p><strong>Receipt ID:</strong> {{ fee.receipt_id }}</p>
+  </div>
+
+  <table class="receipt-table">
+    <tr>
+      <th>Student Name</th>
+      <td>{{ fee.student.user.get_full_name }}</td>
+    </tr>
+    <tr>
+      <th>Roll Number</th>
+      <td>{{ fee.student.rollno }}</td>
+    </tr>
+    <tr>
+      <th>Class</th>
+      <td>{{ fee.student.school_class.name }} - {{ fee.student.section.name }}</td>
+    </tr>
+    <tr>
+      <th>Fee Type</th>
+      <td>{{ fee.fee_type.name }}</td>
+    </tr>
+    <tr>
+      <th>Amount Paid</th>
+      <td>₹{{ fee.amount_paid }}</td>
+    </tr>
+    <tr>
+      <th>Payment Method</th>
+      <td>{{ fee.payment_method }}</td>
+    </tr>
+    <tr>
+      <th>Transaction ID</th>
+      <td>{{ fee.transaction_id }}</td>
+    </tr>
+    <tr>
+      <th>Payment Date</th>
+      <td>{{ fee.payment_date }}</td>
+    </tr>
+  </table>
+
+  <div style="text-align:center;">
+    <button onclick="window.print()" class="download-btn">🖨️ Print / Download Receipt</button>
+  </div>
+</div>
+
+</body>
+</html>
