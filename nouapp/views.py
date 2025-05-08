@@ -1,13 +1,16 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render,redirect
+from django.http import HttpResponse, HttpResponseServerError
 # from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
+import random
 from .models import *
 from .decorators import user_type_required
-
+import logging
+from collections import Counter , defaultdict
 from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -20,14 +23,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.functions import TruncDate
-from .forms import StudentFeeForm
+from .forms import *
 from django.db.models import Sum
+from django.utils.timezone import now
+from django.db import transaction
+from django.db.models import Q
+from datetime import timedelta
+from django.db.models import Max
 
 
 # Create your views here.
 # @login_required(login_url='login')
 
-def super_admin(request):
+def super_admin():
     return redirect('/superadmin/')
 
 def home(request):
@@ -500,6 +508,38 @@ class StudentViews():
     def read_notifications(request):
         notifications = Notification.objects.all()
         return render(request, 'pages/student/notifications.html', {'notifications': notifications})
+    
+    def timetable_list(request):
+
+        student = Student.objects.get(user=request.user)
+        print(student.school_class)
+
+
+        classes = SchoolClass.objects.all()
+        school_class = get_object_or_404(SchoolClass, id=student.school_class.id)
+        section = get_object_or_404(Section, id=student.section.id)
+        timetable_entries = TimetableEntry.objects.filter(
+            school_class=school_class,
+            section=section
+        ).select_related('subject', 'teacher', 'period')
+
+        # Organize entries by day and period.id
+        timetable = defaultdict(dict)
+        for entry in timetable_entries:
+
+            timetable[entry.day][entry.period.id] = entry
+    
+
+        context = {
+            'classes':classes,
+            'school_class': school_class,
+            'section': section,
+            'timetable': dict(timetable),
+            'days': DayChoices.choices,  # E.g. [(1, "Monday"), (2, "Tuesday"), ...]
+            'periods': Period.objects.all().order_by('start_time'),
+        }
+        return render(request, 'pages/student/timetable_list.html', context)
+
    
     
 
@@ -1134,6 +1174,36 @@ class TeacherViews():
             'classes': classes,
             'is_filtered': is_filtered,
         })
+    
+
+    def teacher_timetable(request):
+        
+        teacher = Teacher.objects.get(user=request.user)
+        periods = Period.objects.all().order_by('start_time')
+
+        # Structure: {teacher: {day: {period_id: entry}}}
+        teacher_timetable = {}
+
+    
+        
+        timetable_entries = TimetableEntry.objects.filter(teacher=teacher).select_related(
+            'subject', 'school_class', 'section', 'period'
+        )
+
+        day_period_map = defaultdict(dict)
+        for entry in timetable_entries:
+            day_period_map[entry.day][entry.period.id] = entry
+
+        teacher_timetable = dict(day_period_map)
+
+        context = {
+            'periods': periods,
+            'days': DayChoices.choices,
+            'teacher_timetable': teacher_timetable,
+        }
+        return render(request, 'pages/teacher/timetable_list.html', context)
+
+
 
 
    
@@ -1322,11 +1392,11 @@ class AdminViews():
                     state=state,
                     postal_code=postal_code,
                     country=country,
-                    school_class_id=school_class_id,
-                    section_id=section_id,
+                    school_classid=school_class_id,
+                    section=section_id,
                     previous_school=previous_school,
                     last_qualification=last_qualification,
-                    year_of_passing=2024,
+                    year_of_passing=year_of_passing,
                     grade=grade,
                     image=image,
                     aadhar_imag=aadhar_image,
@@ -1414,6 +1484,10 @@ class AdminViews():
                 )
 
                 # Optionally, send confirmation email to teacher
+                Employee.objects.create(
+                    user=user,
+                    role=user.user_type
+                )
                 messages.success(request, f"Teacher {first_name} registered successfully.")
                 send_admin_teacher_registration_email(user_email=email, user_name=f"{first_name} {last_name}", username=username, password=password, login_url=None)
                 return redirect('register_teacher')  # Replace with your actual view
@@ -1602,6 +1676,13 @@ class AdminViews():
             teacher.user_type="guest"
             teacher.is_staff = False
         else:
+            employee = Employee.objects.filter(user=teacher).first()
+            if not employee:
+                Employee.objects.create(
+                    user=teacher,
+                    role=teacher.user_type
+                )
+
             teacher.user_type="teacher"
             teacher.is_staff = True
         teacher.save()
@@ -1957,6 +2038,530 @@ class AdminViews():
 
         return render(request, 'pages/admin/fee_submit.html', context)
     
+    def edit_period(request, period_id):
+        entry = Period.objects.filter(pk=period_id).first()
+        periods = Period.objects.all()
+        if request.method == 'POST':
+            form = PeriodForm(request.POST,instance=entry)
+            if form.is_valid():
+                form.save()
+                return redirect('add_period')  # You can change this to your actual list or dashboard
+        else:
+            form = PeriodForm(instance=entry)
+        
+        return render(request, 'pages/admin/add_period.html', {'form': form, 'periods':periods, 'period_id':period_id})
+    
+    def add_period(request):
+        periods = Period.objects.all()
+        if request.method == 'POST':
+            form = PeriodForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('add_period')  # You can change this to your actual list or dashboard
+        else:
+            form = PeriodForm()
+        
+        return render(request, 'pages/admin/add_period.html', {'form': form, 'periods':periods})
+    
+    def generate_timetable_for_class(school_class_id, section_id):
+        PERIODS = list(Period.objects.all())  # Get all defined periods
+        DAYS = [choice[0] for choice in DayChoices.choices]  # e.g., ['Monday', 'Tuesday', ...]
+
+        TimetableEntry.objects.filter(school_class_id=school_class_id, section_id=section_id).delete()
+
+        # Fetch subjects and teacher assignments
+        interests = TeacherInterest.objects.filter(school_class_id=school_class_id, section_id=section_id)
+        subject_teacher_map = defaultdict(list)
+        for interest in interests:
+            subject_teacher_map[interest.subject].append(interest.teacher)
+
+        # Generate all (day, period) slot combinations
+        timetable_slots = [(day, period) for day in DAYS for period in PERIODS]
+        random.shuffle(timetable_slots)
+
+        subject_periods_required = {subject: 5 for subject in subject_teacher_map}  # Adjust as needed
+        teacher_busy_slots = defaultdict(set)
+        timetable_entries = []
+
+        for subject, teachers in subject_teacher_map.items():
+            periods_needed = subject_periods_required[subject]
+            assigned = 0
+
+            for (day, period_instance) in timetable_slots:
+                if assigned >= periods_needed:
+                    break
+
+                random.shuffle(teachers)
+                for teacher in teachers:
+                    if (day, period_instance.id) not in teacher_busy_slots[teacher.id]:
+                        timetable_entries.append(TimetableEntry(
+                            school_class_id=school_class_id,
+                            section_id=section_id,
+                            subject=subject,
+                            teacher=teacher,
+                            day=day,
+                            period=period_instance
+                        ))
+                        teacher_busy_slots[teacher.id].add((day, period_instance.id))
+                        assigned += 1
+                        break
+
+        TimetableEntry.objects.bulk_create(timetable_entries)
+
+    def generate_college_timetable(request):
+        """
+        View to automatically generate and save the school timetable for all sections.
+
+        Constraints enforced:
+        1. 8 periods each day (Period 5 is lunch break - no classes).
+        2. Each section has one additional free period daily (aside from lunch).
+        3. A teacher cannot be assigned to more than one section in the same period.
+        4. Teachers only teach subjects they are interested in (TeacherInterest).
+        5. Subjects are evenly distributed in each section's timetable.
+        """
+        with transaction.atomic():
+            if request.user.user_type != 'admin':
+                return
+            # Clear existing timetable entries to start fresh
+            TimetableEntry.objects.all().delete()
+            print("Generation Started")
+
+            # Fetch all days (e.g., Monday-Friday)
+            days = [choice[0] for choice in DayChoices.choices]
+
+
+            # Fetch all periods excluding period number 5 (lunch break)
+            periods = list(Period.objects.exclude(name='Lunch').order_by('start_time'))
+
+            # Pre-cache teacher interests: subject_id -> list of teacher instances
+            teachers_by_subject = {}
+            for ti in TeacherInterest.objects.select_related('teacher', 'subject'):
+                teachers_by_subject.setdefault(ti.subject_id, []).append(ti.teacher)
+
+            # Track teacher assignments by (day_id, period_id) to avoid conflicts
+            teacher_busy = {}
+            for day in days:
+                for period in periods:
+                    teacher_busy[(day, period.id)] = set()
+
+            # Iterate through each section to assign its timetable
+            all_sections = Section.objects.select_related('school_class').all()
+            for section in all_sections:
+                # Get subjects for this section (assuming SchoolClass has many-to-many 'subjects')
+                try:
+                    subjects_qs = section.school_class.subjects.all()
+                except Exception:
+                    # Fallback: use all subjects if no specific relation
+                    subjects_qs = Subject.objects.all()
+                subjects = list(subjects_qs)
+                if not subjects:
+                    continue
+
+                # Calculate total teaching slots per week: 6 classes/day * number of days
+                days_count = len(days)
+                total_slots = days_count * 6  # 6 classes each day (free and lunch excluded)
+
+                # Evenly distribute subject occurrences in this section's timetable
+                num_subjects = len(subjects)
+                base_count = total_slots // num_subjects
+                extra = total_slots % num_subjects
+                subject_slots = []
+                for i, subject in enumerate(subjects):
+                    count = base_count + (1 if i < extra else 0)
+                    subject_slots.extend([subject] * count)
+                random.shuffle(subject_slots)  # Shuffle to randomize distribution
+
+                # Decide a random free period (aside from lunch) for each day in this section
+                free_periods = {}
+                available_periods = [p.id for p in periods]
+                for day in days:
+                    free_periods[day] = random.choice(available_periods)
+
+                # Assign subjects to periods for each day in this section
+                slot_idx = 0
+                for day in days:
+                    for period in periods:
+                        # Skip lunch break (period number 5 is excluded already)
+                        # Skip this day's free period
+                        if period.id == free_periods[day]:
+                            continue
+                        # If we've assigned all subject slots, break
+                        if slot_idx >= len(subject_slots):
+                            break
+
+                        subject = subject_slots[slot_idx]
+                        slot_idx += 1
+
+                        # Find a teacher who can teach this subject and is not busy
+                        teacher_assigned = None
+                        for teacher in teachers_by_subject.get(subject.id, []):
+                            if teacher.id not in teacher_busy[(day, period.id)]:
+                                teacher_assigned = teacher
+                                break
+
+                        # If no teacher is available for this subject at this slot, skip assigning (slot remains free)
+                        if not teacher_assigned:
+                            continue
+
+                        # Mark teacher as busy for this day-period
+                        teacher_busy[(day, period.id)].add(teacher_assigned.id)
+                        print(day)
+                        # Create the timetable entry
+                        timetable=TimetableEntry.objects.create(
+                            school_class=section.school_class,
+                            section=section,
+                            subject=subject,
+                            teacher=teacher_assigned,
+                            day=day,
+                            period=period
+                        )
+                        # print(timetable)
+
+        # return HttpResponse("Timetable generated successfully.")
+        messages.success(request,"Timetable Generated...")
+        return redirect("timetable_list_all")
+    
+    def generate_school_timetable(request):
+        """
+        Generates a complete timetable for all sections:
+        - 6 days (Mon-Sat), 8 periods each day, skipping the 'Lunch' period.
+        - Each section gets one additional free period per day (randomly chosen).
+        - Subjects needed 6+ times/week are fixed to the same period each day if possible:contentReference[oaicite:5]{index=5}.
+        - No teacher is double-booked in the same period across sections:contentReference[oaicite:6]{index=6}.
+        - Teachers are only assigned to subjects they are interested in (via TeacherInterest).
+        - Subjects are distributed evenly across available slots.
+        - A teacher can teach max 6 periods every day
+        """
+        logger = logging.getLogger(__name__)
+        logger.info("Starting generation of school timetable...")
+
+        try:
+            with transaction.atomic():
+                # Clear existing timetable entries
+                TimetableEntry.objects.all().delete()
+                logger.info("Cleared old timetable entries.")
+
+                # Prepare global teacher availability map: teacher_busy[teacher_id][day] = set(period_id)
+                teacher_busy = {}
+                teacher_load = Counter()
+
+                # Initialize teacher_busy for all teachers
+                for ti in TeacherInterest.objects.select_related('teacher').all():
+                    teacher = ti.teacher
+                    if teacher.id not in teacher_busy:
+                        # Map each teacher to a dict of days with occupied periods
+                        teacher_busy[teacher.id] = {day_choice[0]: set() for day_choice in DayChoices.choices}
+
+                # Fetch all periods, identify lunch to skip
+                lunch_period = Period.objects.filter(name__iexact='Lunch').first()
+                periods = list(Period.objects.exclude(id=lunch_period.id) if lunch_period else Period.objects.all())
+                periods.sort(key=lambda p: p.id)  # assume id correlates with period order
+
+                # Prepare list of days (values from DayChoices)
+                days = [choice[0] for choice in DayChoices.choices]
+
+                # Iterate through each class and section
+                for school_class in SchoolClass.objects.all():
+                    for section in school_class.sections.all():
+                        logger.info(f"Scheduling section {section} of class {school_class}.")
+                        # Get all subjects for this class (assuming Subject has a FK to SchoolClass)
+                        subjects = list(Subject.objects.filter(school_class=school_class))
+                        if not subjects:
+                            logger.warning(f"No subjects found for {school_class}. Skipping section {section}.")
+                            continue
+
+                        # Compute total teaching slots (6 days * (8 - 2 breaks) = 36 slots per week)
+                        total_slots = 6 * (len(periods) - 1)  # subtract one for free period per day
+                        # Distribute subjects evenly across total_slots
+                        base_count = total_slots // len(subjects)
+                        extra = total_slots % len(subjects)
+                        # Assign initial counts and shuffle to randomize which subjects get the extra slot
+                        random.shuffle(subjects)
+                        subject_counts = {}
+                        for i, subj in enumerate(subjects):
+                            cnt = base_count + (1 if i < extra else 0)
+                            subject_counts[subj.id] = cnt
+                        subject_map = {subj.id: subj for subj in subjects}
+
+                        # Assign one random free period per day for this section
+                        free_periods = {}
+                        for day in days:
+                            # choose a free period from all non-lunch periods
+                            free_periods[day] = random.choice(periods).id
+
+                        # Identify subjects requiring daily coverage (>=6 slots)
+                        fixed_subjects = [sid for sid, cnt in subject_counts.items() if cnt >= 6]
+                        fixed_periods = {}  # map subj_id -> chosen period_id
+                        occupied_fixed = set()
+                        if fixed_subjects:
+                            # Sort by count descending to assign largest first
+                            fixed_subjects.sort(key=lambda sid: subject_counts[sid], reverse=True)
+                            candidate_period_ids = [p.id for p in periods]
+                            for sid in fixed_subjects:
+                                # Find period candidates not used and not equal to any free period
+                                candidates = [pid for pid in candidate_period_ids if pid not in occupied_fixed]
+                                candidates = [
+                                    pid for pid in candidates
+                                    if all(pid != free_periods[day] for day in days)
+                                ]
+                                if not candidates:
+                                    logger.warning(f"No single period available for daily subject {subject_map[sid].name}. Will distribute normally.")
+                                    continue
+                                chosen_pid = random.choice(candidates)
+                                fixed_periods[sid] = chosen_pid
+                                occupied_fixed.add(chosen_pid)
+                            # Reduce counts by one per day for fixed subjects
+                            for sid, pid in fixed_periods.items():
+                                subject_counts[sid] -= 6
+
+                        # Now schedule day by day
+                        for day in days:
+                            # Place fixed subjects first (they occupy their period each day)
+                            for sid, pid in fixed_periods.items():
+                                # Assign a teacher for this subject-period if not already done
+                                subj = subject_map[sid]
+                                # Select interested teachers who are free this day, this period
+                                teacher_ids = list(TeacherInterest.objects.filter(subject=subj).values_list('teacher_id', flat=True))
+                                # Filter by availability
+                                available = [t for t in teacher_ids if pid not in teacher_busy.get(t, {}).get(day, set())]
+                                if not available:
+                                    logger.error(f"No available teacher for fixed subject {subj.name} on {day} period {pid}.")
+                                    continue
+                                # Choose teacher with least load to balance assignments
+                                min_load = min(teacher_load[t] for t in available)
+                                candidates = [t for t in available if teacher_load[t] == min_load]
+                                teacher_id = random.choice(candidates)
+                                # Mark teacher busy and update load
+                                teacher_busy[teacher_id][day].add(pid)
+                                teacher_load[teacher_id] += 1
+                                # Create the timetable entry
+                                period_instance=Period.objects.filter(pk=int(pid)).first()
+                                subject_instance = Subject.objects.filter(pk=sid).first()
+                                teacher_instance = Teacher.objects.filter(pk=teacher_id).first()
+
+                                print("Period Instance",period_instance)
+                                TimetableEntry.objects.create(
+                                    school_class=section.school_class,
+                                    section=section,
+                                    day=day,
+                                    period=period_instance,
+                                    subject=subject_instance,
+                                    teacher=teacher_instance
+                                )
+
+                            # Fill remaining periods
+                            for period in periods:
+                                pid = period.id
+                                # Skip lunch and the section's free period
+                                if lunch_period and pid == lunch_period.id:
+                                    continue
+                                if pid == free_periods[day]:
+                                    continue
+                                # Skip fixed subjects' reserved periods
+                                if pid in fixed_periods.values():
+                                    continue
+                                # Find any subject with remaining count > 0
+                                remaining_subjects = [sid for sid, cnt in subject_counts.items() if cnt > 0]
+                                if not remaining_subjects:
+                                    break  # no more subjects to schedule
+                                # Try subjects in order of highest remaining count
+                                remaining_subjects.sort(key=lambda sid: subject_counts[sid], reverse=True)
+                                assigned = False
+                                for sid in remaining_subjects:
+                                    subj = subject_map[sid]
+                                    # Find available teachers for this subject
+                                    teacher_ids = list(TeacherInterest.objects.filter(subject=subj).values_list('teacher_id', flat=True))
+                                    available = [t for t in teacher_ids if pid not in teacher_busy.get(t, {}).get(day, set())]
+                                    if not available:
+                                        continue  # try next subject
+                                    # Pick teacher with least current load
+                                    min_load = min(teacher_load[t] for t in available)
+                                    candidates = [t for t in available if teacher_load[t] == min_load]
+                                    teacher_id = random.choice(candidates)
+                                    # Assign and update
+                                    teacher_busy[teacher_id][day].add(pid)
+                                    teacher_load[teacher_id] += 1
+                                    subject_counts[sid] -= 1
+                                    subject_instance = Subject.objects.filter(pk=sid).first()
+                                    teacher_instance = Teacher.objects.filter(pk=teacher_id).first()
+                                    TimetableEntry.objects.create(
+                                        school_class=section.school_class,
+                                        section=section,
+                                        day=day,
+                                        period=period,
+                                        subject=subject_instance,
+                                        teacher=teacher_instance
+                                    )
+                                    assigned = True
+                                    break
+                                if not assigned:
+                                    logger.warning(f"Could not assign any subject to {section} on {day} period {pid} (no available teachers).")
+                                    # Slot remains unfilled
+
+                        logger.info(f"Completed scheduling for section {section}.")
+
+                logger.info("Timetable generation completed successfully.")
+                return HttpResponse("Timetable generated successfully.")
+        except Exception as e:
+            logger.error("Error generating timetable: %s", e)
+            return HttpResponseServerError(f"Error generating timetable: {e}")
+   
+    def timetable_add(request):
+        if request.method == 'POST':
+            form = TimetableEntryForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request,'Timetable Entry Added')
+                return redirect('timetable_list', class_id=form.cleaned_data['school_class'].id, section_id=form.cleaned_data['section'].id)
+        else:
+            form = TimetableEntryForm()
+        
+        return render(request, 'pages/admin/add_timetable.html', {'form': form, 'title': 'Add Timetable Entry'})
+    
+    def timetable_edit(request, entry_id):
+        entry = get_object_or_404(TimetableEntry, id=entry_id)
+        if request.method == 'POST':
+            form = TimetableEntryForm(request.POST, instance=entry)
+            if form.is_valid():
+                form.save()
+                return redirect('timetable_list', class_id=entry.school_class.id, section_id=entry.section.id)
+        else:
+            form = TimetableEntryForm(instance=entry)
+        
+        return render(request, 'pages/admin/add_timetable.html', {'form': form, 'title': 'Edit Timetable Entry'})
+    
+    def timetable_delete(request, entry_id):
+        entry = get_object_or_404(TimetableEntry, id=entry_id)
+        class_id = entry.school_class.id
+        section_id = entry.section.id
+        entry.delete()
+        return redirect('timetable_list', class_id=class_id, section_id=section_id)
+        
+    
+    def add_salary_structure(request,user_id):
+        user = get_object_or_404(User, id=user_id)
+        employee = get_object_or_404(Employee, user=user)
+
+        salary_structure = SalaryStructure.objects.filter(employee=employee).first()
+
+        
+        if request.method == 'POST':
+
+            form = SalaryStructureForm(request.POST,instance=salary_structure)
+            if form.is_valid():
+                structure = form.save(commit=False)
+                structure.employee = employee  # ✅ Assign employee here
+                structure.save()
+                return redirect('manage_teacher')  # Replace with your view name
+        else:
+            form = SalaryStructureForm(instance=salary_structure)
+
+        return render(request, 'pages/admin/add_salary_structure.html', {'form': form})
+    
+    def employee_attendance_report(request):
+        employees = Employee.objects.select_related('user').all()
+        
+
+        # Get unique attendance dates
+        dates = EmployeeAttendance.objects.annotate(date_only=TruncDate('date')) \
+                                .values_list('date_only', flat=True) \
+                                .distinct() \
+                                .order_by('date_only')
+
+        # Build dictionary of attendance data
+        attendance_data = {}
+        attendances = EmployeeAttendance.objects.annotate(date_only=TruncDate('date')).all()
+
+        for attendance in attendances:
+            key = (attendance.employee_id, attendance.date_only)
+            attendance_data[key] = attendance.status
+
+        return render(request, 'pages/admin/employee_attendance_report.html', {
+            'employees': employees,
+            'dates': dates,
+            'attendance_data': attendance_data,
+        })
+    
+
+    def submit_employee_attendance(request, employee_id):
+        print(employee_id)
+        employee = get_object_or_404(Employee,pk=employee_id)
+        status = request.POST.get('status')
+        print(status)
+        attendance = EmployeeAttendance.objects.create(
+            employee = employee,
+            status=status,
+        )
+
+        return redirect('employee_attendance_report')
+    
+
+    
+
+    def create_salary_payment(request, employee_id):
+        user = get_object_or_404(User, id=employee_id)
+        employee = get_object_or_404(Employee, user=user)
+
+
+        # Get last salary payment date
+        last_payment = SalaryPayment.objects.filter(employee=employee).aggregate(Max('date'))['date__max']
+        start_date = last_payment + timedelta(days=1) if last_payment else employee.date_joined
+        end_date = timezone.now().date()
+
+        # Get attendance between dates
+        attendance_qs = EmployeeAttendance.objects.filter(
+            employee=employee,
+            date__range=(start_date, end_date)
+        )
+
+        # Count worked and absent days
+        present_days = attendance_qs.filter(status='present').count()
+        half_days = attendance_qs.filter(status='halfday').count()
+        absent_days = attendance_qs.filter(status='absent').count()
+
+        # Calculate effective worked/absent
+        total_worked = present_days + (half_days * 0.5)
+        total_absent = absent_days + (half_days * 0.5)
+
+        # Get employee's salary structure
+        try:
+            structure = SalaryStructure.objects.get(employee=employee)
+        except SalaryStructure.DoesNotExist:
+            messages.error(request, "Salary structure not defined for this employee.")
+            return redirect('salary_payment_list')
+
+        # Create salary payment record
+        payment = SalaryPayment.objects.create(
+            employee=employee,
+            salary_structure=structure,
+            date=end_date,
+            worked_days=int(total_worked),
+            absent_days=int(total_absent),
+        )
+
+        messages.success(request, f"Salary generated for {employee.user.get_full_name()} from {start_date} to {end_date}.")
+        return redirect('salary_payment_list')
+    
+    def salary_payment_list(request):
+        payments = SalaryPayment.objects.select_related('employee__user').order_by('-date')
+
+        # Optional filters (by employee name or date)
+        query = request.GET.get('q')
+        if query:
+            payments = payments.filter(
+                Q(employee__user__first_name__icontains=query) |
+                Q(employee__user__last_name__icontains=query) |
+                Q(date__icontains=query)
+            )
+
+        return render(request, 'pages/admin/salary_list.html', {
+            'payments': payments,
+            'query': query,
+        })
+
+
+
+        
 
 
 
@@ -1964,6 +2569,7 @@ class AdminViews():
 def view_fee_receipt(request, receipt_id):
     fee = get_object_or_404(StudentFee, receipt_id=receipt_id)
     return render(request, 'pages/admin/fee_receipt.html', {'fee': fee})
+
     
 
 
@@ -2000,3 +2606,95 @@ def student_fee_summary(student):
         
 
     return summary
+
+def teacher_timetable_list(request):
+    teachers = Teacher.objects.select_related('user').all()
+    periods = Period.objects.all().order_by('start_time')
+
+    # Structure: {teacher: {day: {period_id: entry}}}
+    teacher_timetables = {}
+
+   
+    for teacher in teachers:
+        if teacher.user.is_staff ==False:
+            continue
+            
+        print(teacher)
+        timetable_entries = TimetableEntry.objects.filter(teacher=teacher).select_related(
+            'subject', 'school_class', 'section', 'period'
+        )
+
+        day_period_map = defaultdict(dict)
+        for entry in timetable_entries:
+            day_period_map[entry.day][entry.period.id] = entry
+
+        teacher_timetables[teacher] = dict(day_period_map)
+
+    context = {
+        'teachers': teachers,
+        'periods': periods,
+        'days': DayChoices.choices,
+        'teacher_timetables': teacher_timetables,
+    }
+    return render(request, 'pages/admin/teacher_timetable_list.html', context)
+
+def timetable_list(request, class_id, section_id):
+
+
+    classes = SchoolClass.objects.all()
+    school_class = get_object_or_404(SchoolClass, id=class_id)
+    section = get_object_or_404(Section, id=section_id)
+    timetable_entries = TimetableEntry.objects.filter(
+        school_class=school_class,
+        section=section
+    ).select_related('subject', 'teacher', 'period')
+
+    # Organize entries by day and period.id
+    timetable = defaultdict(dict)
+    for entry in timetable_entries:
+
+        timetable[entry.day][entry.period.id] = entry
+ 
+
+    context = {
+        'classes':classes,
+        'school_class': school_class,
+        'section': section,
+        'timetable': dict(timetable),
+        'days': DayChoices.choices,  # E.g. [(1, "Monday"), (2, "Tuesday"), ...]
+        'periods': Period.objects.all().order_by('start_time'),
+    }
+    return render(request, 'pages/admin/timetable_list.html', context)
+
+
+def filter_timetable (request):
+    if request.method == 'POST':
+        class_id = request.POST.get('school_class')
+        section_id = request.POST.get('section')
+        return redirect('timetable_list', class_id=class_id, section_id=section_id)
+    
+def timetable_list_all(request):
+    classes = SchoolClass.objects.prefetch_related('sections')
+    periods = Period.objects.all().order_by('start_time')
+    days = DayChoices.choices  # E.g. [(1, 'Monday'), (2, 'Tuesday'), ...]
+
+    # Nested dictionary: timetable[(class_id, section_id)][day][period_id] = entry
+    timetable = defaultdict(lambda: defaultdict(dict))
+
+    entries = TimetableEntry.objects.select_related('subject', 'teacher', 'period', 'school_class', 'section')
+    for entry in entries:
+        key = f"{entry.school_class.id}_{entry.section.id}"
+        
+        timetable[key][entry.day][entry.period.id] = entry
+        # print(entry.day)
+
+        
+
+    context = {
+        'classes': classes,
+        'timetable': dict(timetable),
+        'days': days,
+        'periods': periods,
+    }
+    # print(timetable)
+    return render(request, 'pages/admin/timetable_list_all.html', context)

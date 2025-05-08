@@ -1,6 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2025-04-30 10:33
+  // Created: 2025-05-04 07:34
   // Cli Options: -a --output erd.dot
 
   fontname = "Roboto"
@@ -601,11 +601,11 @@ digraph model_graph {
       </TABLE>
       >]
   
-    nouapp_models_Program [label=<
+    nouapp_models_SchoolClass [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Program
+      SchoolClass
       </B></FONT></TD></TR>
     
     
@@ -627,11 +627,11 @@ digraph model_graph {
       </TABLE>
       >]
   
-    nouapp_models_Branch [label=<
+    nouapp_models_Section [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Branch
+      Section
       </B></FONT></TD></TR>
     
     
@@ -644,49 +644,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto">branch_code</FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto">CharField</FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto">name</FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto">CharField</FONT>
-      </TD></TR>
-    
-    
-      </TABLE>
-      >]
-  
-    nouapp_models_Year [label=<
-      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
-      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
-      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Year
-      </B></FONT></TD></TR>
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>id</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -720,7 +678,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -728,15 +686,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -778,7 +728,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -786,15 +736,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -852,7 +794,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -860,15 +802,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -910,7 +844,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -918,7 +852,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -929,14 +863,6 @@ digraph model_graph {
       <FONT FACE="Roboto"><B>user</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>OneToOneField (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
     
     
@@ -1176,6 +1102,14 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>paid_by</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>student</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
@@ -1201,6 +1135,14 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto">payment_method</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">receipt_id</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto">CharField</FONT>
       </TD></TR>
@@ -1412,7 +1354,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1420,7 +1362,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1437,14 +1379,6 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>teacher</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1530,13 +1464,13 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1544,7 +1478,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1553,14 +1487,6 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>user</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1620,13 +1546,13 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1634,7 +1560,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1643,14 +1569,6 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>user</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1710,13 +1628,13 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1724,7 +1642,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1733,14 +1651,6 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>user</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -1774,7 +1684,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto">link</FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto">CharField</FONT>
+      <FONT FACE="Roboto">URLField</FONT>
       </TD></TR>
     
     
@@ -1800,7 +1710,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
@@ -1850,7 +1760,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
@@ -1900,7 +1810,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
@@ -2006,7 +1916,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto">link</FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto">CharField</FONT>
+      <FONT FACE="Roboto">URLField</FONT>
       </TD></TR>
     
     
@@ -2032,7 +1942,7 @@ digraph model_graph {
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>IntegerField</B></FONT>
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
       </TD></TR>
     
     
@@ -2088,7 +1998,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>branch</B></FONT>
+      <FONT FACE="Roboto"><B>school_class</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -2096,7 +2006,7 @@ digraph model_graph {
     
     
       <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>program</B></FONT>
+      <FONT FACE="Roboto"><B>section</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -2113,14 +2023,6 @@ digraph model_graph {
     
       <TR><TD ALIGN="LEFT" BORDER="0">
       <FONT FACE="Roboto"><B>submitted_by</B></FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-      </TD></TR>
-    
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto"><B>year</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
@@ -2197,56 +2099,44 @@ digraph model_graph {
   nouapp_models_User -> django_contrib_auth_models_AbstractUser
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
-  nouapp_models_Branch -> nouapp_models_Program
-  [label=" program (branches)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Section -> nouapp_models_SchoolClass
+  [label=" school_class (sections)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Year -> nouapp_models_Branch
-  [label=" branch (years)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_FeesType -> nouapp_models_SchoolClass
+  [label=" school_class (fees_types)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_FeesType -> nouapp_models_Year
-  [label=" year (fees_types)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_FeesType -> nouapp_models_Section
+  [label=" section (fees_types)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_FeesType -> nouapp_models_Program
-  [label=" program (fees_types)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Entrance -> nouapp_models_SchoolClass
+  [label=" school_class (entrance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_FeesType -> nouapp_models_Branch
-  [label=" branch (fees_types)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Entrance -> nouapp_models_Section
+  [label=" section (entrance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Entrance -> nouapp_models_Year
-  [label=" year (entrance_exams)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Subject -> nouapp_models_SchoolClass
+  [label=" school_class (subject)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Entrance -> nouapp_models_Program
-  [label=" program (entrance_exams)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Entrance -> nouapp_models_Branch
-  [label=" branch (entrance_exams)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Subject -> nouapp_models_Year
-  [label=" year (subjects)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Subject -> nouapp_models_Program
-  [label=" program (subjects)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Subject -> nouapp_models_Branch
-  [label=" branch (subjects)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Subject -> nouapp_models_Section
+  [label=" section (subject)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Student -> nouapp_models_User
   [label=" user (student)"] [arrowhead=none, arrowtail=none, dir=both];
 
-  nouapp_models_Student -> nouapp_models_Program
-  [label=" program (students)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Student -> nouapp_models_SchoolClass
+  [label=" school_class (students)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Student -> nouapp_models_Branch
-  [label=" branch (students)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Student -> nouapp_models_Year
-  [label=" year (students)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Student -> nouapp_models_Section
+  [label=" section (students)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_StudentFee -> nouapp_models_Student
   [label=" student (student_fees)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_StudentFee -> nouapp_models_FeesType
   [label=" fee_type (student_fees)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  nouapp_models_StudentFee -> nouapp_models_User
+  [label=" paid_by (student_fee_paid_by)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Teacher -> nouapp_models_User
   [label=" user (teacher_profile)"] [arrowhead=none, arrowtail=none, dir=both];
@@ -2257,14 +2147,11 @@ digraph model_graph {
   nouapp_models_TeacherInterest -> nouapp_models_Subject
   [label=" subject (interested_teachers)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_TeacherInterest -> nouapp_models_Year
-  [label=" year (teacherinterest)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_TeacherInterest -> nouapp_models_SchoolClass
+  [label=" school_class (teacherinterest)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_TeacherInterest -> nouapp_models_Branch
-  [label=" branch (teacherinterest)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_TeacherInterest -> nouapp_models_Program
-  [label=" program (teacherinterest)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_TeacherInterest -> nouapp_models_Section
+  [label=" section (teacherinterest)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Admin -> nouapp_models_User
   [label=" user (admin)"] [arrowhead=none, arrowtail=none, dir=both];
@@ -2272,38 +2159,29 @@ digraph model_graph {
   nouapp_models_StudyMaterial -> nouapp_models_User
   [label=" user (study_materials)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_StudyMaterial -> nouapp_models_Program
-  [label=" program (studymaterial)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_StudyMaterial -> nouapp_models_SchoolClass
+  [label=" school_class (studymaterial)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_StudyMaterial -> nouapp_models_Branch
-  [label=" branch (studymaterial)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_StudyMaterial -> nouapp_models_Year
-  [label=" year (studymaterial)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_StudyMaterial -> nouapp_models_Section
+  [label=" section (studymaterial)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Assesment -> nouapp_models_User
   [label=" user (assesments)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Assesment -> nouapp_models_Program
-  [label=" program (assesment)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Assesment -> nouapp_models_SchoolClass
+  [label=" school_class (assesment)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Assesment -> nouapp_models_Branch
-  [label=" branch (assesment)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Assesment -> nouapp_models_Year
-  [label=" year (assesment)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Assesment -> nouapp_models_Section
+  [label=" section (assesment)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Lecture -> nouapp_models_User
   [label=" user (lectures)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Lecture -> nouapp_models_Program
-  [label=" program (lecture)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Lecture -> nouapp_models_SchoolClass
+  [label=" school_class (lecture)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Lecture -> nouapp_models_Branch
-  [label=" branch (lecture)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Lecture -> nouapp_models_Year
-  [label=" year (lecture)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Lecture -> nouapp_models_Section
+  [label=" section (lecture)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Complaint -> nouapp_models_Student
   [label=" student (complaints)"] [arrowhead=none, arrowtail=dot, dir=both];
@@ -2323,14 +2201,11 @@ digraph model_graph {
   nouapp_models_Attendance -> nouapp_models_Student
   [label=" student (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Attendance -> nouapp_models_Program
-  [label=" program (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Attendance -> nouapp_models_SchoolClass
+  [label=" school_class (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  nouapp_models_Attendance -> nouapp_models_Branch
-  [label=" branch (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  nouapp_models_Attendance -> nouapp_models_Year
-  [label=" year (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
+  nouapp_models_Attendance -> nouapp_models_Section
+  [label=" section (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   nouapp_models_Attendance -> nouapp_models_User
   [label=" submitted_by (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];

@@ -1,0 +1,43 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}Add Period{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="max-w-2xl mx-auto bg-blue-50/10 dark:text-white shadow rounded p-6 mt-10">
+        <h2 class="text-xl font-bold mb-4 text-center">⌚Add New Period</h2>
+        <form method="POST" class="space-y-5">
+        {% csrf_token %}
+          {{ form.non_field_errors }}
+      
+          {% for field in form %}
+            <div  class="dark:text-black">
+              <label class="block text-sm font-medium text-gray-700 dark:text-white mb-1">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit Sallery</button>
+        </form>
+      </div>
+     
+
+  
+
+
+{% endblock %}

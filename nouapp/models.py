@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from django.core.validators import MinValueValidator
 # Create your models here.
 
 def avatar_upload_path(instance, filename):
@@ -203,6 +204,20 @@ class StudentFee(models.Model):
         unique_code = get_random_string(length=6).upper()
         return f"{prefix}-{self.student.rollno}-{unique_code}"
 
+class Employee(models.Model):
+    """Represents a school staff member (teacher/admin/etc.)."""
+    EMPLOYEE_TYPES = [
+        ('teacher', 'Teacher'),
+        ('admin',   'Admin'),
+        ('staff',   'Staff'),
+    ]
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=20, choices=EMPLOYEE_TYPES)
+    date_joined = models.DateField(auto_now_add=True)
+    # Add other fields (department, designation) as needed.
+
+    def __str__(self):
+        return f"{self.user.get_full_name} ({self.get_role_display()})"
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile')
@@ -251,7 +266,7 @@ class TeacherInterest(models.Model):
 
 
     def __str__(self):
-        return f"{self.teacher.user.username} - {self.subject.name} ({self.year.name}/{self.branch.name}/{self.program.name})"
+        return f"{self.teacher.user.username} - {self.subject.name} ({self.school_class.name}/{self.section.name})"
 
 
 
@@ -384,3 +399,138 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.student.user.username} - {self.date} - {'Present' if self.status else 'Absent'}"
+    
+class DayChoices(models.TextChoices):
+    MONDAY = 'Monday'
+    TUESDAY = 'Tuesday'
+    WEDNESDAY = 'Wednesday'
+    THURSDAY = 'Thursday'
+    FRIDAY = 'Friday'
+    SATURDAY = 'Saturday'
+    # SUNDAY = 'Sunday'
+
+class Period(models.Model):
+    name = models.CharField(max_length=50)  # e.g., "Period 1", "Period 2"
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    def __str__(self):
+        return f"{self.name} ({self.start_time} - {self.end_time})"
+
+class TimetableEntry(models.Model):
+    day = models.CharField(max_length=10, choices=DayChoices.choices)
+    period = models.ForeignKey(Period, on_delete=models.CASCADE)
+    school_class = models.ForeignKey(SchoolClass, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
+    teacher = models.ForeignKey('Teacher', on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('day', 'period', 'school_class', 'section')
+
+    def __str__(self):
+        return f"{self.day} - {self.period.name} - {self.subject} ({self.school_class.name}-{self.section.name})"
+
+
+class ErrorLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    view_name = models.CharField(max_length=255)
+    error_type = models.CharField(max_length=255)
+    error_message = models.TextField()
+    stack_trace = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+
+
+
+
+class SalaryStructure(models.Model):
+    """Salary components for an employee (one structure per employee)."""
+    employee = models.OneToOneField(Employee, on_delete=models.PROTECT)
+    base_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    deductions = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    allowances = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tax_percent = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Auto-calculate total
+        self.total_salary = (
+            self.base_salary + self.bonuses + self.allowances - self.deductions - self.tax_percent
+        )
+        super().save(*args, **kwargs)
+
+class EmployeeAttendance(models.Model):
+    """Daily attendance record for integration with payroll."""
+    STATUS_CHOICES = [
+        ('present', 'Present'),
+        ('absent',  'Absent'),
+        ('halfday', 'Half Day'),
+        # Add other statuses if needed.
+    ]
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    date     = models.DateTimeField(auto_now_add=True)
+    status   = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    # submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    
+    class Meta:
+        unique_together = ('employee', 'date')
+
+    def __str__(self):
+        return f"{self.employee.user.get_full_name} - {self.date}: {self.get_status_display()}"
+
+class SalaryPayment(models.Model):
+    """A monthly salary payout record (with breakdown)."""
+    employee         = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    salary_structure = models.ForeignKey(SalaryStructure, on_delete=models.PROTECT)
+    date             = models.DateField(help_text="Payment date")
+    worked_days      = models.IntegerField(default=0)
+    absent_days      = models.IntegerField(default=0)
+    # Copy salary components (snapshot for this payment)
+    base_salary      = models.DecimalField(max_digits=10, decimal_places=2)
+    allowances       = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    bonuses          = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    deductions       = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tax_percent      = models.DecimalField(max_digits=5,  decimal_places=2, default=0)
+    net_salary       = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+
+    def calculate_net(self):
+        """Calculate net salary based on attendance and components."""
+        # Example logic: pro-rate basic by attendance and apply tax.
+        total_days = self.worked_days + self.absent_days or 1
+        per_day = self.base_salary / total_days
+        earned_basic = per_day * self.worked_days
+        gross = earned_basic + self.allowances + self.bonuses
+        tax_amount = gross * (self.tax_percent / 100)
+        self.net_salary = gross - (self.deductions + tax_amount)
+        return self.net_salary
+
+    def save(self, *args, **kwargs):
+        # On first save, copy the structure’s values
+        if not self.id:
+            self.base_salary      = self.salary_structure.base_salary
+            self.allowances = self.salary_structure.allowances
+            self.bonuses    = self.salary_structure.bonuses
+            self.deductions = self.salary_structure.deductions
+            self.tax_percent= self.salary_structure.tax_percent
+        # Recalculate net salary on every save
+        self.calculate_net()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Payout for {self.employee.user.get_full_name} on {self.date}"
+
+class Payslip(models.Model):
+    """Generated payslip document for a salary payment."""
+    salary_payment = models.OneToOneField(SalaryPayment, on_delete=models.CASCADE)
+    generated_on   = models.DateTimeField(auto_now_add=True)
+    file           = models.FileField(upload_to='payslips/')
+
+    def __str__(self):
+        return f"Payslip for {self.salary_payment.employee.user.get_full_name} ({self.salary_payment.date})"
+
+

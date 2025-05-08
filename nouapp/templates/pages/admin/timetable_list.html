@@ -1,0 +1,126 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+{% load custom_filters %} 
+
+{% block title %}Time Table{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<div class="container-xxl flex-grow-1 container-p-y">
+   
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <h2 class="text-3xl font-bold text-center mb-6">
+          📅 Timetable - {{ school_class.name }} {{ section.name }}
+        </h2>
+        <form action="{%  url 'filter_timetable' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+              <div class="container">
+                  <div class="border p-4 rounded md:m-4 bg-blue-100 dark:bg-sky-950 border-gray-900/10 pb-12">
+                      <h1 class="text-center text-2xl font-semibold">Filter Time Table</h1>
+                      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                          <label for="school_class" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Class</label>
+                          <div class="mt-2">
+                            <select id="school_class" name="school_class"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <option value="">--Select Class--</option>
+                              {% for class in classes %}
+                                <option value="{{ class.id }}">{{ class.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+            
+                        
+            
+                        <div class="sm:col-span-3">
+                          <label for="section" class="block text-sm font-medium leading-6 text-gray-900 dark:text-white">Select Section</label>
+                          <div class="mt-2">
+                            <select id="section" name="section"  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                              <option value="">--Select Section --</option>
+                              
+                            </select>
+                          </div>
+                        </div>
+                
+                            
+                
+                       
+          
+                        <div class="col-span-full">
+                          <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
+                        </div>
+          
+                        
+                      </div>
+                    </div>
+              </div>
+        </form>
+      
+        
+
+                <div class="overflow-x-auto max-w-7xl mx-auto p-4">
+                    <h2 class="text-2xl font-bold text-center mb-6">
+                    📚 Timetable - {{ school_class.name }} {{ section.name }}
+                    </h2>
+                    <table class="min-w-full table-fixed border-collapse border border-gray-300 dark:border-gray-700">
+                        <thead class="bg-gray-100 dark:bg-slate-800">
+                            <tr>
+                            <th class="border px-4 py-2 w-32 text-left">Day / Period</th>
+                            {% for period in periods %}
+                                <th class="border px-4 py-2 text-center">
+                                {{ period.name }}<br>
+                                <span class="text-xs text-gray-500">
+                                    {{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}
+                                </span>
+                                </th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for day_value, day_name in days %}
+                            <tr class=" {% if forloop.counter0|divisibleby:2 %}bg-blue-50 dark:bg-slate-800{% else %}bg-gray-50 dark:bg-slate-900{% endif %} hover:bg-gray-100 dark:hover:bg-slate-700">
+                                <td class="border px-4 py-2 font-semibold bg-gray-50 dark:bg-slate-900">{{ day_name }}</td>
+                                {% for period in periods %}
+                                
+                                {% with timetable|get_item:day_value as row %}
+                                {% with row|get_item:period.id as entry %}
+                                <td class="border px-4 py-2 text-sm text-center">
+                                    {% if entry %}
+                                      <div class="font-semibold text-indigo-700 dark:text-indigo-300">
+                                        {{ entry.subject.name }}
+                                      </div>
+                                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ entry.teacher.user.get_full_name }}
+                                      </div>
+                                      {% if request.user.user_type == "admin" %}
+                                        <a href="{% url 'timetable_edit' entry.id %}" class="inline-block mt-2 text-xs text-blue-600 hover:underline">Edit</a>
+                                      {% endif %}
+                                    {% else %}
+                                      <span class="text-gray-400">-</span>
+                                    {% endif %}
+                                  </td>
+                                {% endwith %}
+                              {% endwith %}
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+      
+       
+
+    </div>
+</div>
+
+{% endblock %}

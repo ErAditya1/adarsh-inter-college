@@ -73,11 +73,11 @@
         <ul id="dropdown-admission" class="hidden py-2 space-y-2">
           <li>
             <a href="{% url "register_student" %}"
-              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Resister Student</a>
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Register Student</a>
           </li>
           <li>
             <a href="{% url "register_teacher" %}"
-              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Resister Teacher</a>
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11">Register Teacher</a>
           </li>
           <li>
             <a href="{% url "students_admission_verification" %}"
@@ -192,7 +192,7 @@
         
       </li>
       <li>
-        <a href="{% url "add_classes" %}"
+        <a href="{% url "add_gallery" %}"
           class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
           <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
             fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +200,78 @@
               d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
               clip-rule="evenodd"></path>
           </svg>
-          <span class="flex-1 ml-3 whitespace-nowrap">Add Programs</span>
+          <span class="flex-1 ml-3 whitespace-nowrap">Add  Gallery</span>
+        </a>
+        
+      </li>
+      <li>
+        <button type="button" class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900" aria-controls="dropdown-academics" data-collapse-toggle="dropdown-academics">
+          <i class="fa-solid fa-person-through-window"></i>             <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Manage Academics</span>
+                <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          </button>
+        <ul id="dropdown-academics" class="hidden py-2 space-y-2">
+          <li>
+            <a href="{% url "add_classes" %}"
+          class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
+          
+          <span class="flex-1 ml-3 whitespace-nowrap">Add Classes</span>
+        </a>
+            </li>
+          <li>
+            <a href="{% url "add_period" %}"
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11"> Add Periods</a>
+          </li>
+          <li>
+            <a href="{% url "timetable_add" %}"
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11"> Insert Timetable</a>
+          </li>
+          
+        
+        </ul>
+      </li>
+      <li>
+        <button type="button" class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900" aria-controls="dropdown-timetable" data-collapse-toggle="dropdown-timetable">
+          <i class="fa-solid fa-person-through-window"></i>             <span class="flex-1 ml-3 text-left whitespace-nowrap" sidebar-toggle-item>Timetables</span>
+                <svg sidebar-toggle-item class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+          </button>
+        <ul id="dropdown-timetable" class="hidden py-2 space-y-2">
+          <li>
+            <a href="{% url "timetable_list_all" %}"
+          class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
+          
+          <span class="flex-1 ml-3 whitespace-nowrap">Class Timetables</span>
+        </a>
+            </li>
+          <li>
+            <a href="{% url "teacher_timetable_list" %}"
+              class="flex items-center w-full p-2 text-base font-normal text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900 pl-11"> Teacher Timetables</a>
+          </li>
+         
+          
+        
+        </ul>
+      </li>
+      <li>
+        <a href="{% url "employee_attendance_report" %}"
+          class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
+          <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="flex-1 ml-3 whitespace-nowrap">Employee Attendance</span>
+        </a>
+      <li>
+        <a href="{% url "salary_payment_list" %}"
+          class="flex items-center p-2 text-base font-normal  text-gray-900  rounded-lg focus:outline-none focus:ring-1 dark:text-blue-50  dark:hover:bg-blue-950 dark:focus:ring-yellow-900">
+          <svg class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="flex-1 ml-3 whitespace-nowrap">Salary Payments</span>
         </a>
         
       </li>

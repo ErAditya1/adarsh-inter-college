@@ -34,6 +34,8 @@ urlpatterns = [
      path('fee-receipt/<str:receipt_id>/', view_fee_receipt, name='fee_receipt'),
 
      
+
+     
     
 
 
@@ -50,7 +52,7 @@ urlpatterns = [
      path("student/assesments/", StudentViews.assesments, name="assesments"),
      path("student/lectures/", StudentViews.lectures, name="lectures"),
      path("student/notifications/", StudentViews.read_notifications, name="notifications"),
-     
+     path('student/timetable/', StudentViews.timetable_list, name='student_timetable_list'),
 
      # guest urls ----------------------------------------------------------------
 
@@ -80,6 +82,8 @@ urlpatterns = [
      path('teacher/profile/', TeacherViews.profile, name='teacher_profile'),
      path('teacher/update_profile/', TeacherViews.update_profile, name='update_profile_teacher'),
      path('fee-receipt/<str:receipt_id>/', view_fee_receipt, name='fee_receipt'),
+     path('teacher/timetable/', TeacherViews.teacher_timetable, name='teacher_timetable'),
+     
 
 
 
@@ -90,6 +94,7 @@ urlpatterns = [
 
      path('admin/register_student/', AdminViews.register_student, name='register_student'),
      path('admin/register_teacher/', AdminViews.register_teacher, name='register_teacher'),
+     
 
      path("admin/manage_user/", AdminViews.manage_user, name="manage_user"),
      path("admin/verify_user/<int:id>/",AdminViews.verify_user, name="verify_user"),
@@ -153,7 +158,23 @@ urlpatterns = [
 
      path('admin/student/<int:student_id>/pay-fee/', AdminViews.submit_student_fee, name='submit_student_fee'),
      
+     path('admin/period/add/', AdminViews.add_period, name='add_period'),
+     path('admin/period/edit/<int:period_id>/', AdminViews.edit_period, name='edit_period'),
+     path('admin/timetable/add/', AdminViews.timetable_add, name='timetable_add'),
+     path('admin/timetable/edit/<int:entry_id>/', AdminViews.timetable_edit, name='timetable_edit'),
+     path('admin/timetable/delete/<int:entry_id>/', AdminViews.timetable_delete, name='timetable_delete'),
 
 
+     path('admin/timetable/<int:class_id>/<int:section_id>/', timetable_list, name='timetable_list'),
+     path('admin/timetable/filter_timetable/', filter_timetable, name='filter_timetable'),
+     path('admin/timetable/teachers/', teacher_timetable_list, name='teacher_timetable_list'),
+     path('admin/timetable/all/', timetable_list_all, name='timetable_list_all'),
+     path('admin/timetable/generate/', AdminViews.generate_school_timetable, name='generate_time_table'),
+     # path('admin/timetable/generate/', AdminViews.generate_timetable_for_all_classes, name='generate_time_table'),
 
+     path('admin/employee/attendance/', AdminViews.employee_attendance_report, name='employee_attendance_report'),
+     path('admin/employee/attendance/submit/<int:employee_id>', AdminViews.submit_employee_attendance, name='submit_employee_attendance'),
+     path('admin/add_sallery/<int:user_id>/', AdminViews.add_salary_structure, name='add_salary_structure'),
+     path('admin/salary/pay/<int:employee_id>/', AdminViews.create_salary_payment, name='pay_salary'),
+     path('admin/salary/payments/', AdminViews.salary_payment_list, name='salary_payment_list'),
 ]

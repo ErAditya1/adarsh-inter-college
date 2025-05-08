@@ -15,3 +15,17 @@ def get_attendance_status(dictionary, key_str):
         print("Error in get_attendance:", e)
         return None
 
+@register.filter
+def get_item(dictionary, key):
+    # print(key)
+    if dictionary:
+
+        return dictionary.get(key)
+    return None
+
+@register.filter
+def get_timetable(timetable, key):
+    """Return timetable[(class_id, section_id)]"""
+    # print(timetable.get(key))
+  
+    return timetable.get(key)

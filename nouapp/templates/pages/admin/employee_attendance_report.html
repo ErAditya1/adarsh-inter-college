@@ -1,0 +1,101 @@
+{% extends "layouts/alayout.html" %} {% load custom_filters %} {% load static %}
+{% block title %}Attendance{% endblock %} {% block css %}
+
+<style></style>
+
+{% endblock %} {% block admin %}
+
+
+
+  <div class="container-fluid  w-full  overflow-auto hide-scrollbar" style="overflow:auto">
+<table  class=" table-bordered" id="example">
+  <thead class="bg-blue-200 dark:bg-sky-950">
+    <tr>
+
+      <th class="p-2">SR No.</th>
+      <th class="p-2">employeee ID</th>
+      <th class="p-2">Username</th>
+      <th class="p-2">Name</th>
+      {% for date in dates %}
+      <th class="p-2">{{ date|date:"d M Y" }}</th>
+      {% endfor %}
+      <th class="text-center"> Attendance</th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    {% for employee in employees %}
+    <tr class="w-full">
+      <td class="p-2">{{ employee.id }}</td>
+      <td class="p-2">{{ employee.id }}</td>
+      <td class="p-2">{{ employee.user.username }}</td>
+      <td class="p-2">{{ employee.user.get_full_name }} </td>
+     
+      <input type="hidden" name="employee_ids" value="{{ employee.id }}">
+      {% for date in dates %}
+      <td >
+        
+
+        
+        {% with employee.id|stringformat:"s" as employee_id %}
+          {% with date|stringformat:"s" as date_str %}
+            {% with employee_id|add:"|"|add:date_str as attendance_key %}
+              
+              {% with attendance_data|get_attendance_status:attendance_key  as status %}
+      
+                {% if status %} 
+                <span class="flex items-center text-white rounded-full px-2 py-1 mx-auto gap-2 w-fit 
+               {% if status == 'present' %}bg-green-600 
+               {% elif status == 'halfday' %}bg-yellow-600 
+               {% elif status == 'absent' %}bg-red-600 
+               {% endif %}">
+    {{ status|capfirst }}
+  </span>
+    {% else %} - 
+                
+                {%endif %}
+              
+              {% endwith %} 
+            {% endwith %}
+          {% endwith %}
+        {% endwith %}
+
+        {% endfor %}
+      </td>
+
+
+      <td>
+        <div class="flex items-center justify-evenly w-full">
+         
+          <form action="{% url 'submit_employee_attendance' employee.id %}" method="POST" enctype="multipart/form-data" class="flex gap-2">
+            {% csrf_token %}
+            <span class="flex items-center bg-green-600 text-white rounded-full px-2 py-1 gap-2 cursor-pointer">
+              <label for="present_{{ employee.id }}">Present:</label>
+              <input type="radio" name="status" id="present_{{ employee.id }}" value="present" checked>
+            </span>
+            <span class="flex items-center bg-yellow-600 text-white rounded-full px-2 py-1 gap-2 cursor-pointer">
+              <label for="halfday_{{ employee.id }}">Half Day:</label>
+              <input type="radio" name="status" id="halfday_{{ employee.id }}" value="halfday">
+            </span>
+            <span class="flex items-center bg-red-600 text-white rounded-full px-2 py-1 gap-2 cursor-pointer">
+              <label for="absent_{{ employee.id }}">Absent:</label>
+              <input type="radio" name="status" id="absent_{{ employee.id }}" value="absent">
+            </span>
+            <button type="submit" class="flex items-center bg-blue-600 text-white rounded-full px-2 py-1 gap-2">
+              Submit
+            </button>
+          </form>
+        </div>
+      </td>
+      
+    </tr>
+    {% endfor %}
+    
+   
+
+  </tbody>
+</table>
+</div>
+
+
+{% endblock %} {% block js %}{% endblock %}

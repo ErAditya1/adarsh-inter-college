@@ -130,8 +130,43 @@ class GalleryAdmin(admin.ModelAdmin):
     list_display = ('user', 'title', 'created_at')
 
 
+@admin.register(Period)
+class PeriodAdmin(admin.ModelAdmin):
+
+    list_display = ('name', 'start_time', 'end_time')
+
+@admin.register(TimetableEntry)
+class TimetableEntryAdmin(admin.ModelAdmin):
+    list_display=("day",'period', 'school_class','section', 'subject', 'teacher')
+    list_filter = ('day','period','school_class','teacher','subject')
+
+
 @admin.register(Attendance)
 class AttendanceAdmin(admin.ModelAdmin):
     list_display = ('student', 'date', 'status', 'school_class', 'section', 'submitted_by')
     list_filter = ('school_class', 'section', 'status')
     search_fields = ('student__user__username',)
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('role', 'date_joined')
+    # search_fields = ('employee__user__username')
+
+@admin.register(SalaryStructure)
+class SalaryStructureAdmin(admin.ModelAdmin):
+    list_display = ('employee', 'base_salary', 'allowances', 'bonuses', 'deductions', 'tax_percent')
+    list_filter = ('employee__role',)
+
+@admin.register(EmployeeAttendance)
+class EmployeeAttendanceAdmin(admin.ModelAdmin):
+    list_display = ('employee', 'date', 'status')
+    list_filter = ('status', 'date')
+
+@admin.register(SalaryPayment)
+class SalaryPaymentAdmin(admin.ModelAdmin):
+    list_display = ('employee', 'date', 'base_salary', 'allowances', 'bonuses', 'deductions', 'net_salary')
+    list_filter = ('date', 'employee__role')
+
+@admin.register(Payslip)
+class PayslipAdmin(admin.ModelAdmin):
+    list_display = ('salary_payment', 'generated_on')

@@ -1,0 +1,48 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}{{title}}{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="max-w-2xl mx-auto bg-blue-50/10 dark:text-white shadow rounded p-6 mt-10">
+        <h2 class="text-2xl font-bold mb-6 text-center">📅 Add Timetable Entry</h2>
+      
+        <form method="POST" class="space-y-5">
+          {% csrf_token %}
+          <p class="text-red-500">
+            {{ form.non_field_errors }}
+          </p>
+      
+          {% for field in form %}
+            <div  class="dark:text-black">
+              <label class="block text-sm font-medium text-gray-700 dark:text-white mb-1">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <p class="text-sm text-red-600 mt-1">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+      
+          <div class="text-center my-2">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+              Add Entry
+            </button>
+          </div>
+        </form>
+      </div>
+  </div>
+
+{% endblock %}

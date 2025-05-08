@@ -1,0 +1,76 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+{% load custom_filters %} 
+
+{% block title %}Time Table Teacher Wise List{% endblock %}
+
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<div class="container-xxl flex-grow-1 container-p-y">
+   
+    <div class="max-w-6xl mx-auto px-4 py-6">
+        <h2 class="text-3xl font-bold text-center mb-6">
+          📅 Timetable 
+        </h2>
+       
+        
+
+             
+        {% load static %}
+        {% for teacher in teachers %}
+          <h2 class="text-lg font-semibold mt-6">{{ teacher.user.get_full_name }}</h2>
+          {% with teacher_timetables|get_item:teacher as time_table %}
+          <table class="min-w-full table-fixed border-collapse border border-gray-300 dark:border-gray-700">
+            <thead class="bg-gray-100 dark:bg-slate-800">
+              <tr>
+                <th class="border px-4 py-2 w-32 text-left">Day</th>
+                {% for period in periods %}
+                <th class="border px-4 py-2 text-center">
+                  {{ period.name }}<br>
+                  <span class="text-xs text-gray-500">
+                      {{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}
+                  </span>
+                  </th>                  
+                  
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for day_value, day_name in days %}
+                <tr  class=" {% if forloop.counter0|divisibleby:2 %}bg-blue-50 dark:bg-slate-800{% else %}bg-gray-50 dark:bg-slate-900{% endif %} hover:bg-gray-100 dark:hover:bg-slate-700">
+                  <td class="border px-4 py-2 font-semibold bg-gray-50 dark:bg-slate-900">{{ day_name }}</td>
+                  {% for period in periods %}
+                    <td class="border px-4 py-2 text-sm text-center">
+                      {% with time_table|get_item:day_value|get_item:period.id as entry %}
+                     
+                        {% if entry %}
+                          {{ entry.subject.name }}<br>
+                          {{ entry.school_class.name }} - {{ entry.section.name }}
+                        {% else %}
+                          -
+                        {% endif %}
+                      {% endwith %}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endwith %}
+        {% endfor %}
+        
+
+    </div>
+</div>
+
+{% endblock %}

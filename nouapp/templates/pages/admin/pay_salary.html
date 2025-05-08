@@ -1,0 +1,47 @@
+
+
+{% extends "layouts/alayout.html" %}
+{% load static %}
+
+
+{% block title %}Manage User{% endblock %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+{% endblock %}
+
+{% block css %}
+
+<style>
+  
+</style>
+
+{% endblock %}
+
+{% block admin %}
+<div class="max-w-2xl mx-auto bg-blue-50/10 dark:text-white shadow rounded p-6 mt-10">
+    <h2 class="text-2xl font-bold mb-4">Salary Payment: {{ employee.user.get_full_name }}</h2>
+
+  <form method="post" class="space-y-4  dark:text-black">
+    {% csrf_token %}
+    <div class=" dark:text-black">
+      {{ form.non_field_errors }}
+      <label for="id_worked_days" class="block font-semibold">Worked Days:</label>
+      {{ form.worked_days }}
+    </div>
+
+    <div>
+      <label for="id_absent_days" class="block font-semibold">Absent Days:</label>
+      {{ form.absent_days }}
+    </div>
+
+    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Pay Salary</button>
+  </form>
+  </div>
+
+{% endblock %}
+
+{% block js %}
+
+
+{% endblock %}
