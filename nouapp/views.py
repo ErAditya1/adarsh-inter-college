@@ -176,6 +176,7 @@ def register(request):
    
 
 def login_user(request):
+    messages.success(request,'Login Successfully')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

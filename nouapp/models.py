@@ -59,8 +59,6 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.school_class.name} - {self.name}"
-
-
     
 class FeesType(models.Model):
     
@@ -439,10 +437,6 @@ class ErrorLog(models.Model):
     error_message = models.TextField()
     stack_trace = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-
-
-
-
 
 
 class SalaryStructure(models.Model):

@@ -2,6 +2,11 @@ from django.shortcuts import redirect,HttpResponse
 from django.urls import reverse
 from django.contrib import messages
 
+
+# >>>>>># Middleware to handle user type-based access control
+# >>>>>># This middleware checks the user type and redirects accordingly
+
+
 class UserTypeMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

@@ -63,7 +63,7 @@
     });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
     <script>
         $(document).ready(function() {
@@ -211,4 +211,58 @@
         });
         
       
+      </script>
+
+      <script>
+        $(document).ready(function() {
+            console.log("Document is ready");
+            // Check if the user has previously entered fullscreen mode
+            console.log("Fullscreen status: " + localStorage.getItem('fullscreen'));
+            if (localStorage.getItem('fullscreen') === 'true') {
+                enableFullScreen();
+            } else {
+                disableFullScreen();
+            }
+            
+            $('#toggle-fullscreen').click(function() {
+                toggleFullScreen();
+            });
+        });
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                enableFullScreen();
+            } else {
+                disableFullScreen();
+            }
+        }
+        function enableFullScreen() {
+            localStorage.setItem('fullscreen', 'true');
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+                document.documentElement.msRequestFullscreen();
+            }
+        }
+        function disableFullScreen() {
+            localStorage.setItem('fullscreen', 'false');
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+        
+    </script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
       </script>
